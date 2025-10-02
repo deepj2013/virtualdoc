@@ -41,6 +41,13 @@ VirtualDoc is a comprehensive healthcare digitalization platform designed to ser
 - **Multi-currency Support**: Local payment methods and currencies
 - **Telemedicine**: HD video consultations with collaboration tools
 
+### 🔍 Patient Discovery Platform
+- **Doctor Marketplace**: Discover and compare healthcare providers
+- **Real-Time Booking**: Live appointment scheduling and availability
+- **AI Recommendations**: Personalized doctor suggestions based on needs
+- **Verified Reviews**: Authentic patient feedback and ratings
+- **Insurance Integration**: Real-time coverage verification and pricing
+
 ## 🏗️ Three-Tier Product Strategy
 
 ### 🆓 Freemium Tier (Community Edition)
@@ -66,24 +73,86 @@ VirtualDoc is a comprehensive healthcare digitalization platform designed to ser
 
 ## 🚀 Quick Start
 
-### Prerequisites
+### Cross-Platform Setup
+
+VirtualDoc supports **macOS**, **Linux**, and **Windows** with dedicated scripts for each platform.
+
+#### One-Command Setup
+
+**For macOS/Linux/WSL/Git Bash:**
+```bash
+./quick-start.sh
+```
+
+**For Windows Command Prompt:**
+```cmd
+.\quick-start.bat
+```
+
+**For Windows PowerShell:**
+```powershell
+.\quick-start.ps1
+```
+
+#### Manual Setup
+
+**Prerequisites:**
 - Docker & Docker Compose
 - Node.js 18+
 - Git
 
-### 1. Clone the Repository
+**For macOS/Linux/WSL/Git Bash:**
 ```bash
-git clone https://github.com/deepj2013/virtualdoc.git
-cd virtualdoc
+# 1. Check requirements
+./scripts/setup/check-requirements.sh
+
+# 2. Install dependencies
+./scripts/setup/install-dependencies.sh
+
+# 3. Setup environment
+./scripts/setup/setup-environment.sh
+
+# 4. Setup database
+./scripts/setup/setup-database.sh
+
+# 5. Start development environment
+./scripts/dev/start-dev.sh
 ```
 
-### 2. Environment Setup
-```bash
-# Copy environment configuration
-cp env.example .env
+**For Windows Command Prompt:**
+```cmd
+REM 1. Check requirements
+.\scripts\setup\check-requirements.bat
 
-# Edit configuration (optional)
-nano .env
+REM 2. Install dependencies
+.\scripts\setup\install-dependencies.bat
+
+REM 3. Setup environment
+.\scripts\setup\setup-environment.bat
+
+REM 4. Setup database
+.\scripts\setup\setup-database.bat
+
+REM 5. Start development environment
+.\scripts\dev\start-dev.bat
+```
+
+**For Windows PowerShell:**
+```powershell
+# 1. Check requirements
+.\scripts\setup\check-requirements.ps1
+
+# 2. Install dependencies
+.\scripts\setup\install-dependencies.ps1
+
+# 3. Setup environment
+.\scripts\setup\setup-environment.ps1
+
+# 4. Setup database
+.\scripts\setup\setup-database.ps1
+
+# 5. Start development environment
+.\scripts\dev\start-dev.ps1
 ```
 
 ### 3. Start the Platform
@@ -119,19 +188,21 @@ virtualdoc/
 │   │   ├── 📋 medical-records-service/ # Medical records
 │   │   ├── 💰 billing-service/    # Billing & payments
 │   │   ├── 📦 inventory-service/  # Inventory management
-│   │   └── 📈 reporting-service/  # Analytics & reporting
+│   │   ├── 📈 reporting-service/  # Analytics & reporting
+│   │   └── 🔍 discovery-service/  # Patient discovery platform
 │   └── 📁 shared/                 # Shared libraries
 ├── 📁 frontend/                   # Frontend applications
 │   ├── 🌐 web-app/               # Main web application
 │   ├── 👥 patient-portal/        # Patient portal
 │   ├── ⚙️ admin-dashboard/       # Admin dashboard
-│   └── 📱 mobile-app/            # Mobile application
+│   ├── 📱 mobile-app/            # Mobile application
+│   └── 🔍 patient-discovery-app/ # Patient discovery mobile app
 ├── 📁 infrastructure/             # Infrastructure & deployment
 │   ├── 🐳 docker/                # Docker configurations
 │   ├── ☸️ kubernetes/            # Kubernetes manifests
 │   ├── 🌐 nginx/                 # API Gateway
 │   └── 📊 monitoring/            # Monitoring & observability
-├── 📁 docs/                      # Comprehensive documentation
+├── 📁 project-docs/              # Comprehensive project documentation
 ├── 📁 product-management/         # Product management docs
 └── 📁 scripts/                   # Utility scripts
 ```
@@ -182,22 +253,25 @@ virtualdoc/
 
 ## 📚 Documentation
 
-### 📖 Core Documentation
-- [📋 Project Overview](docs/PROJECT_OVERVIEW.md) - Complete project vision and mission
-- [🏗️ Technical Architecture](docs/architecture/TECHNICAL_ARCHITECTURE.md) - System design and architecture
-- [🤖 AI Integration](docs/architecture/AI_INTEGRATION.md) - AI capabilities and implementation
-- [📊 Comprehensive Summary](docs/COMPREHENSIVE_SUMMARY.md) - Complete project summary
+### 🎯 Project Documentation
+- [📋 Project Overview](project-docs/PROJECT_OVERVIEW.md) - Complete project vision and strategy
+- [🏗️ System Architecture](project-docs/architecture/system-architecture.md) - Technical system design
+- [🗄️ Database Schema](project-docs/diagrams/database-schema.md) - Database design and relationships
+- [🔄 User Flows](project-docs/flows/user-flows.md) - Complete user journey mapping
+- [📝 User Stories](project-docs/flows/user-stories.md) - Detailed user stories and epics
+- [🔍 Patient Discovery Platform](project-docs/flows/patient-discovery-platform.md) - Healthcare marketplace platform
 
-### 🚀 Setup & Deployment
-- [⚙️ Setup Guide](docs/deployment/SETUP_GUIDE.md) - Installation and configuration
-- [🚀 Deployment Guide](docs/deployment/DEPLOYMENT_GUIDE.md) - Production deployment
-- [📁 Project Structure](PROJECT_STRUCTURE.md) - Detailed project organization
+### 🎨 Design Documentation
+- [👩‍⚕️ Doctor Dashboard Wireframes](project-docs/wireframes/doctor-dashboard-wireframe.md) - Doctor interface design
+- [👥 Patient Portal Wireframes](project-docs/wireframes/patient-portal-wireframe.md) - Patient interface design
+- [🎨 Design System](project-docs/design/design-system.md) - UI/UX design guidelines
 
-### 🎯 Product Management
-- [📋 Product Roadmap](product-management/PRODUCT_ROADMAP.md) - Development timeline
-- [🆓 Freemium Tier](product-management/freemium/) - Community edition details
-- [💼 Premium Tier](product-management/premium/) - Professional edition details
-- [🏢 Enterprise Tier](product-management/enterprise/) - Hospital edition details
+### 📋 Product Management
+- [🆓 Freemium Tier](product-management/freemium/README.md) - Community edition features
+- [💎 Premium Tier](product-management/premium/README.md) - Professional edition features
+- [🏢 Enterprise Tier](product-management/enterprise/README.md) - Enterprise edition features
+- [🔍 Discovery Platform](product-management/discovery-platform/README.md) - Healthcare marketplace platform
+- [📁 Project Structure](project-docs/PROJECT_STRUCTURE.md) - Detailed project organization
 
 ### 🔌 API Documentation
 - [🔐 Authentication API](docs/api/authentication.md) - Auth endpoints
