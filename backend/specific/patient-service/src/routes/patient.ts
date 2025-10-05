@@ -10,7 +10,103 @@ const patientController = new PatientController();
 // All routes require authentication
 router.use(authenticateToken);
 
-// Patient CRUD operations
+/**
+ * @swagger
+ * /api/patients:
+ *   get:
+ *     summary: Get all patients
+ *     description: Retrieve a list of patients with optional filtering and pagination
+ *     tags: [Patients]
+ *     security:
+ *       - bearerAuth: []
+ *     parameters:
+ *       - in: query
+ *         name: page
+ *         schema:
+ *           type: integer
+ *           minimum: 1
+ *           default: 1
+ *         description: Page number
+ *       - in: query
+ *         name: limit
+ *         schema:
+ *           type: integer
+ *           minimum: 1
+ *           maximum: 100
+ *           default: 10
+ *         description: Number of patients per page
+ *       - in: query
+ *         name: search
+ *         schema:
+ *           type: string
+ *         description: Search by patient name or ID
+ *       - in: query
+ *         name: status
+ *         schema:
+ *           type: string
+ *           enum: [active, inactive, archived]
+ *         description: Filter by patient status
+ *     responses:
+ *       200:
+ *         description: List of patients retrieved successfully
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 success:
+ *                   type: boolean
+ *                   example: true
+ *                 message:
+ *                   type: string
+ *                   example: Patients retrieved successfully
+ *                 data:
+ *                   type: object
+ *                   properties:
+ *                     patients:
+ *                       type: array
+ *                       items:
+ *                         type: object
+ *                         properties:
+ *                           id:
+ *                             type: string
+ *                             example: 123e4567-e89b-12d3-a456-426614174000
+ *                           firstName:
+ *                             type: string
+ *                             example: John
+ *                           lastName:
+ *                             type: string
+ *                             example: Doe
+ *                           dateOfBirth:
+ *                             type: string
+ *                             format: date
+ *                             example: 1990-01-01
+ *                           gender:
+ *                             type: string
+ *                             enum: [male, female, other]
+ *                             example: male
+ *                           phoneNumber:
+ *                             type: string
+ *                             example: +1234567890
+ *                           email:
+ *                             type: string
+ *                             format: email
+ *                             example: john.doe@example.com
+ *                           status:
+ *                             type: string
+ *                             enum: [active, inactive, archived]
+ *                             example: active
+ *                           createdAt:
+ *                             type: string
+ *                             format: date-time
+ *                             example: 2024-01-01T00:00:00.000Z
+ *                     pagination:
+ *                       $ref: '#/components/schemas/Pagination'
+ *       401:
+ *         $ref: '#/components/responses/UnauthorizedError'
+ *       500:
+ *         $ref: '#/components/responses/InternalServerError'
+ */
 router.get('/', 
   validateRequest(patientSchemas.getPatients),
   patientController.getPatients
