@@ -1,0 +1,35 @@
+{
+  "name": "virtualdoc",
+  "version": "1.0.0",
+  "description": "VirtualDoc - Comprehensive Healthcare Platform",
+  "private": true,
+  "scripts": {
+    "start": "./start.sh",
+    "dev": "docker-compose up --build",
+    "stop": "docker-compose down",
+    "restart": "docker-compose restart",
+    "logs": "docker-compose logs -f",
+    "build": "docker-compose build",
+    "clean": "docker-compose down -v --remove-orphans",
+    "status": "docker-compose ps",
+    "frontend": "cd frontend/web-app && npm run dev",
+    "frontend:build": "cd frontend/web-app && npm run build",
+    "frontend:install": "cd frontend/web-app && npm install"
+  },
+  "keywords": [
+    "healthcare",
+    "medical",
+    "telemedicine",
+    "microservices",
+    "docker",
+    "react",
+    "nodejs",
+    "typescript"
+  ],
+  "author": "VirtualDoc Team",
+  "license": "MIT",
+  "engines": {
+    "node": ">=18.0.0",
+    "npm": ">=8.0.0"
+  }
+}

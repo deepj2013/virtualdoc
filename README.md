@@ -71,105 +71,78 @@ VirtualDoc is a comprehensive healthcare digitalization platform designed to ser
 - Dedicated support
 - Advanced security and compliance
 
-## 🚀 Quick Start
+## 🚀 Quick Start (Super Simple!)
 
-### Cross-Platform Setup
+### Prerequisites
+- **Docker Desktop** (Download from [docker.com](https://www.docker.com/products/docker-desktop/))
+- **Git** (Download from [git-scm.com](https://git-scm.com/))
 
-VirtualDoc supports **macOS**, **Linux**, and **Windows** with dedicated scripts for each platform.
+That's it! No Node.js, no complex setup needed.
 
-#### One-Command Setup
+### One-Command Start (Works on Windows, Mac, Linux)
 
 **For macOS/Linux/WSL/Git Bash:**
 ```bash
-./quick-start.sh
+./start.sh
 ```
 
 **For Windows Command Prompt:**
 ```cmd
-.\quick-start.bat
+start.bat
 ```
 
 **For Windows PowerShell:**
 ```powershell
-.\quick-start.ps1
+.\start.bat
 ```
 
-#### Manual Setup
-
-**Prerequisites:**
-- Docker & Docker Compose
-- Node.js 18+
-- Git
-
-**For macOS/Linux/WSL/Git Bash:**
+### Alternative: Using npm (if you have Node.js)
 ```bash
-# 1. Check requirements
-./scripts/setup/check-requirements.sh
-
-# 2. Install dependencies
-./scripts/setup/install-dependencies.sh
-
-# 3. Setup environment
-./scripts/setup/setup-environment.sh
-
-# 4. Setup database
-./scripts/setup/setup-database.sh
-
-# 5. Start development environment
-./scripts/dev/start-dev.sh
+cd frontend/web-app
+npm run dev
 ```
 
-**For Windows Command Prompt:**
-```cmd
-REM 1. Check requirements
-.\scripts\setup\check-requirements.bat
+### What happens?
+1. ✅ Checks if Docker is running
+2. 🔨 Builds React app with Vite + Tailwind CSS
+3. 🗄️ Starts PostgreSQL and Redis databases
+4. 🚀 Launches mock API for development
+5. 🌐 Opens web app at http://localhost:3000
 
-REM 2. Install dependencies
-.\scripts\setup\install-dependencies.bat
+### Access Your Applications
+- **🌐 Web App**: http://localhost:3000 (React + Vite + Tailwind CSS)
+- **🔧 Mock API**: http://localhost:3001 (Development API)
+- **🗄️ PostgreSQL**: localhost:5432
+- **🗄️ Redis**: localhost:6379
 
-REM 3. Setup environment
-.\scripts\setup\setup-environment.bat
+### Technology Stack
+- **Frontend**: React 18 + Vite + Tailwind CSS + TypeScript
+- **Backend**: Mock API (for development)
+- **Database**: PostgreSQL + Redis
+- **Containerization**: Docker + Docker Compose
 
-REM 4. Setup database
-.\scripts\setup\setup-database.bat
-
-REM 5. Start development environment
-.\scripts\dev\start-dev.bat
-```
-
-**For Windows PowerShell:**
-```powershell
-# 1. Check requirements
-.\scripts\setup\check-requirements.ps1
-
-# 2. Install dependencies
-.\scripts\setup\install-dependencies.ps1
-
-# 3. Setup environment
-.\scripts\setup\setup-environment.ps1
-
-# 4. Setup database
-.\scripts\setup\setup-database.ps1
-
-# 5. Start development environment
-.\scripts\dev\start-dev.ps1
-```
-
-### 3. Start the Platform
+### Useful Commands
 ```bash
-# Start all services
-docker-compose up -d
+# View logs
+docker-compose logs -f
 
-# Check service health
-curl http://localhost:3001/health  # Auth Service
-curl http://localhost:4001/health  # Patient Service
+# Stop all services
+docker-compose down
+
+# Restart services
+./start.sh
+
+# Frontend development (if you have Node.js)
+cd frontend/web-app
+npm run dev
 ```
 
-### 4. Access the Applications
-- **Main Web App**: http://localhost:3000
-- **Patient Portal**: http://localhost:3001
-- **Admin Dashboard**: http://localhost:3002
-- **API Gateway**: http://localhost
+### Troubleshooting
+- **Docker not running**: Start Docker Desktop and try again
+- **Port conflicts**: Stop other services using ports 3000-3001, 5432, 6379
+- **Build fails**: Run `docker-compose down` then `./start.sh`
+- **Need help**: Check logs with `docker-compose logs`
+- **Frontend issues**: The app uses Vite for fast development and Tailwind CSS for styling
 
 ## 📁 Project Structure
 
@@ -218,11 +191,13 @@ virtualdoc/
 - **Kubernetes** orchestration
 
 ### Frontend
-- **React** with TypeScript
-- **Next.js** for web applications
-- **React Native** for mobile
-- **Material-UI** component library
-- **Redux** state management
+- **React 18** with TypeScript
+- **Vite** for fast development and building
+- **Tailwind CSS** for styling
+- **React Router** for navigation
+- **Heroicons** for icons
+- **React Hook Form** for forms
+- **Framer Motion** for animations
 
 ### Infrastructure
 - **Docker Compose** for development

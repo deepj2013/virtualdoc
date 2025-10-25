@@ -1,0 +1,71 @@
+[
+  {
+    "httpRequest": {
+      "method": "GET",
+      "path": "/api/health"
+    },
+    "httpResponse": {
+      "statusCode": 200,
+      "body": {
+        "status": "healthy",
+        "service": "VirtualDoc API",
+        "timestamp": "2024-01-01T00:00:00Z"
+      }
+    }
+  },
+  {
+    "httpRequest": {
+      "method": "POST",
+      "path": "/api/auth/login"
+    },
+    "httpResponse": {
+      "statusCode": 200,
+      "body": {
+        "success": true,
+        "token": "mock-jwt-token",
+        "user": {
+          "id": "1",
+          "email": "doctor@virtualdoc.com",
+          "name": "Dr. John Doe",
+          "role": "doctor"
+        }
+      }
+    }
+  },
+  {
+    "httpRequest": {
+      "method": "GET",
+      "path": "/api/dashboard/stats"
+    },
+    "httpResponse": {
+      "statusCode": 200,
+      "body": {
+        "patients": 1234,
+        "appointments": 24,
+        "revenue": 45678,
+        "messages": 89
+      }
+    }
+  },
+  {
+    "httpRequest": {
+      "method": "GET",
+      "path": "/api/patients"
+    },
+    "httpResponse": {
+      "statusCode": 200,
+      "body": {
+        "patients": [
+          {
+            "id": "1",
+            "name": "John Doe",
+            "email": "john.doe@email.com",
+            "phone": "+1 (555) 123-4567",
+            "lastVisit": "2023-12-15",
+            "status": "active"
+          }
+        ]
+      }
+    }
+  }
+]
