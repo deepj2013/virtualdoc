@@ -1,5 +1,5 @@
 import React from 'react';
-import { Outlet } from 'react-router-dom';
+import { Outlet, Link, useLocation } from 'react-router-dom';
 import { 
   HomeIcon, 
   UsersIcon, 
@@ -17,17 +17,18 @@ import { useState } from 'react';
 
 const Layout: React.FC = () => {
   const [sidebarOpen, setSidebarOpen] = useState(false);
+  const location = useLocation();
 
   const navigation = [
-    { name: 'Dashboard', href: '/dashboard', icon: HomeIcon },
-    { name: 'Patients', href: '/patients', icon: UsersIcon },
-    { name: 'Appointments', href: '/appointments', icon: CalendarIcon },
-    { name: 'Medical Records', href: '/medical-records', icon: DocumentTextIcon },
-    { name: 'Billing', href: '/billing', icon: CreditCardIcon },
-    { name: 'Inventory', href: '/inventory', icon: CubeIcon },
-    { name: 'Reports', href: '/reports', icon: ChartBarIcon },
-    { name: 'Settings', href: '/settings', icon: CogIcon },
-    { name: 'Profile', href: '/profile', icon: UserIcon },
+    { name: 'Dashboard', href: '/app/dashboard', icon: HomeIcon },
+    { name: 'Patients', href: '/app/patients', icon: UsersIcon },
+    { name: 'Appointments', href: '/app/appointments', icon: CalendarIcon },
+    { name: 'Medical Records', href: '/app/medical-records', icon: DocumentTextIcon },
+    { name: 'Billing', href: '/app/billing', icon: CreditCardIcon },
+    { name: 'Inventory', href: '/app/inventory', icon: CubeIcon },
+    { name: 'Reports', href: '/app/reports', icon: ChartBarIcon },
+    { name: 'Settings', href: '/app/settings', icon: CogIcon },
+    { name: 'Profile', href: '/app/profile', icon: UserIcon },
   ];
 
   return (
@@ -37,7 +38,7 @@ const Layout: React.FC = () => {
         <div className="fixed inset-0 bg-gray-600 bg-opacity-75" onClick={() => setSidebarOpen(false)} />
         <div className="fixed inset-y-0 left-0 flex w-64 flex-col bg-white">
           <div className="flex h-16 items-center justify-between px-4">
-            <h1 className="text-xl font-bold text-gray-900">VirtualDoc</h1>
+            <Link to="/" className="text-xl font-bold text-gray-900">VirtualDoc</Link>
             <button
               onClick={() => setSidebarOpen(false)}
               className="text-gray-400 hover:text-gray-600"
@@ -46,16 +47,23 @@ const Layout: React.FC = () => {
             </button>
           </div>
           <nav className="flex-1 space-y-1 px-2 py-4">
-            {navigation.map((item) => (
-              <a
-                key={item.name}
-                href={item.href}
-                className="group flex items-center px-2 py-2 text-sm font-medium rounded-md text-gray-600 hover:bg-gray-50 hover:text-gray-900"
-              >
-                <item.icon className="mr-3 h-5 w-5" />
-                {item.name}
-              </a>
-            ))}
+            {navigation.map((item) => {
+              const isActive = location.pathname === item.href;
+              return (
+                <Link
+                  key={item.name}
+                  to={item.href}
+                  className={`group flex items-center px-2 py-2 text-sm font-medium rounded-md ${
+                    isActive
+                      ? 'bg-blue-100 text-blue-700'
+                      : 'text-gray-600 hover:bg-gray-50 hover:text-gray-900'
+                  }`}
+                >
+                  <item.icon className="mr-3 h-5 w-5" />
+                  {item.name}
+                </Link>
+              );
+            })}
           </nav>
         </div>
       </div>
@@ -64,19 +72,26 @@ const Layout: React.FC = () => {
       <div className="hidden lg:fixed lg:inset-y-0 lg:flex lg:w-64 lg:flex-col">
         <div className="flex flex-col flex-grow bg-white border-r border-gray-200">
           <div className="flex h-16 items-center px-4">
-            <h1 className="text-xl font-bold text-gray-900">VirtualDoc</h1>
+            <Link to="/" className="text-xl font-bold text-gray-900">VirtualDoc</Link>
           </div>
           <nav className="flex-1 space-y-1 px-2 py-4">
-            {navigation.map((item) => (
-              <a
-                key={item.name}
-                href={item.href}
-                className="group flex items-center px-2 py-2 text-sm font-medium rounded-md text-gray-600 hover:bg-gray-50 hover:text-gray-900"
-              >
-                <item.icon className="mr-3 h-5 w-5" />
-                {item.name}
-              </a>
-            ))}
+            {navigation.map((item) => {
+              const isActive = location.pathname === item.href;
+              return (
+                <Link
+                  key={item.name}
+                  to={item.href}
+                  className={`group flex items-center px-2 py-2 text-sm font-medium rounded-md ${
+                    isActive
+                      ? 'bg-blue-100 text-blue-700'
+                      : 'text-gray-600 hover:bg-gray-50 hover:text-gray-900'
+                  }`}
+                >
+                  <item.icon className="mr-3 h-5 w-5" />
+                  {item.name}
+                </Link>
+              );
+            })}
           </nav>
         </div>
       </div>

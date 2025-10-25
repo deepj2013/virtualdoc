@@ -57,7 +57,8 @@ echo   🎉 VirtualDoc is ready!
 echo ========================================
 echo.
 echo 🌐 Access your applications:
-echo   • Web App (React + Vite + Tailwind): http://localhost:3000
+echo   • Web App (React + Vite + Tailwind): http://localhost:3003
+echo   • Docker Web App: http://localhost:3004
 echo   • Mock API: http://localhost:3001
 echo.
 echo 🗄️ Database:

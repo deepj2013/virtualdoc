@@ -3,6 +3,8 @@ import { BrowserRouter as Router, Routes, Route, Navigate } from 'react-router-d
 import { Toaster } from 'react-hot-toast';
 
 // Components
+import Landing from './pages/Landing/Landing';
+import Contact from './pages/Contact/Contact';
 import Layout from './components/Layout/Layout';
 import Login from './pages/Auth/Login';
 import Register from './pages/Auth/Register';
@@ -47,17 +49,21 @@ const PublicRoute: React.FC<{ children: React.ReactNode }> = ({ children }) => {
     );
   }
 
-  return !isAuthenticated ? <>{children}</> : <Navigate to="/dashboard" replace />;
+  return !isAuthenticated ? <>{children}</> : <Navigate to="/app/dashboard" replace />;
 };
 
 const App: React.FC = () => {
   return (
     <Router>
-      <div className="min-h-screen bg-gray-50">
+      <div className="min-h-screen">
         <Routes>
-          {/* Public Routes */}
+          {/* Landing Page - Public */}
+          <Route path="/" element={<Landing />} />
+          <Route path="/contact" element={<Contact />} />
+          
+          {/* Auth Routes - Public */}
           <Route
-            path="/login"
+            path="/auth/login"
             element={
               <PublicRoute>
                 <Login />
@@ -65,7 +71,7 @@ const App: React.FC = () => {
             }
           />
           <Route
-            path="/register"
+            path="/auth/register"
             element={
               <PublicRoute>
                 <Register />
@@ -73,16 +79,16 @@ const App: React.FC = () => {
             }
           />
 
-          {/* Protected Routes */}
+          {/* App Routes - Protected */}
           <Route
-            path="/"
+            path="/app"
             element={
               <ProtectedRoute>
                 <Layout />
               </ProtectedRoute>
             }
           >
-            <Route index element={<Navigate to="/dashboard" replace />} />
+            <Route index element={<Navigate to="/app/dashboard" replace />} />
             <Route path="dashboard" element={<Dashboard />} />
             <Route path="patients" element={<Patients />} />
             <Route path="patients/:id" element={<PatientDetail />} />
@@ -95,8 +101,13 @@ const App: React.FC = () => {
             <Route path="profile" element={<Profile />} />
           </Route>
 
+          {/* Legacy redirects for backward compatibility */}
+          <Route path="/login" element={<Navigate to="/auth/login" replace />} />
+          <Route path="/register" element={<Navigate to="/auth/register" replace />} />
+          <Route path="/dashboard" element={<Navigate to="/app/dashboard" replace />} />
+
           {/* Catch all route */}
-          <Route path="*" element={<Navigate to="/dashboard" replace />} />
+          <Route path="*" element={<Navigate to="/" replace />} />
         </Routes>
       </div>
       <Toaster

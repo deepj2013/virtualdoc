@@ -81,22 +81,28 @@ That's it! No Node.js, no complex setup needed.
 
 ### One-Command Start (Works on Windows, Mac, Linux)
 
-**For macOS/Linux/WSL/Git Bash:**
+**Option 1: Full Docker Setup (Recommended for Production)**
 ```bash
+# macOS/Linux
 ./start.sh
-```
 
-**For Windows Command Prompt:**
-```cmd
+# Windows
 start.bat
 ```
 
-**For Windows PowerShell:**
-```powershell
-.\start.bat
+**Option 2: Development Mode (Single Port - Fastest)**
+```bash
+# macOS/Linux
+./dev.sh
+
+# Windows
+dev.bat
+
+# Or using npm
+npm run dev
 ```
 
-### Alternative: Using npm (if you have Node.js)
+### Alternative: Using npm directly
 ```bash
 cd frontend/web-app
 npm run dev
@@ -107,10 +113,11 @@ npm run dev
 2. 🔨 Builds React app with Vite + Tailwind CSS
 3. 🗄️ Starts PostgreSQL and Redis databases
 4. 🚀 Launches mock API for development
-5. 🌐 Opens web app at http://localhost:3000
+5. 🌐 Opens web app at http://localhost:3003
 
 ### Access Your Applications
-- **🌐 Web App**: http://localhost:3000 (React + Vite + Tailwind CSS)
+- **🌐 Web App (Dev)**: http://localhost:3003 (React + Vite + Tailwind CSS)
+- **🌐 Web App (Docker)**: http://localhost:3004 (Docker container)
 - **🔧 Mock API**: http://localhost:3001 (Development API)
 - **🗄️ PostgreSQL**: localhost:5432
 - **🗄️ Redis**: localhost:6379
