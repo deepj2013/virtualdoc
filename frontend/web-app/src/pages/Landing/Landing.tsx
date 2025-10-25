@@ -5,7 +5,6 @@ import {
   BuildingOfficeIcon, 
   HeartIcon,
   CheckIcon,
-  StarIcon,
   ArrowRightIcon,
   ShieldCheckIcon,
   ChartBarIcon,
