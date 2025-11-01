@@ -21,6 +21,9 @@ build/
 *.tsbuildinfo
 .next/
 out/
+**/dist/
+**/build/
+**/*.tsbuildinfo
 
 # IDE & Editor
 .vscode/
