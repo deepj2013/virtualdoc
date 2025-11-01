@@ -10,13 +10,15 @@ This directory contains the complete database schema design for the VirtualDoc S
 1. **DATABASE_SCHEMA_DESIGN.md** - Part 1: Multi-tenant, Users, Patients, Medical Records, Appointments, Telemedicine, Providers
 2. **DATABASE_SCHEMA_PART2.md** - Part 2: Communication, Inventory, HR, Care Management
 3. **DATABASE_SCHEMA_PART3.md** - Part 3: Billing, Reporting, Notifications, System Configuration
+4. **DATABASE_SCHEMA_VIDEO_CALLING.md** - Video Calling & Meeting Management Module
+5. **DATABASE_SCHEMA_ENHANCEMENTS.md** - Enhanced Patient Management, OPD/IPD, Services, Reporting, Analytics
 
 ### Visualization Files
 4. **virtualdoc_database_schema.drawio.xml** - Draw.io XML file for ER diagram visualization
 
 ## 🗄️ Schema Overview
 
-### Total Tables: 67+ tables across 16 modules
+### Total Tables: 90+ tables across 22 modules
 
 #### Module Breakdown:
 1. **Multi-Tenant & Organization** (4 tables)
@@ -66,6 +68,24 @@ This directory contains the complete database schema design for the VirtualDoc S
 
 16. **System Configuration** (4 tables)
     - system_settings, tenant_domains, audit_logs, file_storage
+
+17. **Enhanced Patient Information** (4 tables)
+    - patient_extended_info, patient_vital_signs, patient_lifestyle_factors, patient_family_medical_history
+
+18. **OPD/IPD & Admission** (5 tables)
+    - admissions, admission_vital_signs, discharge_summaries, wards, beds
+
+19. **Service & Facility Configuration** (3 tables)
+    - tenant_services, tenant_facilities, service_bookings
+
+20. **Enhanced Reporting** (3 tables)
+    - structured_reports, report_templates, report_attachments
+
+21. **Business Analytics & Data Warehousing** (4 tables)
+    - analytics_facts, analytics_dimensions, analytics_dashboards, analytics_reports_scheduled
+
+22. **Enhanced User Roles** (1 table)
+    - user_role_extensions
 
 ## 🎨 Viewing the ER Diagram
 
@@ -122,6 +142,16 @@ The schema is designed for PostgreSQL with:
 ✅ Telemedicine consultations
 ✅ Video calling with guest links (Doctor-Patient, Team Meetings)
 ✅ Meeting recording and transcription
+✅ Comprehensive patient information (medical & non-medical)
+✅ Vital signs tracking with historical data
+✅ Lifestyle factors and family medical history
+✅ OPD/IPD admission management
+✅ Ward and bed management
+✅ Discharge summary reports
+✅ Tenant-specific services (X-ray, MRI, Lab, Dietitian, Fitness Coach, etc.)
+✅ Structured reporting with key-value organized data
+✅ 20-year business analytics support
+✅ Enhanced user roles (Receptionist, CRM, Marketing, Dietitian, Fitness Coach)
 ✅ Healthcare provider integration (Labs, MRI, Chemist)
 ✅ Email, SMS, WhatsApp notifications
 ✅ Inventory management
