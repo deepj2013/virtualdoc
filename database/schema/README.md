@@ -18,7 +18,7 @@ This directory contains the complete database schema design for the VirtualDoc S
 
 ## 🗄️ Schema Overview
 
-### Total Tables: 90+ tables across 22 modules
+### Total Tables: 100+ tables across 23 modules
 
 #### Module Breakdown:
 1. **Multi-Tenant & Organization** (4 tables)
@@ -87,6 +87,9 @@ This directory contains the complete database schema design for the VirtualDoc S
 22. **Enhanced User Roles** (1 table)
     - user_role_extensions
 
+23. **Authentication & Admin Management** (10 tables)
+    - admin_roles, admin_users, authentication_tokens, password_reset_tokens, email_verification_tokens, api_keys, login_attempts, account_locks, admin_permissions, admin_role_permissions, admin_activity_logs
+
 ## 🎨 Viewing the ER Diagram
 
 ### Using Draw.io
@@ -152,6 +155,11 @@ The schema is designed for PostgreSQL with:
 ✅ Structured reporting with key-value organized data
 ✅ 20-year business analytics support
 ✅ Enhanced user roles (Receptionist, CRM, Marketing, Dietitian, Fitness Coach)
+✅ Universal Admin, Sub-Admin, Tenant Admin management
+✅ Comprehensive token management (JWT, refresh, API keys, password reset)
+✅ Session management with device tracking
+✅ Login attempt tracking and account lockout
+✅ Admin activity audit logging
 ✅ Healthcare provider integration (Labs, MRI, Chemist)
 ✅ Email, SMS, WhatsApp notifications
 ✅ Inventory management

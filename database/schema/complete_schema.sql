@@ -127,13 +127,27 @@ CREATE TABLE role_permissions (
 CREATE TABLE user_sessions (
     id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
     user_id UUID REFERENCES users(id) ON DELETE CASCADE NOT NULL,
-    token_hash VARCHAR(255) NOT NULL,
-    device_info TEXT,
+    tenant_id UUID REFERENCES tenants(id) ON DELETE CASCADE,
+    session_token VARCHAR(255) UNIQUE NOT NULL,
+    access_token_id UUID, -- Will reference authentication_tokens
+    refresh_token_id UUID, -- Will reference authentication_tokens
+    device_id VARCHAR(255),
+    device_name VARCHAR(255),
+    device_type VARCHAR(50) CHECK (device_type IN ('desktop', 'mobile', 'tablet', 'api')),
     ip_address VARCHAR(45),
     user_agent TEXT,
+    location JSONB,
+    login_method VARCHAR(50) CHECK (login_method IN ('password', 'oauth', 'sso', 'api_key', '2fa')),
+    logged_in_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    last_activity_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
     expires_at TIMESTAMP NOT NULL,
+    logged_out_at TIMESTAMP,
+    logout_reason VARCHAR(100),
+    is_active BOOLEAN DEFAULT true,
+    is_current BOOLEAN DEFAULT false,
+    forced_logout BOOLEAN DEFAULT false,
     created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
-    last_activity TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+    updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
 );
 
 -- ============================================
@@ -547,6 +561,230 @@ CREATE TABLE video_call_settings (
     updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
     UNIQUE(tenant_id, user_id, setting_type)
 );
+
+-- ============================================
+-- 23. ENHANCED AUTHENTICATION & ADMIN MODULE
+-- ============================================
+
+CREATE TABLE admin_roles (
+    id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
+    role_code VARCHAR(50) UNIQUE NOT NULL CHECK (role_code IN ('universal_admin', 'sub_admin', 'tenant_admin', 'super_admin')),
+    role_name VARCHAR(100) NOT NULL,
+    role_description TEXT,
+    hierarchy_level INTEGER NOT NULL CHECK (hierarchy_level BETWEEN 1 AND 10),
+    permissions JSONB NOT NULL,
+    can_manage_users BOOLEAN DEFAULT false,
+    can_manage_tenants BOOLEAN DEFAULT false,
+    can_manage_admins BOOLEAN DEFAULT false,
+    can_access_analytics BOOLEAN DEFAULT false,
+    can_manage_billing BOOLEAN DEFAULT false,
+    can_configure_system BOOLEAN DEFAULT false,
+    scope VARCHAR(50) DEFAULT 'global' CHECK (scope IN ('global', 'tenant', 'department')),
+    is_active BOOLEAN DEFAULT true,
+    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+);
+
+CREATE TABLE admin_users (
+    id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
+    user_id UUID REFERENCES users(id) ON DELETE CASCADE NOT NULL,
+    tenant_id UUID REFERENCES tenants(id) ON DELETE SET NULL,
+    admin_role_id UUID REFERENCES admin_roles(id) ON DELETE SET NULL,
+    admin_role_code VARCHAR(50) NOT NULL CHECK (admin_role_code IN ('universal_admin', 'sub_admin', 'tenant_admin')),
+    assigned_tenant_id UUID REFERENCES tenants(id) ON DELETE SET NULL,
+    assigned_departments UUID[],
+    is_active BOOLEAN DEFAULT true,
+    is_suspended BOOLEAN DEFAULT false,
+    suspension_reason TEXT,
+    suspended_by UUID REFERENCES users(id),
+    suspended_at TIMESTAMP,
+    last_login_at TIMESTAMP,
+    password_changed_at TIMESTAMP,
+    requires_password_change BOOLEAN DEFAULT false,
+    two_factor_enabled BOOLEAN DEFAULT false,
+    two_factor_secret VARCHAR(255),
+    backup_codes TEXT[],
+    assigned_by UUID REFERENCES users(id),
+    assigned_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    UNIQUE(user_id, tenant_id)
+);
+
+CREATE TABLE authentication_tokens (
+    id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
+    user_id UUID REFERENCES users(id) ON DELETE CASCADE NOT NULL,
+    token_type VARCHAR(50) NOT NULL CHECK (token_type IN ('access_token', 'refresh_token', 'api_key', 'password_reset', 'email_verification', '2fa_token')),
+    token_hash VARCHAR(255) NOT NULL,
+    token_value TEXT,
+    jti VARCHAR(255) UNIQUE,
+    refresh_token_id UUID REFERENCES authentication_tokens(id) ON DELETE SET NULL,
+    device_id VARCHAR(255),
+    device_info TEXT,
+    ip_address VARCHAR(45),
+    user_agent TEXT,
+    tenant_id UUID REFERENCES tenants(id) ON DELETE CASCADE,
+    issued_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    expires_at TIMESTAMP NOT NULL,
+    revoked_at TIMESTAMP,
+    revoked_by UUID REFERENCES users(id),
+    revoked_reason TEXT,
+    last_used_at TIMESTAMP,
+    usage_count INTEGER DEFAULT 0,
+    is_active BOOLEAN DEFAULT true,
+    metadata JSONB,
+    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+);
+
+CREATE TABLE password_reset_tokens (
+    id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
+    user_id UUID REFERENCES users(id) ON DELETE CASCADE NOT NULL,
+    tenant_id UUID REFERENCES tenants(id) ON DELETE CASCADE,
+    token_hash VARCHAR(255) UNIQUE NOT NULL,
+    token_value VARCHAR(255) NOT NULL,
+    email VARCHAR(255) NOT NULL,
+    ip_address VARCHAR(45),
+    user_agent TEXT,
+    requested_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    expires_at TIMESTAMP NOT NULL,
+    used_at TIMESTAMP,
+    is_used BOOLEAN DEFAULT false,
+    is_revoked BOOLEAN DEFAULT false,
+    revoked_at TIMESTAMP,
+    attempts INTEGER DEFAULT 0,
+    max_attempts INTEGER DEFAULT 3,
+    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+);
+
+CREATE TABLE email_verification_tokens (
+    id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
+    user_id UUID REFERENCES users(id) ON DELETE CASCADE NOT NULL,
+    tenant_id UUID REFERENCES tenants(id) ON DELETE CASCADE,
+    email VARCHAR(255) NOT NULL,
+    token_hash VARCHAR(255) UNIQUE NOT NULL,
+    token_value VARCHAR(255) NOT NULL,
+    verification_type VARCHAR(50) DEFAULT 'email' CHECK (verification_type IN ('email', 'phone', '2fa')),
+    requested_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    expires_at TIMESTAMP NOT NULL,
+    verified_at TIMESTAMP,
+    is_verified BOOLEAN DEFAULT false,
+    is_expired BOOLEAN DEFAULT false,
+    attempts INTEGER DEFAULT 0,
+    max_attempts INTEGER DEFAULT 5,
+    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+);
+
+CREATE TABLE api_keys (
+    id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
+    user_id UUID REFERENCES users(id) ON DELETE CASCADE NOT NULL,
+    tenant_id UUID REFERENCES tenants(id) ON DELETE CASCADE,
+    key_name VARCHAR(255) NOT NULL,
+    key_hash VARCHAR(255) UNIQUE NOT NULL,
+    key_prefix VARCHAR(20) NOT NULL,
+    key_scope VARCHAR(50) DEFAULT 'read_write' CHECK (key_scope IN ('read', 'write', 'read_write', 'admin')),
+    permissions JSONB,
+    ip_whitelist TEXT[],
+    rate_limit_per_minute INTEGER DEFAULT 100,
+    rate_limit_per_hour INTEGER DEFAULT 1000,
+    last_used_at TIMESTAMP,
+    expires_at TIMESTAMP,
+    is_active BOOLEAN DEFAULT true,
+    revoked_at TIMESTAMP,
+    revoked_by UUID REFERENCES users(id),
+    revoked_reason TEXT,
+    usage_count INTEGER DEFAULT 0,
+    created_by UUID REFERENCES users(id),
+    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+);
+
+CREATE TABLE login_attempts (
+    id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
+    user_id UUID REFERENCES users(id) ON DELETE SET NULL,
+    email VARCHAR(255),
+    tenant_id UUID REFERENCES tenants(id) ON DELETE SET NULL,
+    ip_address VARCHAR(45) NOT NULL,
+    user_agent TEXT,
+    attempt_type VARCHAR(50) DEFAULT 'password' CHECK (attempt_type IN ('password', 'oauth', 'api_key', '2fa')),
+    success BOOLEAN DEFAULT false,
+    failure_reason VARCHAR(255),
+    device_fingerprint VARCHAR(255),
+    location JSONB,
+    attempted_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    session_id UUID REFERENCES user_sessions(id) ON DELETE SET NULL,
+    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+);
+
+CREATE TABLE account_locks (
+    id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
+    user_id UUID REFERENCES users(id) ON DELETE CASCADE NOT NULL,
+    tenant_id UUID REFERENCES tenants(id) ON DELETE CASCADE,
+    lock_type VARCHAR(50) NOT NULL CHECK (lock_type IN ('failed_attempts', 'admin_lock', 'suspicious_activity', 'security_breach')),
+    lock_reason TEXT,
+    locked_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    locked_until TIMESTAMP,
+    unlocked_at TIMESTAMP,
+    unlocked_by UUID REFERENCES users(id),
+    unlock_reason TEXT,
+    failed_attempts INTEGER DEFAULT 0,
+    is_permanent BOOLEAN DEFAULT false,
+    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+);
+
+CREATE TABLE admin_permissions (
+    id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
+    permission_code VARCHAR(100) UNIQUE NOT NULL,
+    permission_name VARCHAR(255) NOT NULL,
+    permission_category VARCHAR(100) NOT NULL CHECK (permission_category IN ('user_management', 'tenant_management', 'billing', 'analytics', 'system_config', 'security')),
+    description TEXT,
+    applies_to VARCHAR(50) DEFAULT 'all' CHECK (applies_to IN ('universal_admin', 'sub_admin', 'tenant_admin', 'all')),
+    is_critical BOOLEAN DEFAULT false,
+    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+);
+
+CREATE TABLE admin_role_permissions (
+    id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
+    admin_role_id UUID REFERENCES admin_roles(id) ON DELETE CASCADE NOT NULL,
+    permission_id UUID REFERENCES admin_permissions(id) ON DELETE CASCADE NOT NULL,
+    can_read BOOLEAN DEFAULT false,
+    can_write BOOLEAN DEFAULT false,
+    can_delete BOOLEAN DEFAULT false,
+    can_execute BOOLEAN DEFAULT false,
+    conditions JSONB,
+    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    UNIQUE(admin_role_id, permission_id)
+);
+
+CREATE TABLE admin_activity_logs (
+    id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
+    admin_user_id UUID REFERENCES admin_users(id) ON DELETE SET NULL,
+    user_id UUID REFERENCES users(id) ON DELETE SET NULL,
+    tenant_id UUID REFERENCES tenants(id) ON DELETE SET NULL,
+    action_type VARCHAR(100) NOT NULL CHECK (action_type IN ('create', 'update', 'delete', 'view', 'export', 'configure', 'suspend', 'activate')),
+    resource_type VARCHAR(100) NOT NULL CHECK (resource_type IN ('user', 'tenant', 'admin', 'billing', 'config', 'subscription', 'service')),
+    resource_id UUID,
+    action_description TEXT,
+    ip_address VARCHAR(45),
+    user_agent TEXT,
+    location JSONB,
+    changes_made JSONB,
+    severity VARCHAR(20) DEFAULT 'info' CHECK (severity IN ('info', 'warning', 'critical', 'security')),
+    status VARCHAR(50) DEFAULT 'success' CHECK (status IN ('success', 'failed', 'partial')),
+    error_message TEXT,
+    session_id UUID REFERENCES user_sessions(id) ON DELETE SET NULL,
+    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+);
+
+-- Update user_sessions to reference authentication_tokens
+ALTER TABLE user_sessions 
+    ADD CONSTRAINT fk_user_sessions_access_token 
+    FOREIGN KEY (access_token_id) REFERENCES authentication_tokens(id) ON DELETE SET NULL;
+
+ALTER TABLE user_sessions 
+    ADD CONSTRAINT fk_user_sessions_refresh_token 
+    FOREIGN KEY (refresh_token_id) REFERENCES authentication_tokens(id) ON DELETE SET NULL;
 
 -- ============================================
 -- 17. ENHANCED PATIENT INFORMATION MODULE
@@ -1096,6 +1334,52 @@ CREATE INDEX idx_analytics_dashboards_tenant ON analytics_dashboards(tenant_id);
 CREATE INDEX idx_user_role_extensions_user ON user_role_extensions(user_id);
 CREATE INDEX idx_user_role_extensions_tenant ON user_role_extensions(tenant_id);
 CREATE INDEX idx_user_role_extensions_role_type ON user_role_extensions(role_type);
+
+-- Authentication & Admin indexes
+CREATE INDEX idx_admin_users_user_id ON admin_users(user_id);
+CREATE INDEX idx_admin_users_tenant_id ON admin_users(tenant_id);
+CREATE INDEX idx_admin_users_role_code ON admin_users(admin_role_code);
+CREATE INDEX idx_admin_users_active ON admin_users(is_active) WHERE is_active = true;
+
+CREATE INDEX idx_auth_tokens_user_id ON authentication_tokens(user_id);
+CREATE INDEX idx_auth_tokens_token_hash ON authentication_tokens(token_hash);
+CREATE INDEX idx_auth_tokens_jti ON authentication_tokens(jti) WHERE jti IS NOT NULL;
+CREATE INDEX idx_auth_tokens_expires_at ON authentication_tokens(expires_at);
+CREATE INDEX idx_auth_tokens_active ON authentication_tokens(is_active, expires_at) WHERE is_active = true;
+CREATE INDEX idx_auth_tokens_type ON authentication_tokens(token_type);
+CREATE INDEX idx_auth_tokens_user_type ON authentication_tokens(user_id, token_type);
+
+CREATE INDEX idx_user_sessions_token ON user_sessions(session_token);
+CREATE INDEX idx_user_sessions_active ON user_sessions(is_active, expires_at) WHERE is_active = true;
+CREATE INDEX idx_user_sessions_current ON user_sessions(user_id, is_current) WHERE is_current = true;
+CREATE INDEX idx_user_sessions_expires_at ON user_sessions(expires_at);
+
+CREATE INDEX idx_password_reset_user_id ON password_reset_tokens(user_id);
+CREATE INDEX idx_password_reset_token_hash ON password_reset_tokens(token_hash);
+CREATE INDEX idx_password_reset_expires_at ON password_reset_tokens(expires_at);
+CREATE INDEX idx_password_reset_active ON password_reset_tokens(is_used, is_revoked, expires_at) WHERE is_used = false AND is_revoked = false;
+
+CREATE INDEX idx_email_verification_user_id ON email_verification_tokens(user_id);
+CREATE INDEX idx_email_verification_token_hash ON email_verification_tokens(token_hash);
+CREATE INDEX idx_email_verification_email ON email_verification_tokens(email);
+
+CREATE INDEX idx_api_keys_user_id ON api_keys(user_id);
+CREATE INDEX idx_api_keys_key_hash ON api_keys(key_hash);
+CREATE INDEX idx_api_keys_active ON api_keys(is_active, expires_at) WHERE is_active = true;
+
+CREATE INDEX idx_login_attempts_user_id ON login_attempts(user_id) WHERE user_id IS NOT NULL;
+CREATE INDEX idx_login_attempts_email ON login_attempts(email);
+CREATE INDEX idx_login_attempts_ip ON login_attempts(ip_address);
+CREATE INDEX idx_login_attempts_attempted_at ON login_attempts(attempted_at DESC);
+CREATE INDEX idx_login_attempts_failed ON login_attempts(user_id, success, attempted_at) WHERE success = false;
+
+CREATE INDEX idx_account_locks_user_id ON account_locks(user_id);
+CREATE INDEX idx_account_locks_active ON account_locks(user_id, locked_until) WHERE locked_until IS NULL OR locked_until > CURRENT_TIMESTAMP;
+
+CREATE INDEX idx_admin_activity_admin_id ON admin_activity_logs(admin_user_id);
+CREATE INDEX idx_admin_activity_resource ON admin_activity_logs(resource_type, resource_id);
+CREATE INDEX idx_admin_activity_created_at ON admin_activity_logs(created_at DESC);
+CREATE INDEX idx_admin_activity_severity ON admin_activity_logs(severity) WHERE severity IN ('critical', 'security');
 
 -- Audit and notification indexes
 CREATE INDEX idx_audit_logs_tenant ON audit_logs(tenant_id) WHERE tenant_id IS NOT NULL;
