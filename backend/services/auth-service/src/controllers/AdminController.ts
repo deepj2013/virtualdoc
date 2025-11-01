@@ -9,6 +9,7 @@ import { getDeviceId, getDeviceInfo, getDeviceType } from '../helpers/device.hel
 import { validateSignup, validateLogin } from '../validators/admin.validator';
 import { hashToken } from '../helpers/jwt.helper';
 import { SignupResponse, LoginResponse } from '../types/admin.types';
+import logger from '../utils/logger';
 
 class AdminController {
   /**
@@ -143,12 +144,27 @@ class AdminController {
         },
       };
 
+      // Audit log for security compliance
+      logger.security('Admin account created', {
+        userId: result.user.id,
+        email: result.user.email,
+        action: 'signup',
+        ipAddress: req.ip || req.socket.remoteAddress || 'unknown',
+      });
+
       res.status(201).json(response);
     } catch (error: any) {
-      console.error('Signup error:', error);
+      // Log error without exposing sensitive data
+      const signupEmail = req.body?.email ? '***REDACTED***' : undefined;
+      logger.error('Signup failed', error, {
+        action: 'signup',
+        email: signupEmail,
+      });
+      
       res.status(500).json({
         success: false,
         message: 'Internal server error',
+        // Never expose error details in production
         error: process.env.NODE_ENV === 'development' ? error.message : undefined,
       });
     }
@@ -178,6 +194,14 @@ class AdminController {
       const deviceInfo = getDeviceInfo(req);
       const ipAddress = req.ip || req.socket.remoteAddress || 'unknown';
       const userAgent = req.get('user-agent') || 'unknown';
+
+      // Audit log login attempt (before authentication)
+      logger.security('Login attempt initiated', {
+        email: '***REDACTED***', // Never log actual email in audit logs
+        ipAddress,
+        userAgent,
+        timestamp: new Date().toISOString(),
+      });
 
       // Find user
       const user = await UserService.findByEmail(email);
@@ -229,7 +253,6 @@ class AdminController {
 
       // Verify password
       if (!user.passwordHash) {
-        console.error('Login error: No password hash found for user', user.id);
         res.status(401).json({
           success: false,
           message: 'Invalid email or password',
@@ -237,13 +260,7 @@ class AdminController {
         return;
       }
 
-      console.log('Comparing password for user:', user.email);
-      console.log('Password hash exists:', !!user.passwordHash);
-      console.log('Password hash length:', user.passwordHash?.length);
-      
       const passwordValid = await comparePassword(password, user.passwordHash);
-      console.log('Password validation result:', passwordValid);
-      
       if (!passwordValid) {
         // Record failed attempt
         await LoginAttemptService.recordAttempt({
@@ -339,6 +356,17 @@ class AdminController {
         success: true,
       });
 
+      // Security audit log for successful login
+      logger.security('Admin login successful', {
+        userId: user.id,
+        email: '***REDACTED***',
+        role: user.role,
+        adminRoleCode: admin.adminRoleCode,
+        ipAddress,
+        deviceId,
+        timestamp: new Date().toISOString(),
+      });
+
       const response: LoginResponse = {
         success: true,
         message: 'Login successful',
@@ -362,10 +390,16 @@ class AdminController {
 
       res.status(200).json(response);
     } catch (error: any) {
-      console.error('Login error:', error);
+      // Log error without exposing sensitive data
+      logger.error('Login failed', error, {
+        action: 'login',
+        ipAddress: req.ip || req.socket.remoteAddress || 'unknown',
+      });
+      
       res.status(500).json({
         success: false,
         message: 'Internal server error',
+        // Never expose error details in production
         error: process.env.NODE_ENV === 'development' ? error.message : undefined,
       });
     }

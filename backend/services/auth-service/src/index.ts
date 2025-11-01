@@ -17,11 +17,29 @@ app.use(cors());
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 
-// Request logging middleware (development only)
+import logger from './utils/logger';
+
+// Request logging middleware (HIPAA compliant)
 if (process.env.NODE_ENV === 'development') {
   app.use((req: Request, res: Response, next) => {
-    console.log(`${req.method} ${req.path}`, {
-      body: req.method === 'POST' ? { ...req.body, password: '***' } : undefined,
+    // Sanitize request body before logging
+    const sanitizedBody = req.method === 'POST' && req.body
+      ? Object.keys(req.body).reduce((acc: any, key) => {
+          const lowerKey = key.toLowerCase();
+          if (lowerKey.includes('password') || lowerKey.includes('token') || lowerKey.includes('secret')) {
+            acc[key] = '***REDACTED***';
+          } else {
+            acc[key] = req.body[key];
+          }
+          return acc;
+        }, {})
+      : undefined;
+    
+    logger.debug(`${req.method} ${req.path}`, {
+      method: req.method,
+      path: req.path,
+      body: sanitizedBody,
+      ip: req.ip || req.socket.remoteAddress || 'unknown',
     });
     next();
   });
@@ -58,18 +76,29 @@ app.use((req: Request, res: Response) => {
 
 // Error handler
 app.use((err: any, req: Request, res: Response, next: any) => {
-  console.error('Error:', err);
+  logger.error('Unhandled application error', err, {
+    path: req.path,
+    method: req.method,
+    ip: req.ip || req.socket.remoteAddress || 'unknown',
+  });
+  
   res.status(err.status || 500).json({
     success: false,
     message: err.message || 'Internal server error',
+    // Never expose stack traces in production (HIPAA requirement)
     ...(process.env.NODE_ENV === 'development' && { stack: err.stack }),
   });
 });
 
 // Start server
 app.listen(PORT, () => {
-  console.log(`🚀 Auth Service running on port ${PORT}`);
-  console.log(`📡 Environment: ${process.env.NODE_ENV || 'development'}`);
-  console.log(`🔗 Admin Signup: POST http://localhost:${PORT}/api/admin/auth/signup`);
-  console.log(`🔗 Admin Login: POST http://localhost:${PORT}/api/admin/auth/login`);
+  logger.info('Auth Service started', {
+    port: PORT,
+    environment: process.env.NODE_ENV || 'development',
+    endpoints: {
+      health: `http://localhost:${PORT}/health`,
+      signup: `POST http://localhost:${PORT}/api/admin/auth/signup`,
+      login: `POST http://localhost:${PORT}/api/admin/auth/login`,
+    },
+  });
 });
