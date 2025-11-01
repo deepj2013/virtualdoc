@@ -131,48 +131,136 @@
           },
           "response": []
         },
-        {
-          "name": "Refresh Token (Future)",
-          "request": {
-            "method": "POST",
-            "header": [
-              {
-                "key": "Content-Type",
-                "value": "application/json"
+            {
+              "name": "Forgot Password",
+              "event": [
+                {
+                  "listen": "test",
+                  "script": {
+                    "exec": [
+                      "if (pm.response.code === 200) {",
+                      "    const jsonData = pm.response.json();",
+                      "    if (jsonData.success && jsonData.data && jsonData.data.otp) {",
+                      "        pm.collectionVariables.set('reset_otp', jsonData.data.otp);",
+                      "        console.log('OTP received:', jsonData.data.otp);",
+                      "    }",
+                      "}"
+                    ],
+                    "type": "text/javascript"
+                  }
+                }
+              ],
+              "request": {
+                "method": "POST",
+                "header": [
+                  {
+                    "key": "Content-Type",
+                    "value": "application/json"
+                  }
+                ],
+                "body": {
+                  "mode": "raw",
+                  "raw": "{\n  \"email\": \"admin@virtualdoc.com\"\n}",
+                  "options": {
+                    "raw": {
+                      "language": "json"
+                    }
+                  }
+                },
+                "url": {
+                  "raw": "{{base_url}}/api/admin/auth/forgot-password",
+                  "host": ["{{base_url}}"],
+                  "path": ["api", "admin", "auth", "forgot-password"]
+                },
+                "description": "Request password reset OTP. In development, OTP is returned in response and logged to console."
               },
-              {
-                "key": "Authorization",
-                "value": "Bearer {{refresh_token}}"
-              }
-            ],
-            "url": {
-              "raw": "{{base_url}}/api/admin/auth/refresh",
-              "host": ["{{base_url}}"],
-              "path": ["api", "admin", "auth", "refresh"]
+              "response": []
             },
-            "description": "Refresh access token using refresh token (To be implemented)"
-          },
-          "response": []
-        },
-        {
-          "name": "Logout (Future)",
-          "request": {
-            "method": "POST",
-            "header": [
-              {
-                "key": "Authorization",
-                "value": "Bearer {{access_token}}"
-              }
-            ],
-            "url": {
-              "raw": "{{base_url}}/api/admin/auth/logout",
-              "host": ["{{base_url}}"],
-              "path": ["api", "admin", "auth", "logout"]
+            {
+              "name": "Reset Password",
+              "request": {
+                "method": "POST",
+                "header": [
+                  {
+                    "key": "Content-Type",
+                    "value": "application/json"
+                  }
+                ],
+                "body": {
+                  "mode": "raw",
+                  "raw": "{\n  \"email\": \"admin@virtualdoc.com\",\n  \"otp\": \"{{reset_otp}}\",\n  \"newPassword\": \"NewSecurePass123!\"\n}",
+                  "options": {
+                    "raw": {
+                      "language": "json"
+                    }
+                  }
+                },
+                "url": {
+                  "raw": "{{base_url}}/api/admin/auth/reset-password",
+                  "host": ["{{base_url}}"],
+                  "path": ["api", "admin", "auth", "reset-password"]
+                },
+                "description": "Reset password using OTP received from forgot password"
+              },
+              "response": []
             },
-            "description": "Logout and revoke tokens (To be implemented)"
-          },
-          "response": []
-        }
+            {
+              "name": "Refresh Token (Future)",
+              "request": {
+                "method": "POST",
+                "header": [
+                  {
+                    "key": "Content-Type",
+                    "value": "application/json"
+                  },
+                  {
+                    "key": "Authorization",
+                    "value": "Bearer {{refresh_token}}"
+                  }
+                ],
+                "url": {
+                  "raw": "{{base_url}}/api/admin/auth/refresh",
+                  "host": ["{{base_url}}"],
+                  "path": ["api", "admin", "auth", "refresh"]
+                },
+                "description": "Refresh access token using refresh token (To be implemented)"
+              },
+              "response": []
+            },
+            {
+              "name": "Logout",
+              "event": [
+                {
+                  "listen": "test",
+                  "script": {
+                    "exec": [
+                      "if (pm.response.code === 200) {",
+                      "    pm.collectionVariables.set('access_token', '');",
+                      "    pm.collectionVariables.set('refresh_token', '');",
+                      "    console.log('Logged out successfully');",
+                      "}"
+                    ],
+                    "type": "text/javascript"
+                  }
+                }
+              ],
+              "request": {
+                "method": "POST",
+                "header": [
+                  {
+                    "key": "Authorization",
+                    "value": "Bearer {{access_token}}"
+                  }
+                ],
+                "url": {
+                  "raw": "{{base_url}}/api/admin/auth/logout",
+                  "host": ["{{base_url}}"],
+                  "path": ["api", "admin", "auth", "logout"]
+                },
+                "description": "Logout and revoke all tokens"
+              },
+              "response": []
+            }
       ],
       "description": "Authentication endpoints for Universal Admin"
     },

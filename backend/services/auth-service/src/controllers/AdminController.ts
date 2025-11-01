@@ -1,9 +1,10 @@
 import { Request, Response } from 'express';
-import { transaction } from '../config/database';
+import { transaction, query } from '../config/database';
 import UserService from '../services/UserService';
 import AdminService from '../services/AdminService';
 import TokenService from '../services/TokenService';
 import LoginAttemptService from '../services/LoginAttemptService';
+import PasswordResetService from '../services/PasswordResetService';
 import { comparePassword, validatePasswordStrength } from '../helpers/password.helper';
 import { getDeviceId, getDeviceInfo, getDeviceType } from '../helpers/device.helper';
 import { validateSignup, validateLogin } from '../validators/admin.validator';
@@ -401,6 +402,201 @@ class AdminController {
         message: 'Internal server error',
         // Never expose error details in production
         error: process.env.NODE_ENV === 'development' ? error.message : undefined,
+      });
+    }
+  };
+
+  /**
+   * Forgot Password - Generate OTP
+   * POST /api/admin/auth/forgot-password
+   */
+  forgotPassword = async (req: Request, res: Response): Promise<void> => {
+    try {
+      const { email } = req.body;
+
+      if (!email) {
+        res.status(400).json({
+          success: false,
+          message: 'Email is required',
+        });
+        return;
+      }
+
+      // Generate OTP and store
+      const { otp, expiresAt } = await PasswordResetService.requestPasswordReset(email);
+
+      // Log OTP to console (for development - remove in production)
+      logger.info('Password Reset OTP Generated', {
+        email: '***REDACTED***',
+        otpLength: otp.length,
+        expiresAt: expiresAt.toISOString(),
+      });
+
+      // In development, show OTP in console
+      if (process.env.NODE_ENV === 'development') {
+        console.log('\n🔐 ===== PASSWORD RESET OTP =====');
+        console.log(`📧 Email: ${email}`);
+        console.log(`🔢 OTP: ${otp}`);
+        console.log(`⏰ Expires at: ${expiresAt.toLocaleString()}`);
+        console.log('================================\n');
+      }
+
+      // Security audit log
+      logger.security('Password reset requested', {
+        email: '***REDACTED***',
+        ipAddress: req.ip || req.socket.remoteAddress || 'unknown',
+        timestamp: new Date().toISOString(),
+      });
+
+      res.status(200).json({
+        success: true,
+        message: 'OTP has been sent. Please check your console for development.',
+        data: {
+          // In development, include OTP for testing
+          ...(process.env.NODE_ENV === 'development' && { otp }),
+          expiresAt: expiresAt.toISOString(),
+        },
+      });
+    } catch (error: any) {
+      logger.error('Forgot password failed', error, {
+        action: 'forgot_password',
+        email: req.body?.email ? '***REDACTED***' : undefined,
+      });
+
+      // Don't reveal if user exists or not for security
+      res.status(200).json({
+        success: true,
+        message: 'If the email exists, an OTP has been sent.',
+      });
+    }
+  };
+
+  /**
+   * Reset Password with OTP
+   * POST /api/admin/auth/reset-password
+   */
+  resetPassword = async (req: Request, res: Response): Promise<void> => {
+    try {
+      const { email, otp, newPassword } = req.body;
+
+      if (!email || !otp || !newPassword) {
+        res.status(400).json({
+          success: false,
+          message: 'Email, OTP, and new password are required',
+        });
+        return;
+      }
+
+      // Verify OTP
+      const { tokenId, userId } = await PasswordResetService.verifyOTP(email, otp);
+
+      // Reset password
+      await PasswordResetService.resetPassword(tokenId, newPassword);
+
+      // Revoke all other tokens
+      await PasswordResetService.revokeAllTokens(userId);
+
+      // Security audit log
+      logger.security('Password reset completed', {
+        userId,
+        email: '***REDACTED***',
+        ipAddress: req.ip || req.socket.remoteAddress || 'unknown',
+        timestamp: new Date().toISOString(),
+      });
+
+      res.status(200).json({
+        success: true,
+        message: 'Password has been reset successfully',
+      });
+    } catch (error: any) {
+      logger.error('Reset password failed', error, {
+        action: 'reset_password',
+        email: req.body?.email ? '***REDACTED***' : undefined,
+      });
+
+      res.status(400).json({
+        success: false,
+        message: error.message || 'Invalid or expired OTP',
+      });
+    }
+  };
+
+  /**
+   * Logout - Revoke tokens
+   * POST /api/admin/auth/logout
+   */
+  logout = async (req: Request, res: Response): Promise<void> => {
+    try {
+      const authHeader = req.headers.authorization;
+      if (!authHeader || !authHeader.startsWith('Bearer ')) {
+        res.status(401).json({
+          success: false,
+          message: 'Authorization token required',
+        });
+        return;
+      }
+
+      const token = authHeader.substring(7);
+      const tokenHash = hashToken(token);
+
+      // Find token
+      const tokenResult = await query(
+        `SELECT id, user_id, token_type FROM authentication_tokens 
+         WHERE token_hash = $1 AND is_active = true AND expires_at > CURRENT_TIMESTAMP`,
+        [tokenHash]
+      );
+
+      if (tokenResult.rows.length === 0) {
+        res.status(401).json({
+          success: false,
+          message: 'Invalid token',
+        });
+        return;
+      }
+
+      const tokenRecord = tokenResult.rows[0];
+
+      // Revoke access token
+      await query(
+        'UPDATE authentication_tokens SET is_active = false, revoked_at = CURRENT_TIMESTAMP WHERE id = $1',
+        [tokenRecord.id]
+      );
+
+      // Revoke associated refresh token if exists
+      await query(
+        `UPDATE authentication_tokens 
+         SET is_active = false, revoked_at = CURRENT_TIMESTAMP 
+         WHERE user_id = $1 AND token_type = 'refresh_token' AND is_active = true`,
+        [tokenRecord.user_id]
+      );
+
+      // Deactivate session
+      await query(
+        `UPDATE user_sessions 
+         SET is_active = false, is_current = false, logged_out_at = CURRENT_TIMESTAMP 
+         WHERE user_id = $1 AND is_active = true`,
+        [tokenRecord.user_id]
+      );
+
+      // Security audit log
+      logger.security('User logged out', {
+        userId: tokenRecord.user_id,
+        ipAddress: req.ip || req.socket.remoteAddress || 'unknown',
+        timestamp: new Date().toISOString(),
+      });
+
+      res.status(200).json({
+        success: true,
+        message: 'Logged out successfully',
+      });
+    } catch (error: any) {
+      logger.error('Logout failed', error, {
+        action: 'logout',
+      });
+
+      res.status(500).json({
+        success: false,
+        message: 'Internal server error',
       });
     }
   };
