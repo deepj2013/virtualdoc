@@ -67,10 +67,26 @@ export class AdminService {
    */
   async findByUserId(userId: string): Promise<AdminUser | null> {
     const result = await query(
-      'SELECT * FROM admin_users WHERE user_id = $1',
+      `SELECT 
+        id, user_id as "userId", tenant_id as "tenantId", admin_role_id as "adminRoleId",
+        admin_role_code as "adminRoleCode", assigned_tenant_id as "assignedTenantId",
+        assigned_departments as "assignedDepartments", is_active as "isActive",
+        is_suspended as "isSuspended", suspension_reason as "suspensionReason",
+        suspended_by as "suspendedBy", suspended_at as "suspendedAt",
+        last_login_at as "lastLoginAt", password_changed_at as "passwordChangedAt",
+        requires_password_change as "requiresPasswordChange", two_factor_enabled as "twoFactorEnabled",
+        two_factor_secret as "twoFactorSecret", backup_codes as "backupCodes",
+        assigned_by as "assignedBy", assigned_at as "assignedAt",
+        created_at as "createdAt", updated_at as "updatedAt"
+      FROM admin_users WHERE user_id = $1`,
       [userId]
     );
-    return result.rows[0] as AdminUser || null;
+    
+    if (!result.rows[0]) {
+      return null;
+    }
+    
+    return result.rows[0] as AdminUser;
   }
 
   /**

@@ -44,16 +44,48 @@ export class UserService {
    * Find user by email
    */
   async findByEmail(email: string): Promise<User | null> {
-    const result = await query('SELECT * FROM users WHERE email = $1', [email.toLowerCase()]);
-    return result.rows[0] as User || null;
+    const result = await query(
+      `SELECT 
+        id, tenant_id as "tenantId", email, password_hash as "passwordHash",
+        phone, phone_verified as "phoneVerified", email_verified as "emailVerified",
+        first_name as "firstName", last_name as "lastName", middle_name as "middleName",
+        date_of_birth as "dateOfBirth", gender, profile_picture_url as "profilePictureUrl",
+        role, is_active as "isActive", last_login_at as "lastLoginAt",
+        mfa_enabled as "mfaEnabled", mfa_secret as "mfaSecret",
+        created_at as "createdAt", updated_at as "updatedAt"
+      FROM users WHERE email = $1`,
+      [email.toLowerCase()]
+    );
+    
+    if (!result.rows[0]) {
+      return null;
+    }
+    
+    return result.rows[0] as User;
   }
 
   /**
    * Find user by ID
    */
   async findById(userId: string): Promise<User | null> {
-    const result = await query('SELECT * FROM users WHERE id = $1', [userId]);
-    return result.rows[0] as User || null;
+    const result = await query(
+      `SELECT 
+        id, tenant_id as "tenantId", email, password_hash as "passwordHash",
+        phone, phone_verified as "phoneVerified", email_verified as "emailVerified",
+        first_name as "firstName", last_name as "lastName", middle_name as "middleName",
+        date_of_birth as "dateOfBirth", gender, profile_picture_url as "profilePictureUrl",
+        role, is_active as "isActive", last_login_at as "lastLoginAt",
+        mfa_enabled as "mfaEnabled", mfa_secret as "mfaSecret",
+        created_at as "createdAt", updated_at as "updatedAt"
+      FROM users WHERE id = $1`,
+      [userId]
+    );
+    
+    if (!result.rows[0]) {
+      return null;
+    }
+    
+    return result.rows[0] as User;
   }
 
   /**

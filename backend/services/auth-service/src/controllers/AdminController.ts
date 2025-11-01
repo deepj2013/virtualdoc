@@ -229,6 +229,7 @@ class AdminController {
 
       // Verify password
       if (!user.passwordHash) {
+        console.error('Login error: No password hash found for user', user.id);
         res.status(401).json({
           success: false,
           message: 'Invalid email or password',
@@ -236,7 +237,13 @@ class AdminController {
         return;
       }
 
+      console.log('Comparing password for user:', user.email);
+      console.log('Password hash exists:', !!user.passwordHash);
+      console.log('Password hash length:', user.passwordHash?.length);
+      
       const passwordValid = await comparePassword(password, user.passwordHash);
+      console.log('Password validation result:', passwordValid);
+      
       if (!passwordValid) {
         // Record failed attempt
         await LoginAttemptService.recordAttempt({
