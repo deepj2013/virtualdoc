@@ -379,6 +379,175 @@ CREATE TABLE appointment_reminders (
     created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
 );
 
+-- ============================================
+-- 16. VIDEO CALLING & MEETING MODULE
+-- ============================================
+
+CREATE TABLE video_call_sessions (
+    id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
+    tenant_id UUID REFERENCES tenants(id) ON DELETE CASCADE,
+    session_type VARCHAR(50) NOT NULL CHECK (session_type IN ('consultation', 'team_meeting', 'training', 'conference', 'other')),
+    title VARCHAR(255) NOT NULL,
+    description TEXT,
+    organizer_id UUID REFERENCES users(id) ON DELETE SET NULL,
+    appointment_id UUID REFERENCES appointments(id) ON DELETE SET NULL,
+    scheduled_start TIMESTAMP NOT NULL,
+    scheduled_end TIMESTAMP,
+    actual_start TIMESTAMP,
+    actual_end TIMESTAMP,
+    duration_minutes INTEGER,
+    meeting_room_id VARCHAR(255) UNIQUE NOT NULL,
+    meeting_room_password VARCHAR(100),
+    meeting_url TEXT NOT NULL,
+    host_url TEXT NOT NULL,
+    guest_link TEXT UNIQUE NOT NULL,
+    guest_link_expires_at TIMESTAMP,
+    max_participants INTEGER DEFAULT 100,
+    is_recording_enabled BOOLEAN DEFAULT false,
+    recording_url TEXT,
+    is_live BOOLEAN DEFAULT false,
+    status VARCHAR(50) DEFAULT 'scheduled' CHECK (status IN ('scheduled', 'in_progress', 'completed', 'cancelled', 'ended')),
+    meeting_provider VARCHAR(50) DEFAULT 'custom' CHECK (meeting_provider IN ('zoom', 'jitsi', 'custom', 'twilio', 'aws_chime')),
+    provider_session_id VARCHAR(255),
+    waiting_room_enabled BOOLEAN DEFAULT true,
+    chat_enabled BOOLEAN DEFAULT true,
+    screen_sharing_enabled BOOLEAN DEFAULT true,
+    mute_on_entry BOOLEAN DEFAULT false,
+    auto_record BOOLEAN DEFAULT false,
+    settings JSONB,
+    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+);
+
+CREATE TABLE video_call_participants (
+    id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
+    session_id UUID REFERENCES video_call_sessions(id) ON DELETE CASCADE NOT NULL,
+    user_id UUID REFERENCES users(id) ON DELETE SET NULL,
+    participant_type VARCHAR(50) NOT NULL CHECK (participant_type IN ('host', 'co_host', 'participant', 'guest', 'panelist')),
+    participant_name VARCHAR(255) NOT NULL,
+    email VARCHAR(255),
+    phone VARCHAR(20),
+    is_guest BOOLEAN DEFAULT false,
+    guest_token VARCHAR(255) UNIQUE,
+    joined_at TIMESTAMP,
+    left_at TIMESTAMP,
+    duration_minutes INTEGER,
+    status VARCHAR(50) DEFAULT 'invited' CHECK (status IN ('invited', 'joined', 'left', 'rejected', 'removed')),
+    device_type VARCHAR(50) CHECK (device_type IN ('desktop', 'mobile', 'tablet', 'phone')),
+    ip_address VARCHAR(45),
+    user_agent TEXT,
+    audio_enabled BOOLEAN DEFAULT true,
+    video_enabled BOOLEAN DEFAULT true,
+    screen_shared BOOLEAN DEFAULT false,
+    is_muted BOOLEAN DEFAULT false,
+    is_on_hold BOOLEAN DEFAULT false,
+    waiting_room_admitted_at TIMESTAMP,
+    admitted_by UUID REFERENCES users(id),
+    connection_quality VARCHAR(20) CHECK (connection_quality IN ('excellent', 'good', 'fair', 'poor')),
+    meeting_role VARCHAR(50),
+    invitation_sent_at TIMESTAMP,
+    invitation_method VARCHAR(50) CHECK (invitation_method IN ('email', 'sms', 'whatsapp', 'in_app', 'guest_link')),
+    notes TEXT,
+    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+);
+
+CREATE TABLE video_call_invitations (
+    id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
+    session_id UUID REFERENCES video_call_sessions(id) ON DELETE CASCADE NOT NULL,
+    invited_user_id UUID REFERENCES users(id) ON DELETE SET NULL,
+    invited_email VARCHAR(255),
+    invited_phone VARCHAR(20),
+    invitation_type VARCHAR(50) NOT NULL CHECK (invitation_type IN ('email', 'sms', 'whatsapp', 'in_app', 'guest_link')),
+    invitation_token VARCHAR(255) UNIQUE,
+    invitation_url TEXT,
+    sent_by UUID REFERENCES users(id),
+    sent_at TIMESTAMP,
+    status VARCHAR(50) DEFAULT 'pending' CHECK (status IN ('pending', 'sent', 'delivered', 'opened', 'accepted', 'declined', 'failed')),
+    opened_at TIMESTAMP,
+    responded_at TIMESTAMP,
+    response VARCHAR(50) CHECK (response IN ('accepted', 'declined', 'tentative')),
+    reminder_sent BOOLEAN DEFAULT false,
+    last_reminder_sent_at TIMESTAMP,
+    error_message TEXT,
+    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+);
+
+CREATE TABLE video_call_recordings (
+    id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
+    session_id UUID REFERENCES video_call_sessions(id) ON DELETE CASCADE NOT NULL,
+    recording_type VARCHAR(50) NOT NULL CHECK (recording_type IN ('full', 'audio_only', 'screen_only', 'transcript')),
+    file_name VARCHAR(255) NOT NULL,
+    file_path TEXT NOT NULL,
+    file_url TEXT,
+    file_size_bytes BIGINT,
+    duration_seconds INTEGER,
+    format VARCHAR(50) CHECK (format IN ('mp4', 'mp3', 'webm', 'transcript')),
+    storage_provider VARCHAR(50) DEFAULT 's3' CHECK (storage_provider IN ('s3', 'azure', 'gcs', 'local')),
+    storage_bucket VARCHAR(255),
+    is_encrypted BOOLEAN DEFAULT true,
+    encryption_key_id VARCHAR(255),
+    access_level VARCHAR(50) DEFAULT 'private' CHECK (access_level IN ('public', 'private', 'restricted', 'patients_only')),
+    transcribed BOOLEAN DEFAULT false,
+    transcript_url TEXT,
+    transcription_status VARCHAR(50) CHECK (transcription_status IN ('pending', 'processing', 'completed', 'failed')),
+    recording_start TIMESTAMP NOT NULL,
+    recording_end TIMESTAMP NOT NULL,
+    recording_status VARCHAR(50) DEFAULT 'processing' CHECK (recording_status IN ('processing', 'completed', 'failed', 'deleted')),
+    uploaded_by UUID REFERENCES users(id),
+    uploaded_at TIMESTAMP,
+    deleted_at TIMESTAMP,
+    retention_days INTEGER DEFAULT 365,
+    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+);
+
+CREATE TABLE video_call_chat_messages (
+    id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
+    session_id UUID REFERENCES video_call_sessions(id) ON DELETE CASCADE NOT NULL,
+    sender_id UUID REFERENCES users(id) ON DELETE SET NULL,
+    sender_name VARCHAR(255) NOT NULL,
+    sender_type VARCHAR(50) CHECK (sender_type IN ('host', 'participant', 'guest')),
+    message_type VARCHAR(50) DEFAULT 'text' CHECK (message_type IN ('text', 'file', 'image', 'system')),
+    message_content TEXT NOT NULL,
+    attachment_url TEXT,
+    attachment_name VARCHAR(255),
+    is_private BOOLEAN DEFAULT false,
+    recipient_id UUID REFERENCES users(id) ON DELETE SET NULL,
+    recipient_email VARCHAR(255),
+    is_pinned BOOLEAN DEFAULT false,
+    pinned_by UUID REFERENCES users(id),
+    is_edited BOOLEAN DEFAULT false,
+    edited_at TIMESTAMP,
+    is_deleted BOOLEAN DEFAULT false,
+    deleted_at TIMESTAMP,
+    read_by TEXT[],
+    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+);
+
+CREATE TABLE video_call_settings (
+    id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
+    tenant_id UUID REFERENCES tenants(id) ON DELETE CASCADE,
+    user_id UUID REFERENCES users(id) ON DELETE CASCADE,
+    setting_type VARCHAR(50) NOT NULL CHECK (setting_type IN ('default_meeting_settings', 'user_preferences')),
+    default_duration_minutes INTEGER DEFAULT 60,
+    default_max_participants INTEGER DEFAULT 100,
+    auto_record BOOLEAN DEFAULT false,
+    waiting_room_enabled BOOLEAN DEFAULT true,
+    mute_on_entry BOOLEAN DEFAULT false,
+    require_password BOOLEAN DEFAULT false,
+    default_password VARCHAR(100),
+    guest_link_enabled BOOLEAN DEFAULT true,
+    guest_link_expires_hours INTEGER,
+    require_registration BOOLEAN DEFAULT false,
+    provider VARCHAR(50) DEFAULT 'custom',
+    settings JSONB,
+    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    UNIQUE(tenant_id, user_id, setting_type)
+);
+
 -- Continue with remaining modules...
 -- (Due to length, see separate files for complete schema)
 
@@ -425,6 +594,20 @@ CREATE INDEX idx_prescriptions_status ON prescriptions(status);
 CREATE INDEX idx_medical_reports_patient ON medical_reports(patient_id);
 CREATE INDEX idx_medical_reports_status ON medical_reports(status);
 CREATE INDEX idx_medical_reports_type ON medical_reports(report_type);
+
+-- Video call indexes
+CREATE INDEX idx_video_call_sessions_tenant ON video_call_sessions(tenant_id);
+CREATE INDEX idx_video_call_sessions_organizer ON video_call_sessions(organizer_id);
+CREATE INDEX idx_video_call_sessions_appointment ON video_call_sessions(appointment_id);
+CREATE INDEX idx_video_call_sessions_room_id ON video_call_sessions(meeting_room_id);
+CREATE INDEX idx_video_call_sessions_guest_link ON video_call_sessions(guest_link);
+CREATE INDEX idx_video_call_sessions_status ON video_call_sessions(status);
+CREATE INDEX idx_participants_session ON video_call_participants(session_id);
+CREATE INDEX idx_participants_guest_token ON video_call_participants(guest_token);
+CREATE INDEX idx_invitations_session ON video_call_invitations(session_id);
+CREATE INDEX idx_invitations_token ON video_call_invitations(invitation_token);
+CREATE INDEX idx_recordings_session ON video_call_recordings(session_id);
+CREATE INDEX idx_chat_messages_session ON video_call_chat_messages(session_id);
 
 -- Audit and notification indexes
 CREATE INDEX idx_audit_logs_tenant ON audit_logs(tenant_id) WHERE tenant_id IS NOT NULL;

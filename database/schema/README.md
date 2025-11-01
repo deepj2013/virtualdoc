@@ -16,7 +16,7 @@ This directory contains the complete database schema design for the VirtualDoc S
 
 ## 🗄️ Schema Overview
 
-### Total Tables: 60+ tables across 15 modules
+### Total Tables: 67+ tables across 16 modules
 
 #### Module Breakdown:
 1. **Multi-Tenant & Organization** (4 tables)
@@ -37,31 +37,34 @@ This directory contains the complete database schema design for the VirtualDoc S
 6. **Telemedicine** (2 tables)
    - telemedicine_consultations, telemedicine_messages
 
-7. **Healthcare Providers** (4 tables)
+7. **Video Calling & Meetings** (7 tables)
+   - video_call_sessions, video_call_participants, video_call_invitations, video_call_recordings, video_call_chat_messages, video_call_analytics, video_call_settings
+
+8. **Healthcare Providers** (4 tables)
    - healthcare_providers, provider_services, provider_orders, order_items
 
-8. **Communication** (3 tables)
+9. **Communication** (3 tables)
    - communication_templates, communications, communication_configurations
 
-9. **Inventory Management** (5 tables)
+10. **Inventory Management** (5 tables)
    - inventory_categories, inventory_items, inventory_stock, inventory_transactions, inventory_orders
 
-10. **HR Management** (5 tables)
+11. **HR Management** (5 tables)
     - employees, employee_attendance, leave_types, employee_leaves, payroll
 
-11. **Care Management** (3 tables)
+12. **Care Management** (3 tables)
     - caregivers, patient_care_assignments, caregiver_visits
 
-12. **Billing & Payments** (4 tables)
+13. **Billing & Payments** (4 tables)
     - invoices, invoice_items, payments, insurance_claims
 
-13. **Reporting & Analytics** (3 tables)
+14. **Reporting & Analytics** (3 tables)
     - custom_reports, report_schedules, analytics_events
 
-14. **Notifications** (3 tables)
+15. **Notifications** (3 tables)
     - notification_templates, notifications, user_notification_preferences
 
-15. **System Configuration** (4 tables)
+16. **System Configuration** (4 tables)
     - system_settings, tenant_domains, audit_logs, file_storage
 
 ## 🎨 Viewing the ER Diagram
@@ -117,6 +120,8 @@ The schema is designed for PostgreSQL with:
 ✅ Medical report uploads (Lab, MRI, Imaging)
 ✅ Appointment scheduling with rosters
 ✅ Telemedicine consultations
+✅ Video calling with guest links (Doctor-Patient, Team Meetings)
+✅ Meeting recording and transcription
 ✅ Healthcare provider integration (Labs, MRI, Chemist)
 ✅ Email, SMS, WhatsApp notifications
 ✅ Inventory management
