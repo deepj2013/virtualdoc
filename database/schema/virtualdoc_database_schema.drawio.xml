@@ -1,0 +1,203 @@
+<mxfile host="app.diagrams.net">
+  <diagram name="VirtualDoc Complete Database Schema" id="virtualdoc-schema">
+    <mxGraphModel dx="2074" dy="1154" grid="1" gridSize="10" guides="1" tooltips="1" connect="1" arrows="1" fold="1" page="1" pageScale="1" pageWidth="3300" pageHeight="4681" math="0" shadow="0">
+      <root>
+        <mxCell id="0" />
+        <mxCell id="1" parent="0" />
+        
+        <!-- Multi-Tenant Module -->
+        <mxCell id="tenants" value="&lt;b&gt;tenants&lt;/b&gt;&lt;br&gt;─────────────────&lt;br&gt;id: UUID&lt;br&gt;name: VARCHAR(255)&lt;br&gt;slug: VARCHAR(100) UNIQUE&lt;br&gt;type: VARCHAR(50)&lt;br&gt;custom_domain: VARCHAR(255)&lt;br&gt;subdomain: VARCHAR(100)&lt;br&gt;is_active: BOOLEAN&lt;br&gt;subscription_tier: VARCHAR(50)&lt;br&gt;subscription_start: DATE&lt;br&gt;subscription_end: DATE&lt;br&gt;max_users: INTEGER&lt;br&gt;max_patients: INTEGER&lt;br&gt;max_storage_gb: INTEGER&lt;br&gt;created_at: TIMESTAMP&lt;br&gt;updated_at: TIMESTAMP" style="swimlane;fontStyle=0;childLayout=stackLayout;horizontal=1;startSize=30;horizontalStack=0;resizeParent=1;resizeParentMax=0;resizeLast=0;collapsible=1;marginBottom=0;whiteSpace=wrap;html=1;fillColor=#dae8fc;strokeColor=#6c8ebf;" vertex="1" parent="1">
+          <mxGeometry x="80" y="80" width="240" height="390" as="geometry" />
+        </mxCell>
+        
+        <mxCell id="tenant_config" value="&lt;b&gt;tenant_configurations&lt;/b&gt;&lt;br&gt;─────────────────&lt;br&gt;id: UUID&lt;br&gt;tenant_id: UUID FK&lt;br&gt;config_key: VARCHAR(100)&lt;br&gt;config_value: TEXT&lt;br&gt;config_type: VARCHAR(50)&lt;br&gt;is_active: BOOLEAN&lt;br&gt;created_at: TIMESTAMP&lt;br&gt;updated_at: TIMESTAMP" style="swimlane;fontStyle=0;childLayout=stackLayout;horizontal=1;startSize=30;horizontalStack=0;resizeParent=1;resizeParentMax=0;resizeLast=0;collapsible=1;marginBottom=0;whiteSpace=wrap;html=1;fillColor=#dae8fc;strokeColor=#6c8ebf;" vertex="1" parent="1">
+          <mxGeometry x="400" y="80" width="260" height="250" as="geometry" />
+        </mxCell>
+        
+        <mxCell id="tenant_modules" value="&lt;b&gt;tenant_modules&lt;/b&gt;&lt;br&gt;─────────────────&lt;br&gt;id: UUID&lt;br&gt;tenant_id: UUID FK&lt;br&gt;module_name: VARCHAR(100)&lt;br&gt;is_enabled: BOOLEAN&lt;br&gt;configured_at: TIMESTAMP&lt;br&gt;created_at: TIMESTAMP" style="swimlane;fontStyle=0;childLayout=stackLayout;horizontal=1;startSize=30;horizontalStack=0;resizeParent=1;resizeParentMax=0;resizeLast=0;collapsible=1;marginBottom=0;whiteSpace=wrap;html=1;fillColor=#dae8fc;strokeColor=#6c8ebf;" vertex="1" parent="1">
+          <mxGeometry x="400" y="380" width="260" height="200" as="geometry" />
+        </mxCell>
+        
+        <mxCell id="departments" value="&lt;b&gt;departments&lt;/b&gt;&lt;br&gt;─────────────────&lt;br&gt;id: UUID&lt;br&gt;tenant_id: UUID FK&lt;br&gt;name: VARCHAR(255)&lt;br&gt;code: VARCHAR(50)&lt;br&gt;description: TEXT&lt;br&gt;head_doctor_id: UUID FK&lt;br&gt;is_active: BOOLEAN&lt;br&gt;created_at: TIMESTAMP&lt;br&gt;updated_at: TIMESTAMP" style="swimlane;fontStyle=0;childLayout=stackLayout;horizontal=1;startSize=30;horizontalStack=0;resizeParent=1;resizeParentMax=0;resizeLast=0;collapsible=1;marginBottom=0;whiteSpace=wrap;html=1;fillColor=#dae8fc;strokeColor=#6c8ebf;" vertex="1" parent="1">
+          <mxGeometry x="80" y="520" width="240" height="260" as="geometry" />
+        </mxCell>
+        
+        <!-- User & Authentication Module -->
+        <mxCell id="users" value="&lt;b&gt;users&lt;/b&gt;&lt;br&gt;─────────────────&lt;br&gt;id: UUID&lt;br&gt;tenant_id: UUID FK&lt;br&gt;email: VARCHAR(255)&lt;br&gt;password_hash: VARCHAR(255)&lt;br&gt;phone: VARCHAR(20)&lt;br&gt;first_name: VARCHAR(100)&lt;br&gt;last_name: VARCHAR(100)&lt;br&gt;date_of_birth: DATE&lt;br&gt;gender: VARCHAR(20)&lt;br&gt;role: VARCHAR(50)&lt;br&gt;is_active: BOOLEAN&lt;br&gt;last_login_at: TIMESTAMP&lt;br&gt;mfa_enabled: BOOLEAN&lt;br&gt;created_at: TIMESTAMP&lt;br&gt;updated_at: TIMESTAMP" style="swimlane;fontStyle=0;childLayout=stackLayout;horizontal=1;startSize=30;horizontalStack=0;resizeParent=1;resizeParentMax=0;resizeLast=0;collapsible=1;marginBottom=0;whiteSpace=wrap;html=1;fillColor=#fff2cc;strokeColor=#d6b656;" vertex="1" parent="1">
+          <mxGeometry x="800" y="80" width="280" height="420" as="geometry" />
+        </mxCell>
+        
+        <mxCell id="user_roles" value="&lt;b&gt;user_roles&lt;/b&gt;&lt;br&gt;─────────────────&lt;br&gt;id: UUID&lt;br&gt;user_id: UUID FK&lt;br&gt;role: VARCHAR(50)&lt;br&gt;tenant_id: UUID FK&lt;br&gt;department_id: UUID FK&lt;br&gt;assigned_by: UUID FK&lt;br&gt;assigned_at: TIMESTAMP&lt;br&gt;is_active: BOOLEAN" style="swimlane;fontStyle=0;childLayout=stackLayout;horizontal=1;startSize=30;horizontalStack=0;resizeParent=1;resizeParentMax=0;resizeLast=0;collapsible=1;marginBottom=0;whiteSpace=wrap;html=1;fillColor=#fff2cc;strokeColor=#d6b656;" vertex="1" parent="1">
+          <mxGeometry x="800" y="560" width="280" height="220" as="geometry" />
+        </mxCell>
+        
+        <mxCell id="permissions" value="&lt;b&gt;permissions&lt;/b&gt;&lt;br&gt;─────────────────&lt;br&gt;id: UUID&lt;br&gt;name: VARCHAR(100)&lt;br&gt;code: VARCHAR(100)&lt;br&gt;module: VARCHAR(100)&lt;br&gt;description: TEXT&lt;br&gt;created_at: TIMESTAMP" style="swimlane;fontStyle=0;childLayout=stackLayout;horizontal=1;startSize=30;horizontalStack=0;resizeParent=1;resizeParentMax=0;resizeLast=0;collapsible=1;marginBottom=0;whiteSpace=wrap;html=1;fillColor=#fff2cc;strokeColor=#d6b656;" vertex="1" parent="1">
+          <mxGeometry x="1160" y="80" width="240" height="200" as="geometry" />
+        </mxCell>
+        
+        <mxCell id="role_permissions" value="&lt;b&gt;role_permissions&lt;/b&gt;&lt;br&gt;─────────────────&lt;br&gt;id: UUID&lt;br&gt;role: VARCHAR(50)&lt;br&gt;permission_id: UUID FK&lt;br&gt;can_read: BOOLEAN&lt;br&gt;can_write: BOOLEAN&lt;br&gt;can_delete: BOOLEAN&lt;br&gt;can_manage: BOOLEAN&lt;br&gt;created_at: TIMESTAMP" style="swimlane;fontStyle=0;childLayout=stackLayout;horizontal=1;startSize=30;horizontalStack=0;resizeParent=1;resizeParentMax=0;resizeLast=0;resizeLast=0;collapsible=1;marginBottom=0;whiteSpace=wrap;html=1;fillColor=#fff2cc;strokeColor=#d6b656;" vertex="1" parent="1">
+          <mxGeometry x="1160" y="340" width="240" height="220" as="geometry" />
+        </mxCell>
+        
+        <!-- Patient Management Module -->
+        <mxCell id="patients" value="&lt;b&gt;patients&lt;/b&gt;&lt;br&gt;─────────────────&lt;br&gt;id: UUID&lt;br&gt;tenant_id: UUID FK&lt;br&gt;user_id: UUID FK&lt;br&gt;patient_number: VARCHAR(50) UNIQUE&lt;br&gt;first_name: VARCHAR(100)&lt;br&gt;last_name: VARCHAR(100)&lt;br&gt;date_of_birth: DATE&lt;br&gt;gender: VARCHAR(20)&lt;br&gt;blood_group: VARCHAR(10)&lt;br&gt;phone: VARCHAR(20)&lt;br&gt;email: VARCHAR(255)&lt;br&gt;address: TEXT&lt;br&gt;emergency_contact: TEXT&lt;br&gt;insurance_provider: VARCHAR(255)&lt;br&gt;abha_id: VARCHAR(50)&lt;br&gt;is_active: BOOLEAN&lt;br&gt;created_at: TIMESTAMP&lt;br&gt;updated_at: TIMESTAMP" style="swimlane;fontStyle=0;childLayout=stackLayout;horizontal=1;startSize=30;horizontalStack=0;resizeParent=1;resizeParentMax=0;resizeLast=0;collapsible=1;marginBottom=0;whiteSpace=wrap;html=1;fillColor=#d5e8d4;strokeColor=#82b366;" vertex="1" parent="1">
+          <mxGeometry x="80" y="900" width="280" height="420" as="geometry" />
+        </mxCell>
+        
+        <mxCell id="patient_family" value="&lt;b&gt;patient_family&lt;/b&gt;&lt;br&gt;─────────────────&lt;br&gt;id: UUID&lt;br&gt;patient_id: UUID FK&lt;br&gt;family_member_id: UUID FK&lt;br&gt;relationship: VARCHAR(50)&lt;br&gt;is_primary_contact: BOOLEAN&lt;br&gt;can_access_records: BOOLEAN&lt;br&gt;created_at: TIMESTAMP" style="swimlane;fontStyle=0;childLayout=stackLayout;horizontal=1;startSize=30;horizontalStack=0;resizeParent=1;resizeParentMax=0;resizeLast=0;collapsible=1;marginBottom=0;whiteSpace=wrap;html=1;fillColor=#d5e8d4;strokeColor=#82b366;" vertex="1" parent="1">
+          <mxGeometry x="420" y="900" width="280" height="220" as="geometry" />
+        </mxCell>
+        
+        <mxCell id="patient_allergies" value="&lt;b&gt;patient_allergies&lt;/b&gt;&lt;br&gt;─────────────────&lt;br&gt;id: UUID&lt;br&gt;patient_id: UUID FK&lt;br&gt;allergen_name: VARCHAR(255)&lt;br&gt;allergen_type: VARCHAR(50)&lt;br&gt;severity: VARCHAR(20)&lt;br&gt;reaction_description: TEXT&lt;br&gt;first_observed: DATE&lt;br&gt;diagnosed_by: UUID FK&lt;br&gt;is_active: BOOLEAN&lt;br&gt;created_at: TIMESTAMP&lt;br&gt;updated_at: TIMESTAMP" style="swimlane;fontStyle=0;childLayout=stackLayout;horizontal=1;startSize=30;horizontalStack=0;resizeParent=1;resizeParentMax=0;resizeLast=0;collapsible=1;marginBottom=0;whiteSpace=wrap;html=1;fillColor=#d5e8d4;strokeColor=#82b366;" vertex="1" parent="1">
+          <mxGeometry x="420" y="1180" width="280" height="280" as="geometry" />
+        </mxCell>
+        
+        <mxCell id="patient_past_illnesses" value="&lt;b&gt;patient_past_illnesses&lt;/b&gt;&lt;br&gt;─────────────────&lt;br&gt;id: UUID&lt;br&gt;patient_id: UUID FK&lt;br&gt;illness_name: VARCHAR(255)&lt;br&gt;icd_code: VARCHAR(20)&lt;br&gt;diagnosis_date: DATE&lt;br&gt;resolved_date: DATE&lt;br&gt;status: VARCHAR(50)&lt;br&gt;notes: TEXT&lt;br&gt;diagnosed_by: UUID FK&lt;br&gt;created_at: TIMESTAMP&lt;br&gt;updated_at: TIMESTAMP" style="swimlane;fontStyle=0;childLayout=stackLayout;horizontal=1;startSize=30;horizontalStack=0;resizeParent=1;resizeParentMax=0;resizeLast=0;collapsible=1;marginBottom=0;whiteSpace=wrap;html=1;fillColor=#d5e8d4;strokeColor=#82b366;" vertex="1" parent="1">
+          <mxGeometry x="420" y="1520" width="280" height="260" as="geometry" />
+        </mxCell>
+        
+        <!-- Medical Records Module -->
+        <mxCell id="medical_records" value="&lt;b&gt;medical_records&lt;/b&gt;&lt;br&gt;─────────────────&lt;br&gt;id: UUID&lt;br&gt;tenant_id: UUID FK&lt;br&gt;patient_id: UUID FK&lt;br&gt;record_type: VARCHAR(50)&lt;br&gt;visit_date: TIMESTAMP&lt;br&gt;doctor_id: UUID FK&lt;br&gt;department_id: UUID FK&lt;br&gt;chief_complaint: TEXT&lt;br&gt;diagnosis: TEXT&lt;br&gt;icd_codes: TEXT[]&lt;br&gt;notes: TEXT&lt;br&gt;follow_up_date: DATE&lt;br&gt;is_confidential: BOOLEAN&lt;br&gt;created_by: UUID FK&lt;br&gt;created_at: TIMESTAMP&lt;br&gt;updated_at: TIMESTAMP" style="swimlane;fontStyle=0;childLayout=stackLayout;horizontal=1;startSize=30;horizontalStack=0;resizeParent=1;resizeParentMax=0;resizeLast=0;collapsible=1;marginBottom=0;whiteSpace=wrap;html=1;fillColor=#f8cecc;strokeColor=#b85450;" vertex="1" parent="1">
+          <mxGeometry x="800" y="900" width="280" height="380" as="geometry" />
+        </mxCell>
+        
+        <mxCell id="prescriptions" value="&lt;b&gt;prescriptions&lt;/b&gt;&lt;br&gt;─────────────────&lt;br&gt;id: UUID&lt;br&gt;medical_record_id: UUID FK&lt;br&gt;patient_id: UUID FK&lt;br&gt;doctor_id: UUID FK&lt;br&gt;prescription_number: VARCHAR(50)&lt;br&gt;issue_date: TIMESTAMP&lt;br&gt;valid_until: DATE&lt;br&gt;instructions: TEXT&lt;br&gt;follow_up_required: BOOLEAN&lt;br&gt;is_telemedicine: BOOLEAN&lt;br&gt;status: VARCHAR(50)&lt;br&gt;created_at: TIMESTAMP&lt;br&gt;updated_at: TIMESTAMP" style="swimlane;fontStyle=0;childLayout=stackLayout;horizontal=1;startSize=30;horizontalStack=0;resizeParent=1;resizeParentMax=0;resizeLast=0;collapsible=1;marginBottom=0;whiteSpace=wrap;html=1;fillColor=#f8cecc;strokeColor=#b85450;" vertex="1" parent="1">
+          <mxGeometry x="800" y="1360" width="280" height="300" as="geometry" />
+        </mxCell>
+        
+        <mxCell id="prescription_items" value="&lt;b&gt;prescription_items&lt;/b&gt;&lt;br&gt;─────────────────&lt;br&gt;id: UUID&lt;br&gt;prescription_id: UUID FK&lt;br&gt;medicine_name: VARCHAR(255)&lt;br&gt;generic_name: VARCHAR(255)&lt;br&gt;dosage: VARCHAR(100)&lt;br&gt;frequency: VARCHAR(100)&lt;br&gt;duration: VARCHAR(100)&lt;br&gt;quantity: INTEGER&lt;br&gt;instructions: TEXT&lt;br&gt;route: VARCHAR(50)&lt;br&gt;timing: VARCHAR(100)&lt;br&gt;created_at: TIMESTAMP" style="swimlane;fontStyle=0;childLayout=stackLayout;horizontal=1;startSize=30;horizontalStack=0;resizeParent=1;resizeParentMax=0;resizeLast=0;collapsible=1;marginBottom=0;whiteSpace=wrap;html=1;fillColor=#f8cecc;strokeColor=#b85450;" vertex="1" parent="1">
+          <mxGeometry x="800" y="1720" width="280" height="300" as="geometry" />
+        </mxCell>
+        
+        <mxCell id="medical_reports" value="&lt;b&gt;medical_reports&lt;/b&gt;&lt;br&gt;─────────────────&lt;br&gt;id: UUID&lt;br&gt;medical_record_id: UUID FK&lt;br&gt;patient_id: UUID FK&lt;br&gt;report_type: VARCHAR(50)&lt;br&gt;report_name: VARCHAR(255)&lt;br&gt;provider_id: UUID&lt;br&gt;ordered_by: UUID FK&lt;br&gt;order_date: TIMESTAMP&lt;br&gt;report_date: TIMESTAMP&lt;br&gt;status: VARCHAR(50)&lt;br&gt;findings: TEXT&lt;br&gt;interpretation: TEXT&lt;br&gt;is_critical: BOOLEAN&lt;br&gt;created_at: TIMESTAMP&lt;br&gt;updated_at: TIMESTAMP" style="swimlane;fontStyle=0;childLayout=stackLayout;horizontal=1;startSize=30;horizontalStack=0;resizeParent=1;resizeParentMax=0;resizeLast=0;collapsible=1;marginBottom=0;whiteSpace=wrap;html=1;fillColor=#f8cecc;strokeColor=#b85450;" vertex="1" parent="1">
+          <mxGeometry x="1160" y="900" width="280" height="340" as="geometry" />
+        </mxCell>
+        
+        <mxCell id="report_files" value="&lt;b&gt;report_files&lt;/b&gt;&lt;br&gt;─────────────────&lt;br&gt;id: UUID&lt;br&gt;medical_report_id: UUID FK&lt;br&gt;file_name: VARCHAR(255)&lt;br&gt;file_path: TEXT&lt;br&gt;file_type: VARCHAR(50)&lt;br&gt;file_size_bytes: BIGINT&lt;br&gt;uploaded_by: UUID FK&lt;br&gt;uploaded_at: TIMESTAMP&lt;br&gt;is_encrypted: BOOLEAN" style="swimlane;fontStyle=0;childLayout=stackLayout;horizontal=1;startSize=30;horizontalStack=0;resizeParent=1;resizeParentMax=0;resizeLast=0;collapsible=1;marginBottom=0;whiteSpace=wrap;html=1;fillColor=#f8cecc;strokeColor=#b85450;" vertex="1" parent="1">
+          <mxGeometry x="1160" y="1300" width="280" height="260" as="geometry" />
+        </mxCell>
+        
+        <mxCell id="report_results" value="&lt;b&gt;report_results&lt;/b&gt;&lt;br&gt;─────────────────&lt;br&gt;id: UUID&lt;br&gt;medical_report_id: UUID FK&lt;br&gt;test_name: VARCHAR(255)&lt;br&gt;test_code: VARCHAR(50)&lt;br&gt;result_value: VARCHAR(255)&lt;br&gt;unit: VARCHAR(50)&lt;br&gt;normal_range: VARCHAR(100)&lt;br&gt;abnormal_flag: VARCHAR(20)&lt;br&gt;notes: TEXT&lt;br&gt;created_at: TIMESTAMP" style="swimlane;fontStyle=0;childLayout=stackLayout;horizontal=1;startSize=30;horizontalStack=0;resizeParent=1;resizeParentMax=0;resizeLast=0;collapsible=1;marginBottom=0;whiteSpace=wrap;html=1;fillColor=#f8cecc;strokeColor=#b85450;" vertex="1" parent="1">
+          <mxGeometry x="1160" y="1620" width="280" height="280" as="geometry" />
+        </mxCell>
+        
+        <!-- Appointments Module -->
+        <mxCell id="doctor_rosters" value="&lt;b&gt;doctor_rosters&lt;/b&gt;&lt;br&gt;─────────────────&lt;br&gt;id: UUID&lt;br&gt;tenant_id: UUID FK&lt;br&gt;doctor_id: UUID FK&lt;br&gt;department_id: UUID FK&lt;br&gt;roster_date: DATE&lt;br&gt;start_time: TIME&lt;br&gt;end_time: TIME&lt;br&gt;slot_duration_minutes: INTEGER&lt;br&gt;consultation_type: VARCHAR(50)&lt;br&gt;max_appointments: INTEGER&lt;br&gt;is_available: BOOLEAN&lt;br&gt;notes: TEXT&lt;br&gt;created_at: TIMESTAMP&lt;br&gt;updated_at: TIMESTAMP" style="swimlane;fontStyle=0;childLayout=stackLayout;horizontal=1;startSize=30;horizontalStack=0;resizeParent=1;resizeParentMax=0;resizeLast=0;collapsible=1;marginBottom=0;whiteSpace=wrap;html=1;fillColor=#e1d5e7;strokeColor=#9673a6;" vertex="1" parent="1">
+          <mxGeometry x="1520" y="80" width="280" height="320" as="geometry" />
+        </mxCell>
+        
+        <mxCell id="appointments" value="&lt;b&gt;appointments&lt;/b&gt;&lt;br&gt;─────────────────&lt;br&gt;id: UUID&lt;br&gt;tenant_id: UUID FK&lt;br&gt;appointment_number: VARCHAR(50)&lt;br&gt;patient_id: UUID FK&lt;br&gt;doctor_id: UUID FK&lt;br&gt;department_id: UUID FK&lt;br&gt;appointment_date: DATE&lt;br&gt;appointment_time: TIME&lt;br&gt;appointment_type: VARCHAR(50)&lt;br&gt;status: VARCHAR(50)&lt;br&gt;reason: TEXT&lt;br&gt;chief_complaint: TEXT&lt;br&gt;priority: VARCHAR(20)&lt;br&gt;consultation_fee: DECIMAL(10,2)&lt;br&gt;payment_status: VARCHAR(50)&lt;br&gt;booking_source: VARCHAR(50)&lt;br&gt;booked_by: UUID FK&lt;br&gt;created_at: TIMESTAMP&lt;br&gt;updated_at: TIMESTAMP" style="swimlane;fontStyle=0;childLayout=stackLayout;horizontal=1;startSize=30;horizontalStack=0;resizeParent=1;resizeParentMax=0;resizeLast=0;collapsible=1;marginBottom=0;whiteSpace=wrap;html=1;fillColor=#e1d5e7;strokeColor=#9673a6;" vertex="1" parent="1">
+          <mxGeometry x="1520" y="460" width="280" height="420" as="geometry" />
+        </mxCell>
+        
+        <!-- Relationships -->
+        <mxCell id="rel1" value="" style="endArrow=ERmany;startArrow=ERone;html=1;rounded=0;exitX=0.5;exitY=0;exitDx=0;exitDy=0;entryX=0.5;entryY=1;entryDx=0;entryDy=0;" edge="1" parent="1" source="tenant_config" target="tenants">
+          <mxGeometry width="100" height="100" relative="1" as="geometry" />
+        </mxCell>
+        
+        <mxCell id="rel2" value="" style="endArrow=ERmany;startArrow=ERone;html=1;rounded=0;exitX=0.5;exitY=0;exitDx=0;exitDy=0;entryX=0.5;entryY=1;entryDx=0;entryDy=0;" edge="1" parent="1" source="tenant_modules" target="tenants">
+          <mxGeometry width="100" height="100" relative="1" as="geometry" />
+        </mxCell>
+        
+        <mxCell id="rel3" value="" style="endArrow=ERmany;startArrow=ERone;html=1;rounded=0;exitX=0.5;exitY=0;exitDx=0;exitDy=0;entryX=0.5;entryY=1;entryDx=0;entryDy=0;" edge="1" parent="1" source="departments" target="tenants">
+          <mxGeometry width="100" height="100" relative="1" as="geometry" />
+        </mxCell>
+        
+        <mxCell id="rel4" value="" style="endArrow=ERmany;startArrow=ERone;html=1;rounded=0;exitX=0.5;exitY=0;exitDx=0;exitDy=0;entryX=0.5;entryY=1;entryDx=0;entryDy=0;" edge="1" parent="1" source="users" target="tenants">
+          <mxGeometry width="100" height="100" relative="1" as="geometry" />
+        </mxCell>
+        
+        <mxCell id="rel5" value="" style="endArrow=ERmany;startArrow=ERone;html=1;rounded=0;exitX=0.5;exitY=0;exitDx=0;exitDy=0;entryX=0.5;entryY=1;entryDx=0;entryDy=0;" edge="1" parent="1" source="user_roles" target="users">
+          <mxGeometry width="100" height="100" relative="1" as="geometry" />
+        </mxCell>
+        
+        <mxCell id="rel6" value="" style="endArrow=ERmany;startArrow=ERone;html=1;rounded=0;exitX=0.5;exitY=0;exitDx=0;exitDy=0;entryX=0.5;entryY=1;entryDx=0;entryDy=0;" edge="1" parent="1" source="role_permissions" target="permissions">
+          <mxGeometry width="100" height="100" relative="1" as="geometry" />
+        </mxCell>
+        
+        <mxCell id="rel7" value="" style="endArrow=ERmany;startArrow=ERone;html=1;rounded=0;exitX=0.5;exitY=0;exitDx=0;exitDy=0;entryX=0.5;entryY=1;entryDx=0;entryDy=0;" edge="1" parent="1" source="patients" target="tenants">
+          <mxGeometry width="100" height="100" relative="1" as="geometry" />
+        </mxCell>
+        
+        <mxCell id="rel8" value="" style="endArrow=ERmany;startArrow=ERone;html=1;rounded=0;exitX=0.5;exitY=0;exitDx=0;exitDy=0;entryX=0.5;entryY=1;entryDx=0;entryDy=0;" edge="1" parent="1" source="patients" target="users">
+          <mxGeometry width="100" height="100" relative="1" as="geometry">
+            <mxPoint x="340" y="1100" as="sourcePoint" />
+            <mxPoint x="860" y="600" as="targetPoint" />
+          </mxGeometry>
+        </mxCell>
+        
+        <mxCell id="rel9" value="" style="endArrow=ERmany;startArrow=ERmany;html=1;rounded=0;exitX=0.5;exitY=0;exitDx=0;exitDy=0;entryX=0.5;entryY=1;entryDx=0;entryDy=0;" edge="1" parent="1" source="patient_family" target="patients">
+          <mxGeometry width="100" height="100" relative="1" as="geometry" />
+        </mxCell>
+        
+        <mxCell id="rel10" value="" style="endArrow=ERmany;startArrow=ERone;html=1;rounded=0;exitX=0.5;exitY=0;exitDx=0;exitDy=0;entryX=0.5;entryY=1;entryDx=0;entryDy=0;" edge="1" parent="1" source="patient_allergies" target="patients">
+          <mxGeometry width="100" height="100" relative="1" as="geometry" />
+        </mxCell>
+        
+        <mxCell id="rel11" value="" style="endArrow=ERmany;startArrow=ERone;html=1;rounded=0;exitX=0.5;exitY=0;exitDx=0;exitDy=0;entryX=0.5;entryY=1;entryDx=0;entryDy=0;" edge="1" parent="1" source="patient_past_illnesses" target="patients">
+          <mxGeometry width="100" height="100" relative="1" as="geometry" />
+        </mxCell>
+        
+        <mxCell id="rel12" value="" style="endArrow=ERmany;startArrow=ERone;html=1;rounded=0;exitX=0.5;exitY=0;exitDx=0;exitDy=0;entryX=0.5;entryY=1;entryDx=0;entryDy=0;" edge="1" parent="1" source="medical_records" target="patients">
+          <mxGeometry width="100" height="100" relative="1" as="geometry" />
+        </mxCell>
+        
+        <mxCell id="rel13" value="" style="endArrow=ERmany;startArrow=ERone;html=1;rounded=0;exitX=0.5;exitY=0;exitDx=0;exitDy=0;entryX=0.5;entryY=1;entryDx=0;entryDy=0;" edge="1" parent="1" source="medical_records" target="tenants">
+          <mxGeometry width="100" height="100" relative="1" as="geometry" />
+        </mxCell>
+        
+        <mxCell id="rel14" value="" style="endArrow=ERmany;startArrow=ERone;html=1;rounded=0;exitX=0.5;exitY=0;exitDx=0;exitDy=0;entryX=0.5;entryY=1;entryDx=0;entryDy=0;" edge="1" parent="1" source="medical_records" target="users">
+          <mxGeometry width="100" height="100" relative="1" as="geometry">
+            <mxPoint x="940" y="1080" as="sourcePoint" />
+            <mxPoint x="940" y="500" as="targetPoint" />
+          </mxGeometry>
+        </mxCell>
+        
+        <mxCell id="rel15" value="" style="endArrow=ERmany;startArrow=ERone;html=1;rounded=0;exitX=0.5;exitY=0;exitDx=0;exitDy=0;entryX=0.5;entryY=1;entryDx=0;entryDy=0;" edge="1" parent="1" source="prescriptions" target="medical_records">
+          <mxGeometry width="100" height="100" relative="1" as="geometry" />
+        </mxCell>
+        
+        <mxCell id="rel16" value="" style="endArrow=ERmany;startArrow=ERone;html=1;rounded=0;exitX=0.5;exitY=0;exitDx=0;exitDy=0;entryX=0.5;entryY=1;entryDx=0;entryDy=0;" edge="1" parent="1" source="prescription_items" target="prescriptions">
+          <mxGeometry width="100" height="100" relative="1" as="geometry" />
+        </mxCell>
+        
+        <mxCell id="rel17" value="" style="endArrow=ERmany;startArrow=ERone;html=1;rounded=0;exitX=0.5;exitY=0;exitDx=0;exitDy=0;entryX=0.5;entryY=1;entryDx=0;entryDy=0;" edge="1" parent="1" source="medical_reports" target="medical_records">
+          <mxGeometry width="100" height="100" relative="1" as="geometry">
+            <mxPoint x="1300" y="1080" as="sourcePoint" />
+            <mxPoint x="940" y="1260" as="targetPoint" />
+          </mxGeometry>
+        </mxCell>
+        
+        <mxCell id="rel18" value="" style="endArrow=ERmany;startArrow=ERone;html=1;rounded=0;exitX=0.5;exitY=0;exitDx=0;exitDy=0;entryX=0.5;entryY=1;entryDx=0;entryDy=0;" edge="1" parent="1" source="report_files" target="medical_reports">
+          <mxGeometry width="100" height="100" relative="1" as="geometry" />
+        </mxCell>
+        
+        <mxCell id="rel19" value="" style="endArrow=ERmany;startArrow=ERone;html=1;rounded=0;exitX=0.5;exitY=0;exitDx=0;exitDy=0;entryX=0.5;entryY=1;entryDx=0;entryDy=0;" edge="1" parent="1" source="report_results" target="medical_reports">
+          <mxGeometry width="100" height="100" relative="1" as="geometry" />
+        </mxCell>
+        
+        <mxCell id="rel20" value="" style="endArrow=ERmany;startArrow=ERone;html=1;rounded=0;exitX=0.5;exitY=0;exitDx=0;exitDy=0;entryX=0.5;entryY=1;entryDx=0;entryDy=0;" edge="1" parent="1" source="appointments" target="patients">
+          <mxGeometry width="100" height="100" relative="1" as="geometry">
+            <mxPoint x="1660" y="680" as="sourcePoint" />
+            <mxPoint x="220" y="1100" as="targetPoint" />
+          </mxGeometry>
+        </mxCell>
+        
+        <mxCell id="rel21" value="" style="endArrow=ERmany;startArrow=ERone;html=1;rounded=0;exitX=0.5;exitY=0;exitDx=0;exitDy=0;entryX=0.5;entryY=1;entryDx=0;entryDy=0;" edge="1" parent="1" source="appointments" target="users">
+          <mxGeometry width="100" height="100" relative="1" as="geometry">
+            <mxPoint x="1660" y="680" as="sourcePoint" />
+            <mxPoint x="940" y="500" as="targetPoint" />
+          </mxGeometry>
+        </mxCell>
+        
+        <mxCell id="rel22" value="" style="endArrow=ERmany;startArrow=ERone;html=1;rounded=0;exitX=0.5;exitY=0;exitDx=0;exitDy=0;entryX=0.5;entryY=1;entryDx=0;entryDy=0;" edge="1" parent="1" source="doctor_rosters" target="users">
+          <mxGeometry width="100" height="100" relative="1" as="geometry">
+            <mxPoint x="1660" y="260" as="sourcePoint" />
+            <mxPoint x="940" y="500" as="targetPoint" />
+          </mxGeometry>
+        </mxCell>
+        
+      </root>
+    </mxGraphModel>
+  </diagram>
+</mxfile>
