@@ -1,382 +1,183 @@
-# VirtualDoc - Comprehensive Healthcare Platform
+# VirtualDoc - Healthcare Platform
 
-<div align="center">
+> Simple, Clean, and Easy to Run - Works on Windows, Mac, and Linux
 
-![VirtualDoc Logo](https://via.placeholder.com/200x80/1976d2/ffffff?text=VirtualDoc)
+## 🚀 Quick Start (3 Steps)
 
-**Revolutionizing Healthcare Through Technology**
-
-[![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
-[![TypeScript](https://img.shields.io/badge/TypeScript-007ACC?logo=typescript&logoColor=white)](https://www.typescriptlang.org/)
-[![React](https://img.shields.io/badge/React-20232A?logo=react&logoColor=61DAFB)](https://reactjs.org/)
-[![Node.js](https://img.shields.io/badge/Node.js-43853D?logo=node.js&logoColor=white)](https://nodejs.org/)
-[![Docker](https://img.shields.io/badge/Docker-2496ED?logo=docker&logoColor=white)](https://www.docker.com/)
-
-[🚀 Quick Start](#-quick-start) • [📚 Documentation](#-documentation) • [🏥 Features](#-features) • [🤝 Contributing](#-contributing) • [📄 License](#-license)
-
-</div>
-
-## 🎯 Project Overview
-
-VirtualDoc is a comprehensive healthcare digitalization platform designed to serve healthcare providers of all sizes - from individual doctors to large hospital systems. Built with modern microservices architecture and powered by advanced AI, it provides essential tools for practice management, patient care, and healthcare innovation.
-
-## 🌟 Key Features
-
-### 🤖 AI-Powered Healthcare
-- **Voice-to-Text AI Assistant**: Natural conversation to generate prescriptions and reports
-- **Smart Prescription Generation**: AI-powered prescription creation with safety checks
-- **Diagnostic Support**: AI-powered symptom analysis and treatment recommendations
-- **Medical Image Analysis**: AI-powered analysis of X-rays, MRIs, and other medical images
-
-### 🏥 Comprehensive Practice Management
-- **Patient Management**: Complete patient lifecycle management
-- **Appointment Scheduling**: Intelligent scheduling with conflict resolution
-- **Medical Records**: Comprehensive electronic health records (EHR)
-- **Billing & Invoicing**: Automated billing with multiple payment options
-- **Inventory Management**: Medical supplies and equipment tracking
-
-### 🌍 Global Healthcare Platform
-- **Multi-language Support**: 20+ languages including regional dialects
-- **Government Integration**: ABHA ID (India), HIPAA (US), GDPR (Europe)
-- **Multi-currency Support**: Local payment methods and currencies
-- **Telemedicine**: HD video consultations with collaboration tools
-
-### 🔍 Patient Discovery Platform
-- **Doctor Marketplace**: Discover and compare healthcare providers
-- **Real-Time Booking**: Live appointment scheduling and availability
-- **AI Recommendations**: Personalized doctor suggestions based on needs
-- **Verified Reviews**: Authentic patient feedback and ratings
-- **Insurance Integration**: Real-time coverage verification and pricing
-
-## 🏗️ Three-Tier Product Strategy
-
-### 🆓 Freemium Tier (Community Edition)
-**Target**: Individual doctors, small clinics, developing regions
-- Basic practice management tools
-- Limited AI features
-- Community support
-- Donation-based sustainability
-
-### 💼 Premium Tier (Professional Edition)
-**Target**: Established practices, multi-doctor clinics
-- Advanced AI features
-- Unlimited patients and appointments
-- Priority support
-- Advanced analytics and reporting
-
-### 🏢 Enterprise Tier (Hospital Edition)
-**Target**: Large hospitals, healthcare systems, government
-- Multi-tenant architecture
-- Custom development
-- Dedicated support
-- Advanced security and compliance
-
-## 🚀 Quick Start (Super Simple!)
-
-### Prerequisites
-- **Docker Desktop** (Download from [docker.com](https://www.docker.com/products/docker-desktop/))
-- **Git** (Download from [git-scm.com](https://git-scm.com/))
-
-That's it! No Node.js, no complex setup needed.
-
-### One-Command Start (Works on Windows, Mac, Linux)
-
-**Option 1: Full Docker Setup (Recommended for Production)**
+### 1. Install Dependencies
 ```bash
-# macOS/Linux
-./start.sh
-
-# Windows
-start.bat
+npm install
 ```
 
-**Option 2: Development Mode (Single Port - Fastest)**
+### 2. Setup Environment
 ```bash
-# macOS/Linux
-./dev.sh
+# Copy environment file
+cp env.example .env
 
-# Windows
-dev.bat
+# Edit .env if needed (defaults work for local development)
+```
 
-# Or using npm
+### 3. Start Everything
+```bash
 npm run dev
 ```
 
-### Alternative: Using npm directly
-```bash
-cd frontend/web-app
-npm run dev
-```
-
-### What happens?
-1. ✅ Checks if Docker is running
-2. 🔨 Builds React app with Vite + Tailwind CSS
-3. 🗄️ Starts PostgreSQL and Redis databases
-4. 🚀 Launches mock API for development
-5. 🌐 Opens web app at http://localhost:3003
-
-### Access Your Applications
-- **🌐 Web App (Dev)**: http://localhost:3003 (React + Vite + Tailwind CSS)
-- **🌐 Web App (Docker)**: http://localhost:3004 (Docker container)
-- **🔧 Mock API**: http://localhost:3001 (Development API)
-- **🗄️ PostgreSQL**: localhost:5432
-- **🗄️ Redis**: localhost:6379
-
-### Technology Stack
-- **Frontend**: React 18 + Vite + Tailwind CSS + TypeScript
-- **Backend**: Mock API (for development)
-- **Database**: PostgreSQL + Redis
-- **Containerization**: Docker + Docker Compose
-
-### Useful Commands
-```bash
-# View logs
-docker-compose logs -f
-
-# Stop all services
-docker-compose down
-
-# Restart services
-./start.sh
-
-# Frontend development (if you have Node.js)
-cd frontend/web-app
-npm run dev
-```
-
-### Troubleshooting
-- **Docker not running**: Start Docker Desktop and try again
-- **Port conflicts**: Stop other services using ports 3000-3001, 5432, 6379
-- **Build fails**: Run `docker-compose down` then `./start.sh`
-- **Need help**: Check logs with `docker-compose logs`
-- **Frontend issues**: The app uses Vite for fast development and Tailwind CSS for styling
+**That's it!** Your platform will be running:
+- 🌐 **Frontend**: http://localhost:3000
+- 🔐 **Auth Service**: http://localhost:3001
+- 👤 **User Service**: http://localhost:3002
+- 🏥 **Patient Service**: http://localhost:3003
+- 📅 **Appointment Service**: http://localhost:3004
+- 🗄️ **Database**: localhost:5432
+- 💾 **Redis**: localhost:6379
 
 ## 📁 Project Structure
 
 ```
-virtualdoc/
-├── 📁 backend/                    # Backend microservices
-│   ├── 📁 common/                 # Common services (shared)
-│   │   ├── 🔐 auth-service/       # Authentication & authorization
-│   │   ├── 👤 user-service/       # User management
-│   │   ├── 📧 notification-service/ # Notifications
-│   │   ├── 📁 file-service/       # File storage
-│   │   └── 📊 audit-service/      # Audit logging
-│   ├── 📁 specific/               # Domain-specific services
-│   │   ├── 🏥 patient-service/    # Patient management
-│   │   ├── 📅 appointment-service/ # Appointment scheduling
-│   │   ├── 📋 medical-records-service/ # Medical records
-│   │   ├── 💰 billing-service/    # Billing & payments
-│   │   ├── 📦 inventory-service/  # Inventory management
-│   │   ├── 📈 reporting-service/  # Analytics & reporting
-│   │   └── 🔍 discovery-service/  # Patient discovery platform
-│   └── 📁 shared/                 # Shared libraries
-├── 📁 frontend/                   # Frontend applications
-│   ├── 🌐 web-app/               # Main web application
-│   ├── 👥 patient-portal/        # Patient portal
-│   ├── ⚙️ admin-dashboard/       # Admin dashboard
-│   ├── 📱 mobile-app/            # Mobile application
-│   └── 🔍 patient-discovery-app/ # Patient discovery mobile app
-├── 📁 infrastructure/             # Infrastructure & deployment
-│   ├── 🐳 docker/                # Docker configurations
-│   ├── ☸️ kubernetes/            # Kubernetes manifests
-│   ├── 🌐 nginx/                 # API Gateway
-│   └── 📊 monitoring/            # Monitoring & observability
-├── 📁 project-docs/              # Comprehensive project documentation
-├── 📁 product-management/         # Product management docs
-└── 📁 scripts/                   # Utility scripts
+virtualDoc/
+├── backend/
+│   └── services/
+│       ├── auth-service/      # Authentication & Authorization
+│       ├── user-service/      # User Management
+│       ├── patient-service/   # Patient Management
+│       └── appointment-service/# Appointment Scheduling
+├── frontend/
+│   └── apps/
+│       └── web-app/          # React Web Application
+├── database/
+│   └── init.sql              # Database Schema
+├── docker-compose.yml         # All services configuration
+├── package.json              # Workspace root
+└── env.example               # Environment variables template
 ```
 
-## 🛠️ Technology Stack
+## 🛠️ Development Commands
 
-### Backend
-- **Node.js** with TypeScript
-- **Express.js** framework
-- **PostgreSQL** primary database
-- **Redis** caching and sessions
-- **Docker** containerization
-- **Kubernetes** orchestration
+### Start All Services
+```bash
+npm run dev
+```
+Starts all microservices and frontend using Docker Compose.
 
-### Frontend
-- **React 18** with TypeScript
-- **Vite** for fast development and building
-- **Tailwind CSS** for styling
-- **React Router** for navigation
-- **Heroicons** for icons
-- **React Hook Form** for forms
-- **Framer Motion** for animations
+### Start Individual Services (Local Development)
+```bash
+# Backend service (from service directory)
+cd backend/services/auth-service
+npm install
+npm run dev
 
-### Infrastructure
-- **Docker Compose** for development
-- **Kubernetes** for production
-- **Nginx** API Gateway
-- **Prometheus & Grafana** monitoring
-- **Elasticsearch** search and analytics
+# Frontend app (from app directory)
+cd frontend/apps/web-app
+npm install
+npm run dev
+```
 
-## 🏥 Use Cases
+### Database Commands
+```bash
+npm run db:migrate    # Run database migrations
+npm run db:seed       # Seed database with sample data
+```
 
-### 👨‍⚕️ Individual Doctor
-- Complete practice management
-- AI-powered documentation
-- Patient communication
-- Basic analytics
+### Docker Commands
+```bash
+npm start            # Start services in background
+npm stop             # Stop all services
+npm run logs         # View all logs
+npm run clean        # Stop and remove all containers/volumes
+```
 
-### 🏥 Small Clinic (5-50 doctors)
-- Multi-provider management
-- Advanced scheduling
-- Shared patient records
-- Inventory management
+## 🔧 Configuration
 
-### 🏢 Large Hospital (500+ beds)
-- Department-based organization
-- Complex workflow management
-- Enterprise integrations
-- Population health analytics
+### Environment Variables
+Copy `env.example` to `.env` and adjust as needed:
+```bash
+cp env.example .env
+```
 
-## 📚 Documentation
+Key variables:
+- `DB_PASSWORD`: Database password (default: virtualdoc123)
+- `JWT_SECRET`: JWT signing key (change in production!)
+- `*_PORT`: Service ports (defaults work fine)
 
-### 🎯 Project Documentation
-- [📋 Project Overview](project-docs/PROJECT_OVERVIEW.md) - Complete project vision and strategy
-- [🏗️ System Architecture](project-docs/architecture/system-architecture.md) - Technical system design
-- [🗄️ Database Schema](project-docs/diagrams/database-schema.md) - Database design and relationships
-- [🔄 User Flows](project-docs/flows/user-flows.md) - Complete user journey mapping
-- [📝 User Stories](project-docs/flows/user-stories.md) - Detailed user stories and epics
-- [🔍 Patient Discovery Platform](project-docs/flows/patient-discovery-platform.md) - Healthcare marketplace platform
+### Database Setup
+The database is automatically initialized when you first run `npm run dev`. The schema is loaded from `database/init.sql`.
 
-### 🎨 Design Documentation
-- [👩‍⚕️ Doctor Dashboard Wireframes](project-docs/wireframes/doctor-dashboard-wireframe.md) - Doctor interface design
-- [👥 Patient Portal Wireframes](project-docs/wireframes/patient-portal-wireframe.md) - Patient interface design
-- [🎨 Design System](project-docs/design/design-system.md) - UI/UX design guidelines
+## 📚 Services Overview
 
-### 📋 Product Management
-- [🆓 Freemium Tier](product-management/freemium/README.md) - Community edition features
-- [💎 Premium Tier](product-management/premium/README.md) - Professional edition features
-- [🏢 Enterprise Tier](product-management/enterprise/README.md) - Enterprise edition features
-- [🔍 Discovery Platform](product-management/discovery-platform/README.md) - Healthcare marketplace platform
-- [📁 Project Structure](project-docs/PROJECT_STRUCTURE.md) - Detailed project organization
+### Backend Services
 
-### 🔌 API Documentation
-- [🔐 Authentication API](docs/api/authentication.md) - Auth endpoints
-- [🏥 Patient API](docs/api/patients.md) - Patient management
-- [📅 Appointment API](docs/api/appointments.md) - Scheduling
-- [📋 Medical Records API](docs/api/medical-records.md) - Health records
+#### Auth Service (Port 3001)
+- User authentication (JWT)
+- User registration and login
+- Password reset
+- Token refresh
 
-## 🎯 Development Roadmap
+#### User Service (Port 3002)
+- User profile management
+- User settings
+- User preferences
 
-### Q1 2024: Foundation
-- [x] Core platform development
-- [x] Freemium tier launch
-- [x] Basic AI features
-- [x] Community building
+#### Patient Service (Port 3003)
+- Patient CRUD operations
+- Patient search and filtering
+- Patient history
 
-### Q2 2024: Growth
-- [ ] Premium tier launch
-- [ ] Advanced AI features
-- [ ] Multi-language support
-- [ ] Global expansion
+#### Appointment Service (Port 3004)
+- Appointment scheduling
+- Appointment management
+- Calendar integration
 
-### Q3 2024: Scale
-- [ ] Enterprise tier launch
-- [ ] Advanced analytics
-- [ ] Custom integrations
-- [ ] Market leadership
+### Frontend Apps
 
-### Q4 2024: Innovation
-- [ ] AI-powered insights
-- [ ] Predictive analytics
-- [ ] Global healthcare network
-- [ ] Research collaboration
+#### Web App (Port 3000)
+- React + Vite + TypeScript
+- Tailwind CSS for styling
+- Patient and doctor dashboards
+- Appointment booking
+
+## 🏗️ Architecture
+
+- **Microservices**: Each service is independent and can be developed/deployed separately
+- **Docker Compose**: All services run in containers for consistency
+- **PostgreSQL**: Primary database for all services
+- **Redis**: Caching and session storage
+- **npm Workspaces**: Monorepo management for easy dependency handling
+
+## 🔍 Troubleshooting
+
+### Port Already in Use
+If a port is already in use, change it in `.env`:
+```
+AUTH_SERVICE_PORT=3101
+```
+
+### Database Connection Issues
+1. Make sure PostgreSQL container is running: `docker ps`
+2. Check database logs: `docker logs virtualdoc-postgres`
+3. Verify credentials in `.env` match docker-compose.yml
+
+### Service Not Starting
+1. Check logs: `npm run logs`
+2. Verify Docker is running
+3. Try rebuilding: `docker-compose build --no-cache`
+
+## 📖 Documentation
+
+- **API Documentation**: Available at `/api/docs` when services are running
+- **Development Guidelines**: See `guidelines/developer/README.md`
+- **Architecture**: See `docs/architecture/TECHNICAL_ARCHITECTURE.md`
 
 ## 🤝 Contributing
 
-We welcome contributions from the community! Here's how you can help:
-
-### 🐛 Bug Reports
-- Use GitHub Issues to report bugs
-- Include detailed reproduction steps
-- Provide system information
-
-### 💡 Feature Requests
-- Submit feature requests via GitHub Issues
-- Describe the use case and benefits
-- Consider implementation complexity
-
-### 🔧 Code Contributions
 1. Fork the repository
 2. Create a feature branch
 3. Make your changes
-4. Add tests
-5. Submit a pull request
-
-### 📚 Documentation
-- Improve existing documentation
-- Add examples and tutorials
-- Translate documentation
-
-## 📊 Project Statistics
-
-- **Microservices**: 11 independent services
-- **Frontend Apps**: 4 applications
-- **Languages**: 20+ supported languages
-- **Countries**: 10+ target markets
-- **Users**: 100,000+ projected users
-
-## 🌟 Why VirtualDoc?
-
-### For Healthcare Providers
-- **Efficiency**: Reduce administrative time by 70%
-- **AI-Powered**: Advanced AI assistance for documentation
-- **Scalable**: Grow from individual practice to hospital system
-- **Compliant**: Built-in healthcare regulations compliance
-
-### For Patients
-- **Accessible**: 24/7 access to healthcare services
-- **Affordable**: Free tier with donation model
-- **Transparent**: Complete medical history tracking
-- **Convenient**: Online medicine shopping and delivery
-
-### For Society
-- **Democratized**: Healthcare technology for everyone
-- **Innovative**: Cutting-edge AI and technology
-- **Global**: Serves healthcare providers worldwide
-- **Impactful**: Measurable improvement in healthcare outcomes
-
-## 📞 Support & Community
-
-### 💬 Community
-- **Discord**: [Join our community](https://discord.gg/virtualdoc)
-- **GitHub Discussions**: [Community discussions](https://github.com/deepj2013/virtualdoc/discussions)
-- **Stack Overflow**: Tag questions with `virtualdoc`
-
-### 📧 Support
-- **Email**: support@virtualdoc.health
-- **GitHub Issues**: [Report issues](https://github.com/deepj2013/virtualdoc/issues)
-- **Documentation**: [Comprehensive docs](docs/)
-
-### 🌐 Website
-- **Main Site**: [www.virtualdoc.health](https://www.virtualdoc.health)
-- **Documentation**: [docs.virtualdoc.health](https://docs.virtualdoc.health)
-- **Status**: [status.virtualdoc.health](https://status.virtualdoc.health)
+4. Submit a pull request
 
 ## 📄 License
 
-This project is licensed under the MIT License - see the [LICENSE](LICENSE) file for details.
-
-## 🙏 Acknowledgments
-
-- Healthcare providers worldwide for their feedback
-- Open source community for inspiration and tools
-- Medical associations for guidance and support
-- Contributors who help make VirtualDoc better
+MIT License - see LICENSE file for details
 
 ---
 
-<div align="center">
-
-**VirtualDoc** - Transforming healthcare through technology, one patient at a time.
-
-*"Empowering healthcare providers, improving patient outcomes, and building a healthier world."*
-
-[⭐ Star us on GitHub](https://github.com/deepj2013/virtualdoc) • [🐛 Report Issues](https://github.com/deepj2013/virtualdoc/issues) • [💬 Join Community](https://discord.gg/virtualdoc)
-
-</div>
+**Made with ❤️ for Healthcare**

@@ -1,36 +1,34 @@
 {
-  "name": "virtualdoc",
+  "name": "virtualdoc-platform",
   "version": "1.0.0",
   "description": "VirtualDoc - Comprehensive Healthcare Platform",
   "private": true,
+  "workspaces": [
+    "backend/services/*",
+    "frontend/apps/*"
+  ],
   "scripts": {
-    "start": "./start.sh",
-    "dev": "./dev.sh",
-    "dev:docker": "docker-compose up --build",
+    "install:all": "npm install",
+    "dev": "docker-compose up",
+    "dev:backend": "npm run dev --workspace=backend",
+    "dev:frontend": "npm run dev --workspace=frontend",
+    "start": "docker-compose up -d",
     "stop": "docker-compose down",
-    "restart": "docker-compose restart",
     "logs": "docker-compose logs -f",
-    "build": "docker-compose build",
-    "clean": "docker-compose down -v --remove-orphans",
-    "status": "docker-compose ps",
-    "frontend": "cd frontend/web-app && npm run dev",
-    "frontend:build": "cd frontend/web-app && npm run build",
-    "frontend:install": "cd frontend/web-app && npm install"
+    "clean": "docker-compose down -v && docker system prune -f",
+    "db:migrate": "npm run migrate --workspace=backend",
+    "db:seed": "npm run seed --workspace=backend"
+  },
+  "engines": {
+    "node": ">=18.0.0",
+    "npm": ">=9.0.0"
   },
   "keywords": [
     "healthcare",
-    "medical",
     "telemedicine",
     "microservices",
-    "docker",
-    "react",
-    "nodejs",
-    "typescript"
+    "health-tech"
   ],
   "author": "VirtualDoc Team",
-  "license": "MIT",
-  "engines": {
-    "node": ">=18.0.0",
-    "npm": ">=8.0.0"
-  }
+  "license": "MIT"
 }

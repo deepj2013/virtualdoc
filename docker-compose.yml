@@ -1,57 +1,141 @@
+version: '3.8'
+
 services:
-  # Database
+  # PostgreSQL Database
   postgres:
     image: postgres:15-alpine
     container_name: virtualdoc-postgres
     environment:
-      POSTGRES_DB: virtualdoc
-      POSTGRES_USER: virtualdoc
-      POSTGRES_PASSWORD: virtualdoc123
+      POSTGRES_DB: ${DB_NAME:-virtualdoc}
+      POSTGRES_USER: ${DB_USER:-virtualdoc}
+      POSTGRES_PASSWORD: ${DB_PASSWORD:-virtualdoc123}
     ports:
-      - "5432:5432"
+      - "${DB_PORT:-5432}:5432"
     volumes:
       - postgres_data:/var/lib/postgresql/data
+      - ./database/init.sql:/docker-entrypoint-initdb.d/init.sql
     networks:
       - virtualdoc-network
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U ${DB_USER:-virtualdoc}"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
     restart: unless-stopped
 
-  # Cache
+  # Redis Cache
   redis:
     image: redis:7-alpine
     container_name: virtualdoc-redis
     ports:
-      - "6379:6379"
+      - "${REDIS_PORT:-6379}:6379"
     volumes:
       - redis_data:/data
     networks:
       - virtualdoc-network
+    healthcheck:
+      test: ["CMD", "redis-cli", "ping"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
     restart: unless-stopped
 
-  # Frontend - React + Vite + Tailwind CSS
-  web-app:
+  # Auth Service
+  auth-service:
     build:
-      context: ./frontend/web-app
+      context: ./backend/services/auth-service
       dockerfile: Dockerfile
-    container_name: virtualdoc-web-app
+    container_name: virtualdoc-auth-service
     ports:
-      - "3004:3000"
+      - "${AUTH_SERVICE_PORT:-3001}:3000"
     environment:
       - NODE_ENV=development
-      - REACT_APP_API_URL=http://localhost:3001
+      - PORT=3000
+      - DATABASE_URL=postgresql://${DB_USER:-virtualdoc}:${DB_PASSWORD:-virtualdoc123}@postgres:5432/${DB_NAME:-virtualdoc}
+      - REDIS_URL=redis://redis:6379
+      - JWT_SECRET=${JWT_SECRET:-your-secret-key-change-in-production}
+    depends_on:
+      postgres:
+        condition: service_healthy
+      redis:
+        condition: service_healthy
     networks:
       - virtualdoc-network
     restart: unless-stopped
 
-  # Simple Mock API for development
-  mock-api:
-    image: mockserver/mockserver:latest
-    container_name: virtualdoc-mock-api
+  # User Service
+  user-service:
+    build:
+      context: ./backend/services/user-service
+      dockerfile: Dockerfile
+    container_name: virtualdoc-user-service
     ports:
-      - "3001:1080"
+      - "${USER_SERVICE_PORT:-3002}:3000"
     environment:
-      MOCKSERVER_INITIALIZATION_JSON_PATH: /config/mock-api.json
-    volumes:
-      - ./mock-api.json:/config/mock-api.json:ro
+      - NODE_ENV=development
+      - PORT=3000
+      - DATABASE_URL=postgresql://${DB_USER:-virtualdoc}:${DB_PASSWORD:-virtualdoc123}@postgres:5432/${DB_NAME:-virtualdoc}
+    depends_on:
+      postgres:
+        condition: service_healthy
+    networks:
+      - virtualdoc-network
+    restart: unless-stopped
+
+  # Patient Service
+  patient-service:
+    build:
+      context: ./backend/services/patient-service
+      dockerfile: Dockerfile
+    container_name: virtualdoc-patient-service
+    ports:
+      - "${PATIENT_SERVICE_PORT:-3003}:3000"
+    environment:
+      - NODE_ENV=development
+      - PORT=3000
+      - DATABASE_URL=postgresql://${DB_USER:-virtualdoc}:${DB_PASSWORD:-virtualdoc123}@postgres:5432/${DB_NAME:-virtualdoc}
+    depends_on:
+      postgres:
+        condition: service_healthy
+    networks:
+      - virtualdoc-network
+    restart: unless-stopped
+
+  # Appointment Service
+  appointment-service:
+    build:
+      context: ./backend/services/appointment-service
+      dockerfile: Dockerfile
+    container_name: virtualdoc-appointment-service
+    ports:
+      - "${APPOINTMENT_SERVICE_PORT:-3004}:3000"
+    environment:
+      - NODE_ENV=development
+      - PORT=3000
+      - DATABASE_URL=postgresql://${DB_USER:-virtualdoc}:${DB_PASSWORD:-virtualdoc123}@postgres:5432/${DB_NAME:-virtualdoc}
+    depends_on:
+      postgres:
+        condition: service_healthy
+    networks:
+      - virtualdoc-network
+    restart: unless-stopped
+
+  # Frontend Web App
+  web-app:
+    build:
+      context: ./frontend/apps/web-app
+      dockerfile: Dockerfile
+    container_name: virtualdoc-web-app
+    ports:
+      - "${WEB_APP_PORT:-3000}:3000"
+    environment:
+      - NODE_ENV=development
+      - VITE_API_URL=http://localhost:3001
+    depends_on:
+      - auth-service
+      - user-service
+      - patient-service
+      - appointment-service
     networks:
       - virtualdoc-network
     restart: unless-stopped
