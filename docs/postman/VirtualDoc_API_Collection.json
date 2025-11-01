@@ -47,7 +47,7 @@
               "listen": "test",
               "script": {
                 "exec": [
-                  "if (pm.response.code === 201) {",
+                  "if (pm.response.code === 200) {",
                   "    const jsonData = pm.response.json();",
                   "    if (jsonData.success && jsonData.data) {",
                   "        pm.collectionVariables.set('user_id', jsonData.data.user.id);",

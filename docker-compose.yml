@@ -13,7 +13,8 @@ services:
       - "${DB_PORT:-5432}:5432"
     volumes:
       - postgres_data:/var/lib/postgresql/data
-      - ./database/init.sql:/docker-entrypoint-initdb.d/init.sql
+      - ./database/schema/complete_schema.sql:/docker-entrypoint-initdb.d/01_complete_schema.sql
+      - ./database/init.sql:/docker-entrypoint-initdb.d/02_init_data.sql
     networks:
       - virtualdoc-network
     healthcheck:
@@ -52,6 +53,12 @@ services:
       - NODE_ENV=development
       - PORT=3000
       - DATABASE_URL=postgresql://${DB_USER:-virtualdoc}:${DB_PASSWORD:-virtualdoc123}@postgres:5432/${DB_NAME:-virtualdoc}
+      - DB_HOST=postgres
+      - DB_PORT=5432
+      - DB_NAME=${DB_NAME:-virtualdoc}
+      - DB_USER=${DB_USER:-virtualdoc}
+      - DB_PASSWORD=${DB_PASSWORD:-virtualdoc123}
+      - DOCKER_ENV=true
       - REDIS_URL=redis://redis:6379
       - JWT_SECRET=${JWT_SECRET:-your-secret-key-change-in-production}
     depends_on:

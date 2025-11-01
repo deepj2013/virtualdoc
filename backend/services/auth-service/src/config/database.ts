@@ -1,20 +1,57 @@
-import { Pool, PoolConfig } from 'pg';
+import { Pool } from 'pg';
 import dotenv from 'dotenv';
 
-dotenv.config();
+// Load .env file only if not in Docker (Docker passes env vars directly)
+if (!process.env.DOCKER_ENV) {
+  dotenv.config();
+}
 
-const poolConfig: PoolConfig = {
-  host: process.env.DB_HOST || 'localhost',
-  port: parseInt(process.env.DB_PORT || '5432', 10),
-  database: process.env.DB_NAME || 'virtualdoc',
-  user: process.env.DB_USER || 'virtualdoc',
-  password: process.env.DB_PASSWORD || 'virtualdoc123',
-  max: 20,
-  idleTimeoutMillis: 30000,
-  connectionTimeoutMillis: 2000,
+// Get database connection string or config
+const getDatabaseConfig = () => {
+  // Priority 1: Use DATABASE_URL if provided
+  if (process.env.DATABASE_URL) {
+    // Ensure postgres:// is converted to postgresql:// for pg library
+    let url = process.env.DATABASE_URL;
+    if (url.startsWith('postgres://')) {
+      url = url.replace('postgres://', 'postgresql://');
+    }
+    
+    const parsedUrl = new URL(url);
+    console.log('✅ Using DATABASE_URL');
+    console.log('   Host:', parsedUrl.hostname);
+    console.log('   Port:', parsedUrl.port || '5432');
+    console.log('   Database:', parsedUrl.pathname.slice(1));
+    
+    return { connectionString: url };
+  }
+
+  // Priority 2: Use individual environment variables
+  const host = process.env.DB_HOST || 'localhost';
+  const port = parseInt(process.env.DB_PORT || '5432', 10);
+  const database = process.env.DB_NAME || 'virtualdoc';
+  const user = process.env.DB_USER || 'virtualdoc';
+  const password = process.env.DB_PASSWORD || 'virtualdoc123';
+  
+  console.log('✅ Using individual DB vars');
+  console.log('   Host:', host);
+  console.log('   Port:', port);
+  console.log('   Database:', database);
+  
+  return {
+    host,
+    port,
+    database,
+    user,
+    password,
+    max: 20,
+    idleTimeoutMillis: 30000,
+    connectionTimeoutMillis: 2000,
+  };
 };
 
-export const pool = new Pool(poolConfig);
+const dbConfig = getDatabaseConfig();
+
+export const pool = new Pool(dbConfig);
 
 // Test connection
 pool.on('connect', () => {
