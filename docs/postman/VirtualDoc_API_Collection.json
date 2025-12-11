@@ -1,14 +1,24 @@
 {
   "info": {
     "name": "VirtualDoc API Collection",
-    "description": "Complete API collection for VirtualDoc Healthcare Platform",
+    "description": "Complete API collection for VirtualDoc Healthcare Platform - Includes Auth, User, and Patient Services",
     "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
-    "version": "1.0.0"
+    "version": "2.0.0"
   },
   "variable": [
     {
-      "key": "base_url",
+      "key": "auth_service_url",
       "value": "http://localhost:3001",
+      "type": "string"
+    },
+    {
+      "key": "user_service_url",
+      "value": "http://localhost:3002",
+      "type": "string"
+    },
+    {
+      "key": "patient_service_url",
+      "value": "http://localhost:3003",
       "type": "string"
     },
     {
@@ -20,11 +30,21 @@
       "key": "refresh_token",
       "value": "",
       "type": "string"
+    },
+    {
+      "key": "user_id",
+      "value": "",
+      "type": "string"
+    },
+    {
+      "key": "patient_id",
+      "value": "",
+      "type": "string"
     }
   ],
   "item": [
     {
-      "name": "Authentication",
+      "name": "Authentication Service",
       "item": [
         {
           "name": "Health Check",
@@ -32,8 +52,8 @@
             "method": "GET",
             "header": [],
             "url": {
-              "raw": "{{base_url}}/health",
-              "host": ["{{base_url}}"],
+              "raw": "{{auth_service_url}}/health",
+              "host": ["{{auth_service_url}}"],
               "path": ["health"]
             },
             "description": "Check if the auth service is running"
@@ -47,7 +67,7 @@
               "listen": "test",
               "script": {
                 "exec": [
-                  "if (pm.response.code === 200) {",
+                  "if (pm.response.code === 200 || pm.response.code === 201) {",
                   "    const jsonData = pm.response.json();",
                   "    if (jsonData.success && jsonData.data) {",
                   "        pm.collectionVariables.set('user_id', jsonData.data.user.id);",
@@ -77,8 +97,8 @@
               }
             },
             "url": {
-              "raw": "{{base_url}}/api/admin/auth/signup",
-              "host": ["{{base_url}}"],
+              "raw": "{{auth_service_url}}/api/admin/auth/signup",
+              "host": ["{{auth_service_url}}"],
               "path": ["api", "admin", "auth", "signup"]
             },
             "description": "Create a new Universal Admin account"
@@ -97,6 +117,7 @@
                   "    if (jsonData.success && jsonData.data.tokens) {",
                   "        pm.collectionVariables.set('access_token', jsonData.data.tokens.accessToken);",
                   "        pm.collectionVariables.set('refresh_token', jsonData.data.tokens.refreshToken);",
+                  "        pm.collectionVariables.set('user_id', jsonData.data.user.id);",
                   "        console.log('Login successful! Tokens saved.');",
                   "    }",
                   "}"
@@ -123,208 +144,33 @@
               }
             },
             "url": {
-              "raw": "{{base_url}}/api/admin/auth/login",
-              "host": ["{{base_url}}"],
+              "raw": "{{auth_service_url}}/api/admin/auth/login",
+              "host": ["{{auth_service_url}}"],
               "path": ["api", "admin", "auth", "login"]
             },
             "description": "Authenticate Universal Admin and receive access tokens"
           },
           "response": []
         },
-            {
-              "name": "Forgot Password",
-              "event": [
-                {
-                  "listen": "test",
-                  "script": {
-                    "exec": [
-                      "if (pm.response.code === 200) {",
-                      "    const jsonData = pm.response.json();",
-                      "    if (jsonData.success && jsonData.data && jsonData.data.otp) {",
-                      "        pm.collectionVariables.set('reset_otp', jsonData.data.otp);",
-                      "        console.log('OTP received:', jsonData.data.otp);",
-                      "    }",
-                      "}"
-                    ],
-                    "type": "text/javascript"
-                  }
-                }
-              ],
-              "request": {
-                "method": "POST",
-                "header": [
-                  {
-                    "key": "Content-Type",
-                    "value": "application/json"
-                  }
-                ],
-                "body": {
-                  "mode": "raw",
-                  "raw": "{\n  \"email\": \"admin@virtualdoc.com\"\n}",
-                  "options": {
-                    "raw": {
-                      "language": "json"
-                    }
-                  }
-                },
-                "url": {
-                  "raw": "{{base_url}}/api/admin/auth/forgot-password",
-                  "host": ["{{base_url}}"],
-                  "path": ["api", "admin", "auth", "forgot-password"]
-                },
-                "description": "Request password reset OTP. In development, OTP is returned in response and logged to console."
-              },
-              "response": []
-            },
-            {
-              "name": "Reset Password",
-              "request": {
-                "method": "POST",
-                "header": [
-                  {
-                    "key": "Content-Type",
-                    "value": "application/json"
-                  }
-                ],
-                "body": {
-                  "mode": "raw",
-                  "raw": "{\n  \"email\": \"admin@virtualdoc.com\",\n  \"otp\": \"{{reset_otp}}\",\n  \"newPassword\": \"NewSecurePass123!\"\n}",
-                  "options": {
-                    "raw": {
-                      "language": "json"
-                    }
-                  }
-                },
-                "url": {
-                  "raw": "{{base_url}}/api/admin/auth/reset-password",
-                  "host": ["{{base_url}}"],
-                  "path": ["api", "admin", "auth", "reset-password"]
-                },
-                "description": "Reset password using OTP received from forgot password"
-              },
-              "response": []
-            },
-            {
-              "name": "Refresh Token (Future)",
-              "request": {
-                "method": "POST",
-                "header": [
-                  {
-                    "key": "Content-Type",
-                    "value": "application/json"
-                  },
-                  {
-                    "key": "Authorization",
-                    "value": "Bearer {{refresh_token}}"
-                  }
-                ],
-                "url": {
-                  "raw": "{{base_url}}/api/admin/auth/refresh",
-                  "host": ["{{base_url}}"],
-                  "path": ["api", "admin", "auth", "refresh"]
-                },
-                "description": "Refresh access token using refresh token (To be implemented)"
-              },
-              "response": []
-            },
-            {
-              "name": "Logout",
-              "event": [
-                {
-                  "listen": "test",
-                  "script": {
-                    "exec": [
-                      "if (pm.response.code === 200) {",
-                      "    pm.collectionVariables.set('access_token', '');",
-                      "    pm.collectionVariables.set('refresh_token', '');",
-                      "    console.log('Logged out successfully');",
-                      "}"
-                    ],
-                    "type": "text/javascript"
-                  }
-                }
-              ],
-              "request": {
-                "method": "POST",
-                "header": [
-                  {
-                    "key": "Authorization",
-                    "value": "Bearer {{access_token}}"
-                  }
-                ],
-                "url": {
-                  "raw": "{{base_url}}/api/admin/auth/logout",
-                  "host": ["{{base_url}}"],
-                  "path": ["api", "admin", "auth", "logout"]
-                },
-                "description": "Logout and revoke all tokens"
-              },
-              "response": []
-            }
-      ],
-      "description": "Authentication endpoints for Universal Admin"
-    },
-    {
-      "name": "Admin Profile (Future)",
-      "item": [
-        {
-          "name": "Get Profile",
-          "request": {
-            "method": "GET",
-            "header": [
-              {
-                "key": "Authorization",
-                "value": "Bearer {{access_token}}"
-              }
-            ],
-            "url": {
-              "raw": "{{base_url}}/api/admin/profile",
-              "host": ["{{base_url}}"],
-              "path": ["api", "admin", "profile"]
-            },
-            "description": "Get admin profile (To be implemented)"
-          },
-          "response": []
-        },
-        {
-          "name": "Update Profile",
-          "request": {
-            "method": "PUT",
-            "header": [
-              {
-                "key": "Authorization",
-                "value": "Bearer {{access_token}}"
-              },
-              {
-                "key": "Content-Type",
-                "value": "application/json"
-              }
-            ],
-            "body": {
-              "mode": "raw",
-              "raw": "{\n  \"firstName\": \"John\",\n  \"lastName\": \"Doe\",\n  \"phone\": \"+1234567890\"\n}",
-              "options": {
-                "raw": {
-                  "language": "json"
-                }
-              }
-            },
-            "url": {
-              "raw": "{{base_url}}/api/admin/profile",
-              "host": ["{{base_url}}"],
-              "path": ["api", "admin", "profile"]
-            },
-            "description": "Update admin profile (To be implemented)"
-          },
-          "response": []
-        }
-      ]
-    },
-    {
-      "name": "Password Management (Future)",
-      "item": [
         {
           "name": "Forgot Password",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "if (pm.response.code === 200) {",
+                  "    const jsonData = pm.response.json();",
+                  "    if (jsonData.success && jsonData.data && jsonData.data.otp) {",
+                  "        pm.collectionVariables.set('reset_otp', jsonData.data.otp);",
+                  "        console.log('OTP received:', jsonData.data.otp);",
+                  "    }",
+                  "}"
+                ],
+                "type": "text/javascript"
+              }
+            }
+          ],
           "request": {
             "method": "POST",
             "header": [
@@ -343,11 +189,11 @@
               }
             },
             "url": {
-              "raw": "{{base_url}}/api/admin/auth/forgot-password",
-              "host": ["{{base_url}}"],
+              "raw": "{{auth_service_url}}/api/admin/auth/forgot-password",
+              "host": ["{{auth_service_url}}"],
               "path": ["api", "admin", "auth", "forgot-password"]
             },
-            "description": "Request password reset (To be implemented)"
+            "description": "Request password reset OTP. In development, OTP is returned in response and logged to console."
           },
           "response": []
         },
@@ -363,7 +209,7 @@
             ],
             "body": {
               "mode": "raw",
-              "raw": "{\n  \"token\": \"reset-token\",\n  \"password\": \"NewSecurePass123!\"\n}",
+              "raw": "{\n  \"email\": \"admin@virtualdoc.com\",\n  \"otp\": \"{{reset_otp}}\",\n  \"newPassword\": \"NewSecurePass123!\"\n}",
               "options": {
                 "raw": {
                   "language": "json"
@@ -371,16 +217,475 @@
               }
             },
             "url": {
-              "raw": "{{base_url}}/api/admin/auth/reset-password",
-              "host": ["{{base_url}}"],
+              "raw": "{{auth_service_url}}/api/admin/auth/reset-password",
+              "host": ["{{auth_service_url}}"],
               "path": ["api", "admin", "auth", "reset-password"]
             },
-            "description": "Reset password with token (To be implemented)"
+            "description": "Reset password using OTP received from forgot password"
+          },
+          "response": []
+        },
+        {
+          "name": "Logout",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "if (pm.response.code === 200) {",
+                  "    pm.collectionVariables.set('access_token', '');",
+                  "    pm.collectionVariables.set('refresh_token', '');",
+                  "    console.log('Logged out successfully');",
+                  "}"
+                ],
+                "type": "text/javascript"
+              }
+            }
+          ],
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{access_token}}"
+              }
+            ],
+            "url": {
+              "raw": "{{auth_service_url}}/api/admin/auth/logout",
+              "host": ["{{auth_service_url}}"],
+              "path": ["api", "admin", "auth", "logout"]
+            },
+            "description": "Logout and revoke all tokens"
           },
           "response": []
         }
-      ]
+      ],
+      "description": "Authentication endpoints for Universal Admin"
+    },
+    {
+      "name": "User Service",
+      "item": [
+        {
+          "name": "Health Check",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{user_service_url}}/health",
+              "host": ["{{user_service_url}}"],
+              "path": ["health"]
+            },
+            "description": "Check if the user service is running"
+          },
+          "response": []
+        },
+        {
+          "name": "Get User Profile",
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{access_token}}"
+              }
+            ],
+            "url": {
+              "raw": "{{user_service_url}}/api/users/profile",
+              "host": ["{{user_service_url}}"],
+              "path": ["api", "users", "profile"]
+            },
+            "description": "Get current authenticated user's profile"
+          },
+          "response": []
+        },
+        {
+          "name": "Update User Profile",
+          "request": {
+            "method": "PUT",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{access_token}}"
+              },
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"firstName\": \"John\",\n  \"lastName\": \"Doe\",\n  \"phone\": \"+1234567890\",\n  \"dateOfBirth\": \"1990-01-01\",\n  \"gender\": \"male\"\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "url": {
+              "raw": "{{user_service_url}}/api/users/profile",
+              "host": ["{{user_service_url}}"],
+              "path": ["api", "users", "profile"]
+            },
+            "description": "Update current user's profile"
+          },
+          "response": []
+        },
+        {
+          "name": "Get User Preferences",
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{access_token}}"
+              }
+            ],
+            "url": {
+              "raw": "{{user_service_url}}/api/users/preferences",
+              "host": ["{{user_service_url}}"],
+              "path": ["api", "users", "preferences"]
+            },
+            "description": "Get user preferences (language, timezone, theme, notifications)"
+          },
+          "response": []
+        },
+        {
+          "name": "Update User Preferences",
+          "request": {
+            "method": "PUT",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{access_token}}"
+              },
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"language\": \"en\",\n  \"timezone\": \"America/New_York\",\n  \"dateFormat\": \"MM/DD/YYYY\",\n  \"timeFormat\": \"12h\",\n  \"theme\": \"dark\",\n  \"notifications\": {\n    \"email\": true,\n    \"sms\": false,\n    \"push\": true\n  }\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "url": {
+              "raw": "{{user_service_url}}/api/users/preferences",
+              "host": ["{{user_service_url}}"],
+              "path": ["api", "users", "preferences"]
+            },
+            "description": "Update user preferences"
+          },
+          "response": []
+        },
+        {
+          "name": "Get User by ID",
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{access_token}}"
+              }
+            ],
+            "url": {
+              "raw": "{{user_service_url}}/api/users/{{user_id}}",
+              "host": ["{{user_service_url}}"],
+              "path": ["api", "users", "{{user_id}}"]
+            },
+            "description": "Get user by ID (own profile or admin access required)"
+          },
+          "response": []
+        },
+        {
+          "name": "Search Users",
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{access_token}}"
+              }
+            ],
+            "url": {
+              "raw": "{{user_service_url}}/api/users/search?search=john&page=1&limit=20",
+              "host": ["{{user_service_url}}"],
+              "path": ["api", "users", "search"],
+              "query": [
+                {
+                  "key": "search",
+                  "value": "john",
+                  "description": "Search term (name or email)"
+                },
+                {
+                  "key": "role",
+                  "value": "",
+                  "description": "Filter by role",
+                  "disabled": true
+                },
+                {
+                  "key": "isActive",
+                  "value": "true",
+                  "description": "Filter by active status",
+                  "disabled": true
+                },
+                {
+                  "key": "page",
+                  "value": "1",
+                  "description": "Page number"
+                },
+                {
+                  "key": "limit",
+                  "value": "20",
+                  "description": "Items per page"
+                }
+              ]
+            },
+            "description": "Search users (Admin only). Supports pagination and filtering."
+          },
+          "response": []
+        }
+      ],
+      "description": "User management endpoints with profile and preferences"
+    },
+    {
+      "name": "Patient Service",
+      "item": [
+        {
+          "name": "Health Check",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{patient_service_url}}/health",
+              "host": ["{{patient_service_url}}"],
+              "path": ["health"]
+            },
+            "description": "Check if the patient service is running"
+          },
+          "response": []
+        },
+        {
+          "name": "Create Patient",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "if (pm.response.code === 201) {",
+                  "    const jsonData = pm.response.json();",
+                  "    if (jsonData.success && jsonData.data.patient) {",
+                  "        pm.collectionVariables.set('patient_id', jsonData.data.patient.id);",
+                  "        console.log('Patient created:', jsonData.data.patient.patientNumber);",
+                  "    }",
+                  "}"
+                ],
+                "type": "text/javascript"
+              }
+            }
+          ],
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{access_token}}"
+              },
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"firstName\": \"Jane\",\n  \"lastName\": \"Smith\",\n  \"dateOfBirth\": \"1990-05-15\",\n  \"gender\": \"female\",\n  \"bloodGroup\": \"O+\",\n  \"phone\": \"+1234567890\",\n  \"email\": \"jane.smith@example.com\",\n  \"addressLine1\": \"123 Main St\",\n  \"city\": \"New York\",\n  \"state\": \"NY\",\n  \"postalCode\": \"10001\",\n  \"country\": \"USA\",\n  \"emergencyContactName\": \"John Smith\",\n  \"emergencyContactPhone\": \"+1987654321\",\n  \"emergencyContactRelation\": \"spouse\"\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "url": {
+              "raw": "{{patient_service_url}}/api/patients",
+              "host": ["{{patient_service_url}}"],
+              "path": ["api", "patients"]
+            },
+            "description": "Create a new patient. Patient number is auto-generated."
+          },
+          "response": []
+        },
+        {
+          "name": "Get All Patients",
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{access_token}}"
+              }
+            ],
+            "url": {
+              "raw": "{{patient_service_url}}/api/patients?page=1&limit=20",
+              "host": ["{{patient_service_url}}"],
+              "path": ["api", "patients"],
+              "query": [
+                {
+                  "key": "page",
+                  "value": "1",
+                  "description": "Page number"
+                },
+                {
+                  "key": "limit",
+                  "value": "20",
+                  "description": "Items per page"
+                }
+              ]
+            },
+            "description": "Get all patients with pagination"
+          },
+          "response": []
+        },
+        {
+          "name": "Search Patients",
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{access_token}}"
+              }
+            ],
+            "url": {
+              "raw": "{{patient_service_url}}/api/patients/search?search=jane&gender=female&page=1&limit=20",
+              "host": ["{{patient_service_url}}"],
+              "path": ["api", "patients", "search"],
+              "query": [
+                {
+                  "key": "search",
+                  "value": "jane",
+                  "description": "Search term (name, patient number, phone, email)"
+                },
+                {
+                  "key": "gender",
+                  "value": "female",
+                  "description": "Filter by gender",
+                  "disabled": true
+                },
+                {
+                  "key": "bloodGroup",
+                  "value": "",
+                  "description": "Filter by blood group",
+                  "disabled": true
+                },
+                {
+                  "key": "city",
+                  "value": "",
+                  "description": "Filter by city",
+                  "disabled": true
+                },
+                {
+                  "key": "state",
+                  "value": "",
+                  "description": "Filter by state",
+                  "disabled": true
+                },
+                {
+                  "key": "isActive",
+                  "value": "true",
+                  "description": "Filter by active status",
+                  "disabled": true
+                },
+                {
+                  "key": "page",
+                  "value": "1",
+                  "description": "Page number"
+                },
+                {
+                  "key": "limit",
+                  "value": "20",
+                  "description": "Items per page"
+                }
+              ]
+            },
+            "description": "Search patients with filters and pagination"
+          },
+          "response": []
+        },
+        {
+          "name": "Get Patient by ID",
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{access_token}}"
+              }
+            ],
+            "url": {
+              "raw": "{{patient_service_url}}/api/patients/{{patient_id}}",
+              "host": ["{{patient_service_url}}"],
+              "path": ["api", "patients", "{{patient_id}}"]
+            },
+            "description": "Get patient details by ID"
+          },
+          "response": []
+        },
+        {
+          "name": "Update Patient",
+          "request": {
+            "method": "PUT",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{access_token}}"
+              },
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"phone\": \"+1987654321\",\n  \"email\": \"jane.updated@example.com\",\n  \"city\": \"Boston\",\n  \"state\": \"MA\"\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "url": {
+              "raw": "{{patient_service_url}}/api/patients/{{patient_id}}",
+              "host": ["{{patient_service_url}}"],
+              "path": ["api", "patients", "{{patient_id}}"]
+            },
+            "description": "Update patient information"
+          },
+          "response": []
+        },
+        {
+          "name": "Delete Patient",
+          "request": {
+            "method": "DELETE",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{access_token}}"
+              }
+            ],
+            "url": {
+              "raw": "{{patient_service_url}}/api/patients/{{patient_id}}",
+              "host": ["{{patient_service_url}}"],
+              "path": ["api", "patients", "{{patient_id}}"]
+            },
+            "description": "Soft delete patient (sets is_active = false). Admin only."
+          },
+          "response": []
+        }
+      ],
+      "description": "Patient management endpoints with full CRUD operations"
     }
   ]
 }
-
