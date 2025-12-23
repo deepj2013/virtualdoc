@@ -1,0 +1,343 @@
+<mxfile host="app.diagrams.net" agent="Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/143.0.0.0 Safari/537.36" version="29.2.7">
+  <diagram name="VirtualDoc User Roles &amp; Workflows" id="virtualdoc-users-flow">
+    <mxGraphModel dx="2209" dy="1213" grid="1" gridSize="10" guides="1" tooltips="1" connect="1" arrows="1" fold="1" page="1" pageScale="1" pageWidth="2000" pageHeight="3000" math="0" shadow="0">
+      <root>
+        <mxCell id="0" />
+        <mxCell id="1" parent="0" />
+        <mxCell id="part1_title" parent="1" style="text;html=1;strokeColor=none;fillColor=none;align=center;verticalAlign=middle;whiteSpace=wrap;rounded=0;fontSize=22;fontStyle=1" value="PART 1: User Roles &amp; Responsibilities Wireframe" vertex="1">
+          <mxGeometry height="50" width="1200" x="400" y="20" as="geometry" />
+        </mxCell>
+        <mxCell id="universal_admin" parent="1" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#ffcccc;strokeColor=#cc0000;fontStyle=1;fontSize=13" value="Universal Admin&#xa;(Super Admin)" vertex="1">
+          <mxGeometry height="60" width="280" x="50" y="100" as="geometry" />
+        </mxCell>
+        <mxCell id="universal_admin_resp" parent="1" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#ffe6cc;strokeColor=#d79b00;fontSize=10;align=left;verticalAlign=top" value="Responsibilities:&#xa;• Full platform access&#xa;• Manage all tenants&#xa;• Manage all admins&#xa;• System configuration&#xa;• Billing management&#xa;• Analytics access&#xa;• User management across all tenants" vertex="1">
+          <mxGeometry height="140" width="280" x="50" y="180" as="geometry" />
+        </mxCell>
+        <mxCell id="sub_admin" parent="1" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#ffcccc;strokeColor=#cc0000;fontStyle=1;fontSize=13" value="Sub Admin" vertex="1">
+          <mxGeometry height="60" width="280" x="370" y="100" as="geometry" />
+        </mxCell>
+        <mxCell id="sub_admin_resp" parent="1" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#ffe6cc;strokeColor=#d79b00;fontSize=10;align=left;verticalAlign=top" value="Responsibilities:&#xa;• Limited admin access&#xa;• Manage users (read/write)&#xa;• View analytics&#xa;• Cannot manage tenants&#xa;• Cannot manage admins&#xa;• Cannot configure system&#xa;• Global scope access" vertex="1">
+          <mxGeometry height="140" width="280" x="370" y="180" as="geometry" />
+        </mxCell>
+        <mxCell id="tenant_admin" parent="1" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#ffcccc;strokeColor=#cc0000;fontStyle=1;fontSize=13" value="Tenant Admin" vertex="1">
+          <mxGeometry height="60" width="280" x="690" y="100" as="geometry" />
+        </mxCell>
+        <mxCell id="tenant_admin_resp" parent="1" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#ffe6cc;strokeColor=#d79b00;fontSize=10;align=left;verticalAlign=top" value="Responsibilities:&#xa;• Tenant-specific admin access&#xa;• Manage users in tenant&#xa;• View tenant analytics&#xa;• Configure tenant settings&#xa;• Manage departments&#xa;• Cannot manage other tenants&#xa;• Tenant scope only" vertex="1">
+          <mxGeometry height="140" width="280" x="690" y="180" as="geometry" />
+        </mxCell>
+        <mxCell id="doctor" parent="1" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#d5e8d4;strokeColor=#82b366;fontStyle=1;fontSize=13" value="Doctor" vertex="1">
+          <mxGeometry height="60" width="280" x="1010" y="100" as="geometry" />
+        </mxCell>
+        <mxCell id="doctor_resp" parent="1" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#c9e1b6;strokeColor=#5d8a3f;fontSize=10;align=left;verticalAlign=top" value="Responsibilities:&#xa;• Conduct consultations&#xa;• Create medical records&#xa;• Write prescriptions&#xa;• Order lab tests/imaging&#xa;• View patient history&#xa;• Manage appointments&#xa;• Video consultations" vertex="1">
+          <mxGeometry height="140" width="280" x="1010" y="180" as="geometry" />
+        </mxCell>
+        <mxCell id="nurse" parent="1" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#d5e8d4;strokeColor=#82b366;fontStyle=1;fontSize=13" value="Nurse" vertex="1">
+          <mxGeometry height="60" width="280" x="1330" y="100" as="geometry" />
+        </mxCell>
+        <mxCell id="nurse_resp" parent="1" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#c9e1b6;strokeColor=#5d8a3f;fontSize=10;align=left;verticalAlign=top" value="Responsibilities:&#xa;• Assist doctors&#xa;• Record vital signs&#xa;• Update patient charts&#xa;• Manage patient care&#xa;• View patient records&#xa;• Schedule follow-ups&#xa;• Ward management" vertex="1">
+          <mxGeometry height="140" width="280" x="1330" y="180" as="geometry" />
+        </mxCell>
+        <mxCell id="receptionist" parent="1" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#dae8fc;strokeColor=#6c8ebf;fontStyle=1;fontSize=13" value="Receptionist" vertex="1">
+          <mxGeometry height="60" width="280" x="50" y="360" as="geometry" />
+        </mxCell>
+        <mxCell id="receptionist_resp" parent="1" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#cce5ff;strokeColor=#007fff;fontSize=10;align=left;verticalAlign=top" value="Responsibilities:&#xa;• Patient registration&#xa;• Appointment booking&#xa;• Check-in/check-out&#xa;• Payment collection&#xa;• Manage walk-ins&#xa;• Phone appointments&#xa;• Patient inquiries" vertex="1">
+          <mxGeometry height="140" width="280" x="50" y="440" as="geometry" />
+        </mxCell>
+        <mxCell id="lab_tech" parent="1" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#dae8fc;strokeColor=#6c8ebf;fontStyle=1;fontSize=13" value="Lab Technician" vertex="1">
+          <mxGeometry height="60" width="280" x="370" y="360" as="geometry" />
+        </mxCell>
+        <mxCell id="lab_tech_resp" parent="1" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#cce5ff;strokeColor=#007fff;fontSize=10;align=left;verticalAlign=top" value="Responsibilities:&#xa;• Perform lab tests&#xa;• Upload test results&#xa;• Manage lab equipment&#xa;• Quality control&#xa;• Report generation&#xa;• Critical value alerts&#xa;• Test scheduling" vertex="1">
+          <mxGeometry height="140" width="280" x="370" y="440" as="geometry" />
+        </mxCell>
+        <mxCell id="patient" parent="1" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#e1d5e7;strokeColor=#9673a6;fontStyle=1;fontSize=13" value="Patient" vertex="1">
+          <mxGeometry height="60" width="280" x="690" y="360" as="geometry" />
+        </mxCell>
+        <mxCell id="patient_resp" parent="1" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#f0e6ff;strokeColor=#b894d6;fontSize=10;align=left;verticalAlign=top" value="Responsibilities:&#xa;• Book appointments&#xa;• View medical records&#xa;• Access prescriptions&#xa;• Join video consultations&#xa;• View lab reports&#xa;• Update profile&#xa;• Manage family members" vertex="1">
+          <mxGeometry height="140" width="280" x="690" y="440" as="geometry" />
+        </mxCell>
+        <mxCell id="chemist" parent="1" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#dae8fc;strokeColor=#6c8ebf;fontStyle=1;fontSize=13" value="Chemist/Pharmacist" vertex="1">
+          <mxGeometry height="60" width="280" x="1010" y="360" as="geometry" />
+        </mxCell>
+        <mxCell id="chemist_resp" parent="1" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#cce5ff;strokeColor=#007fff;fontSize=10;align=left;verticalAlign=top" value="Responsibilities:&#xa;• Dispense medications&#xa;• Manage inventory&#xa;• Verify prescriptions&#xa;• Patient counseling&#xa;• Stock management&#xa;• Prescription tracking&#xa;• Drug interactions check" vertex="1">
+          <mxGeometry height="140" width="280" x="1010" y="440" as="geometry" />
+        </mxCell>
+        <mxCell id="staff" parent="1" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#dae8fc;strokeColor=#6c8ebf;fontStyle=1;fontSize=13" value="Staff" vertex="1">
+          <mxGeometry height="60" width="280" x="1330" y="360" as="geometry" />
+        </mxCell>
+        <mxCell id="staff_resp" parent="1" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#cce5ff;strokeColor=#007fff;fontSize=10;align=left;verticalAlign=top" value="Responsibilities:&#xa;• General support tasks&#xa;• Data entry&#xa;• File management&#xa;• Administrative tasks&#xa;• Limited record access&#xa;• Report generation&#xa;• Basic operations" vertex="1">
+          <mxGeometry height="140" width="280" x="1330" y="440" as="geometry" />
+        </mxCell>
+        <mxCell id="part2_title" parent="1" style="text;html=1;strokeColor=none;fillColor=none;align=center;verticalAlign=middle;whiteSpace=wrap;rounded=0;fontSize=22;fontStyle=1" value="PART 2: User Workflows &amp; Responsibilities" vertex="1">
+          <mxGeometry height="50" width="1200" x="400" y="620" as="geometry" />
+        </mxCell>
+        <mxCell id="patient_workflow_title" parent="1" style="text;html=1;strokeColor=none;fillColor=none;align=left;verticalAlign=middle;whiteSpace=wrap;rounded=0;fontSize=16;fontStyle=1" value="Patient Workflow" vertex="1">
+          <mxGeometry height="30" width="300" x="50" y="700" as="geometry" />
+        </mxCell>
+        <mxCell id="patient_wf1" parent="1" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#e1d5e7;strokeColor=#9673a6;fontSize=10" value="1. Register/Login" vertex="1">
+          <mxGeometry height="40" width="120" x="50" y="750" as="geometry" />
+        </mxCell>
+        <mxCell id="patient_wf2" parent="1" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#e1d5e7;strokeColor=#9673a6;fontSize=10" value="2. Search Doctor" vertex="1">
+          <mxGeometry height="40" width="120" x="190" y="750" as="geometry" />
+        </mxCell>
+        <mxCell id="patient_wf3" parent="1" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#e1d5e7;strokeColor=#9673a6;fontSize=10" value="3. Book Appointment" vertex="1">
+          <mxGeometry height="40" width="120" x="330" y="750" as="geometry" />
+        </mxCell>
+        <mxCell id="patient_wf4" parent="1" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#e1d5e7;strokeColor=#9673a6;fontSize=10" value="4. Join Video Call" vertex="1">
+          <mxGeometry height="40" width="120" x="470" y="750" as="geometry" />
+        </mxCell>
+        <mxCell id="patient_wf5" parent="1" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#e1d5e7;strokeColor=#9673a6;fontSize=10" value="5. View Records" vertex="1">
+          <mxGeometry height="40" width="120" x="610" y="750" as="geometry" />
+        </mxCell>
+        <mxCell id="patient_wf6" parent="1" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#e1d5e7;strokeColor=#9673a6;fontSize=10" value="6. Get Prescription" vertex="1">
+          <mxGeometry height="40" width="120" x="750" y="750" as="geometry" />
+        </mxCell>
+        <mxCell id="patient_wf_arrow1" edge="1" parent="1" source="patient_wf1" style="endArrow=classic;html=1;rounded=0;exitX=1;exitY=0.5;entryX=0;entryY=0.5;strokeWidth=2" target="patient_wf2" value="">
+          <mxGeometry height="50" relative="1" width="50" as="geometry" />
+        </mxCell>
+        <mxCell id="patient_wf_arrow2" edge="1" parent="1" source="patient_wf2" style="endArrow=classic;html=1;rounded=0;exitX=1;exitY=0.5;entryX=0;entryY=0.5;strokeWidth=2" target="patient_wf3" value="">
+          <mxGeometry height="50" relative="1" width="50" as="geometry" />
+        </mxCell>
+        <mxCell id="patient_wf_arrow3" edge="1" parent="1" source="patient_wf3" style="endArrow=classic;html=1;rounded=0;exitX=1;exitY=0.5;entryX=0;entryY=0.5;strokeWidth=2" target="patient_wf4" value="">
+          <mxGeometry height="50" relative="1" width="50" as="geometry" />
+        </mxCell>
+        <mxCell id="patient_wf_arrow4" edge="1" parent="1" source="patient_wf4" style="endArrow=classic;html=1;rounded=0;exitX=1;exitY=0.5;entryX=0;entryY=0.5;strokeWidth=2" target="patient_wf5" value="">
+          <mxGeometry height="50" relative="1" width="50" as="geometry" />
+        </mxCell>
+        <mxCell id="patient_wf_arrow5" edge="1" parent="1" source="patient_wf5" style="endArrow=classic;html=1;rounded=0;exitX=1;exitY=0.5;entryX=0;entryY=0.5;strokeWidth=2" target="patient_wf6" value="">
+          <mxGeometry height="50" relative="1" width="50" as="geometry" />
+        </mxCell>
+        <mxCell id="doctor_workflow_title" parent="1" style="text;html=1;strokeColor=none;fillColor=none;align=left;verticalAlign=middle;whiteSpace=wrap;rounded=0;fontSize=16;fontStyle=1" value="Doctor Workflow" vertex="1">
+          <mxGeometry height="30" width="300" x="50" y="830" as="geometry" />
+        </mxCell>
+        <mxCell id="doctor_wf1" parent="1" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#d5e8d4;strokeColor=#82b366;fontSize=10" value="1. Login" vertex="1">
+          <mxGeometry height="40" width="120" x="50" y="880" as="geometry" />
+        </mxCell>
+        <mxCell id="doctor_wf2" parent="1" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#d5e8d4;strokeColor=#82b366;fontSize=10" value="2. View Schedule" vertex="1">
+          <mxGeometry height="40" width="120" x="190" y="880" as="geometry" />
+        </mxCell>
+        <mxCell id="doctor_wf3" parent="1" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#d5e8d4;strokeColor=#82b366;fontSize=10" value="3. Start Consultation" vertex="1">
+          <mxGeometry height="40" width="120" x="330" y="880" as="geometry" />
+        </mxCell>
+        <mxCell id="doctor_wf4" parent="1" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#d5e8d4;strokeColor=#82b366;fontSize=10" value="4. Create Records" vertex="1">
+          <mxGeometry height="40" width="120" x="470" y="880" as="geometry" />
+        </mxCell>
+        <mxCell id="doctor_wf5" parent="1" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#d5e8d4;strokeColor=#82b366;fontSize=10" value="5. Write Prescription" vertex="1">
+          <mxGeometry height="40" width="120" x="610" y="880" as="geometry" />
+        </mxCell>
+        <mxCell id="doctor_wf6" parent="1" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#d5e8d4;strokeColor=#82b366;fontSize=10" value="6. Order Tests" vertex="1">
+          <mxGeometry height="40" width="120" x="750" y="880" as="geometry" />
+        </mxCell>
+        <mxCell id="doctor_wf_arrow1" edge="1" parent="1" source="doctor_wf1" style="endArrow=classic;html=1;rounded=0;exitX=1;exitY=0.5;entryX=0;entryY=0.5;strokeWidth=2" target="doctor_wf2" value="">
+          <mxGeometry height="50" relative="1" width="50" as="geometry" />
+        </mxCell>
+        <mxCell id="doctor_wf_arrow2" edge="1" parent="1" source="doctor_wf2" style="endArrow=classic;html=1;rounded=0;exitX=1;exitY=0.5;entryX=0;entryY=0.5;strokeWidth=2" target="doctor_wf3" value="">
+          <mxGeometry height="50" relative="1" width="50" as="geometry" />
+        </mxCell>
+        <mxCell id="doctor_wf_arrow3" edge="1" parent="1" source="doctor_wf3" style="endArrow=classic;html=1;rounded=0;exitX=1;exitY=0.5;entryX=0;entryY=0.5;strokeWidth=2" target="doctor_wf4" value="">
+          <mxGeometry height="50" relative="1" width="50" as="geometry" />
+        </mxCell>
+        <mxCell id="doctor_wf_arrow4" edge="1" parent="1" source="doctor_wf4" style="endArrow=classic;html=1;rounded=0;exitX=1;exitY=0.5;entryX=0;entryY=0.5;strokeWidth=2" target="doctor_wf5" value="">
+          <mxGeometry height="50" relative="1" width="50" as="geometry" />
+        </mxCell>
+        <mxCell id="doctor_wf_arrow5" edge="1" parent="1" source="doctor_wf5" style="endArrow=classic;html=1;rounded=0;exitX=1;exitY=0.5;entryX=0;entryY=0.5;strokeWidth=2" target="doctor_wf6" value="">
+          <mxGeometry height="50" relative="1" width="50" as="geometry" />
+        </mxCell>
+        <mxCell id="receptionist_workflow_title" parent="1" style="text;html=1;strokeColor=none;fillColor=none;align=left;verticalAlign=middle;whiteSpace=wrap;rounded=0;fontSize=16;fontStyle=1" value="Receptionist Workflow" vertex="1">
+          <mxGeometry height="30" width="300" x="50" y="960" as="geometry" />
+        </mxCell>
+        <mxCell id="receptionist_wf1" parent="1" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#dae8fc;strokeColor=#6c8ebf;fontSize=10" value="1. Login" vertex="1">
+          <mxGeometry height="40" width="120" x="50" y="1010" as="geometry" />
+        </mxCell>
+        <mxCell id="receptionist_wf2" parent="1" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#dae8fc;strokeColor=#6c8ebf;fontSize=10" value="2. Register Patient" vertex="1">
+          <mxGeometry height="40" width="120" x="190" y="1010" as="geometry" />
+        </mxCell>
+        <mxCell id="receptionist_wf3" parent="1" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#dae8fc;strokeColor=#6c8ebf;fontSize=10" value="3. Book Appointment" vertex="1">
+          <mxGeometry height="40" width="120" x="330" y="1010" as="geometry" />
+        </mxCell>
+        <mxCell id="receptionist_wf4" parent="1" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#dae8fc;strokeColor=#6c8ebf;fontSize=10" value="4. Check-in Patient" vertex="1">
+          <mxGeometry height="40" width="120" x="470" y="1010" as="geometry" />
+        </mxCell>
+        <mxCell id="receptionist_wf5" parent="1" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#dae8fc;strokeColor=#6c8ebf;fontSize=10" value="5. Collect Payment" vertex="1">
+          <mxGeometry height="40" width="120" x="610" y="1010" as="geometry" />
+        </mxCell>
+        <mxCell id="receptionist_wf6" parent="1" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#dae8fc;strokeColor=#6c8ebf;fontSize=10" value="6. Check-out" vertex="1">
+          <mxGeometry height="40" width="120" x="750" y="1010" as="geometry" />
+        </mxCell>
+        <mxCell id="receptionist_wf_arrow1" edge="1" parent="1" source="receptionist_wf1" style="endArrow=classic;html=1;rounded=0;exitX=1;exitY=0.5;entryX=0;entryY=0.5;strokeWidth=2" target="receptionist_wf2" value="">
+          <mxGeometry height="50" relative="1" width="50" as="geometry" />
+        </mxCell>
+        <mxCell id="receptionist_wf_arrow2" edge="1" parent="1" source="receptionist_wf2" style="endArrow=classic;html=1;rounded=0;exitX=1;exitY=0.5;entryX=0;entryY=0.5;strokeWidth=2" target="receptionist_wf3" value="">
+          <mxGeometry height="50" relative="1" width="50" as="geometry" />
+        </mxCell>
+        <mxCell id="receptionist_wf_arrow3" edge="1" parent="1" source="receptionist_wf3" style="endArrow=classic;html=1;rounded=0;exitX=1;exitY=0.5;entryX=0;entryY=0.5;strokeWidth=2" target="receptionist_wf4" value="">
+          <mxGeometry height="50" relative="1" width="50" as="geometry" />
+        </mxCell>
+        <mxCell id="receptionist_wf_arrow4" edge="1" parent="1" source="receptionist_wf4" style="endArrow=classic;html=1;rounded=0;exitX=1;exitY=0.5;entryX=0;entryY=0.5;strokeWidth=2" target="receptionist_wf5" value="">
+          <mxGeometry height="50" relative="1" width="50" as="geometry" />
+        </mxCell>
+        <mxCell id="receptionist_wf_arrow5" edge="1" parent="1" source="receptionist_wf5" style="endArrow=classic;html=1;rounded=0;exitX=1;exitY=0.5;entryX=0;entryY=0.5;strokeWidth=2" target="receptionist_wf6" value="">
+          <mxGeometry height="50" relative="1" width="50" as="geometry" />
+        </mxCell>
+        <mxCell id="nurse_workflow_title" parent="1" style="text;html=1;strokeColor=none;fillColor=none;align=left;verticalAlign=middle;whiteSpace=wrap;rounded=0;fontSize=16;fontStyle=1" value="Nurse Workflow" vertex="1">
+          <mxGeometry height="30" width="300" x="50" y="1090" as="geometry" />
+        </mxCell>
+        <mxCell id="nurse_wf1" parent="1" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#d5e8d4;strokeColor=#82b366;fontSize=10" value="1. Login" vertex="1">
+          <mxGeometry height="40" width="120" x="50" y="1140" as="geometry" />
+        </mxCell>
+        <mxCell id="nurse_wf2" parent="1" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#d5e8d4;strokeColor=#82b366;fontSize=10" value="2. View Patients" vertex="1">
+          <mxGeometry height="40" width="120" x="190" y="1140" as="geometry" />
+        </mxCell>
+        <mxCell id="nurse_wf3" parent="1" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#d5e8d4;strokeColor=#82b366;fontSize=10" value="3. Record Vitals" vertex="1">
+          <mxGeometry height="40" width="120" x="330" y="1140" as="geometry" />
+        </mxCell>
+        <mxCell id="nurse_wf4" parent="1" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#d5e8d4;strokeColor=#82b366;fontSize=10" value="4. Update Charts" vertex="1">
+          <mxGeometry height="40" width="120" x="470" y="1140" as="geometry" />
+        </mxCell>
+        <mxCell id="nurse_wf5" parent="1" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#d5e8d4;strokeColor=#82b366;fontSize=10" value="5. Assist Doctor" vertex="1">
+          <mxGeometry height="40" width="120" x="610" y="1140" as="geometry" />
+        </mxCell>
+        <mxCell id="nurse_wf6" parent="1" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#d5e8d4;strokeColor=#82b366;fontSize=10" value="6. Ward Management" vertex="1">
+          <mxGeometry height="40" width="120" x="750" y="1140" as="geometry" />
+        </mxCell>
+        <mxCell id="nurse_wf_arrow1" edge="1" parent="1" source="nurse_wf1" style="endArrow=classic;html=1;rounded=0;exitX=1;exitY=0.5;entryX=0;entryY=0.5;strokeWidth=2" target="nurse_wf2" value="">
+          <mxGeometry height="50" relative="1" width="50" as="geometry" />
+        </mxCell>
+        <mxCell id="nurse_wf_arrow2" edge="1" parent="1" source="nurse_wf2" style="endArrow=classic;html=1;rounded=0;exitX=1;exitY=0.5;entryX=0;entryY=0.5;strokeWidth=2" target="nurse_wf3" value="">
+          <mxGeometry height="50" relative="1" width="50" as="geometry" />
+        </mxCell>
+        <mxCell id="nurse_wf_arrow3" edge="1" parent="1" source="nurse_wf3" style="endArrow=classic;html=1;rounded=0;exitX=1;exitY=0.5;entryX=0;entryY=0.5;strokeWidth=2" target="nurse_wf4" value="">
+          <mxGeometry height="50" relative="1" width="50" as="geometry" />
+        </mxCell>
+        <mxCell id="nurse_wf_arrow4" edge="1" parent="1" source="nurse_wf4" style="endArrow=classic;html=1;rounded=0;exitX=1;exitY=0.5;entryX=0;entryY=0.5;strokeWidth=2" target="nurse_wf5" value="">
+          <mxGeometry height="50" relative="1" width="50" as="geometry" />
+        </mxCell>
+        <mxCell id="nurse_wf_arrow5" edge="1" parent="1" source="nurse_wf5" style="endArrow=classic;html=1;rounded=0;exitX=1;exitY=0.5;entryX=0;entryY=0.5;strokeWidth=2" target="nurse_wf6" value="">
+          <mxGeometry height="50" relative="1" width="50" as="geometry" />
+        </mxCell>
+        <mxCell id="lab_workflow_title" parent="1" style="text;html=1;strokeColor=none;fillColor=none;align=left;verticalAlign=middle;whiteSpace=wrap;rounded=0;fontSize=16;fontStyle=1" value="Lab Technician Workflow" vertex="1">
+          <mxGeometry height="30" width="300" x="50" y="1220" as="geometry" />
+        </mxCell>
+        <mxCell id="lab_wf1" parent="1" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#dae8fc;strokeColor=#6c8ebf;fontSize=10" value="1. Login" vertex="1">
+          <mxGeometry height="40" width="120" x="50" y="1270" as="geometry" />
+        </mxCell>
+        <mxCell id="lab_wf2" parent="1" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#dae8fc;strokeColor=#6c8ebf;fontSize=10" value="2. View Test Orders" vertex="1">
+          <mxGeometry height="40" width="120" x="190" y="1270" as="geometry" />
+        </mxCell>
+        <mxCell id="lab_wf3" parent="1" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#dae8fc;strokeColor=#6c8ebf;fontSize=10" value="3. Perform Test" vertex="1">
+          <mxGeometry height="40" width="120" x="330" y="1270" as="geometry" />
+        </mxCell>
+        <mxCell id="lab_wf4" parent="1" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#dae8fc;strokeColor=#6c8ebf;fontSize=10" value="4. Enter Results" vertex="1">
+          <mxGeometry height="40" width="120" x="470" y="1270" as="geometry" />
+        </mxCell>
+        <mxCell id="lab_wf5" parent="1" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#dae8fc;strokeColor=#6c8ebf;fontSize=10" value="5. Quality Check" vertex="1">
+          <mxGeometry height="40" width="120" x="610" y="1270" as="geometry" />
+        </mxCell>
+        <mxCell id="lab_wf6" parent="1" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#dae8fc;strokeColor=#6c8ebf;fontSize=10" value="6. Upload Report" vertex="1">
+          <mxGeometry height="40" width="120" x="750" y="1270" as="geometry" />
+        </mxCell>
+        <mxCell id="lab_wf_arrow1" edge="1" parent="1" source="lab_wf1" style="endArrow=classic;html=1;rounded=0;exitX=1;exitY=0.5;entryX=0;entryY=0.5;strokeWidth=2" target="lab_wf2" value="">
+          <mxGeometry height="50" relative="1" width="50" as="geometry" />
+        </mxCell>
+        <mxCell id="lab_wf_arrow2" edge="1" parent="1" source="lab_wf2" style="endArrow=classic;html=1;rounded=0;exitX=1;exitY=0.5;entryX=0;entryY=0.5;strokeWidth=2" target="lab_wf3" value="">
+          <mxGeometry height="50" relative="1" width="50" as="geometry" />
+        </mxCell>
+        <mxCell id="lab_wf_arrow3" edge="1" parent="1" source="lab_wf3" style="endArrow=classic;html=1;rounded=0;exitX=1;exitY=0.5;entryX=0;entryY=0.5;strokeWidth=2" target="lab_wf4" value="">
+          <mxGeometry height="50" relative="1" width="50" as="geometry" />
+        </mxCell>
+        <mxCell id="lab_wf_arrow4" edge="1" parent="1" source="lab_wf4" style="endArrow=classic;html=1;rounded=0;exitX=1;exitY=0.5;entryX=0;entryY=0.5;strokeWidth=2" target="lab_wf5" value="">
+          <mxGeometry height="50" relative="1" width="50" as="geometry" />
+        </mxCell>
+        <mxCell id="lab_wf_arrow5" edge="1" parent="1" source="lab_wf5" style="endArrow=classic;html=1;rounded=0;exitX=1;exitY=0.5;entryX=0;entryY=0.5;strokeWidth=2" target="lab_wf6" value="">
+          <mxGeometry height="50" relative="1" width="50" as="geometry" />
+        </mxCell>
+        <mxCell id="admin_workflow_title" parent="1" style="text;html=1;strokeColor=none;fillColor=none;align=left;verticalAlign=middle;whiteSpace=wrap;rounded=0;fontSize=16;fontStyle=1" value="Admin Workflow (Universal/Sub/Tenant)" vertex="1">
+          <mxGeometry height="30" width="400" x="50" y="1350" as="geometry" />
+        </mxCell>
+        <mxCell id="admin_wf1" parent="1" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#ffcccc;strokeColor=#cc0000;fontSize=10" value="1. Login" vertex="1">
+          <mxGeometry height="40" width="120" x="50" y="1400" as="geometry" />
+        </mxCell>
+        <mxCell id="admin_wf2" parent="1" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#ffcccc;strokeColor=#cc0000;fontSize=10" value="2. Dashboard" vertex="1">
+          <mxGeometry height="40" width="120" x="190" y="1400" as="geometry" />
+        </mxCell>
+        <mxCell id="admin_wf3" parent="1" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#ffcccc;strokeColor=#cc0000;fontSize=10" value="3. Manage Users" vertex="1">
+          <mxGeometry height="40" width="120" x="330" y="1400" as="geometry" />
+        </mxCell>
+        <mxCell id="admin_wf4" parent="1" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#ffcccc;strokeColor=#cc0000;fontSize=10" value="4. View Analytics" vertex="1">
+          <mxGeometry height="40" width="120" x="470" y="1400" as="geometry" />
+        </mxCell>
+        <mxCell id="admin_wf5" parent="1" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#ffcccc;strokeColor=#cc0000;fontSize=10" value="5. Configure System" vertex="1">
+          <mxGeometry height="40" width="120" x="610" y="1400" as="geometry" />
+        </mxCell>
+        <mxCell id="admin_wf6" parent="1" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#ffcccc;strokeColor=#cc0000;fontSize=10" value="6. Manage Tenants" vertex="1">
+          <mxGeometry height="40" width="120" x="750" y="1400" as="geometry" />
+        </mxCell>
+        <mxCell id="admin_wf_arrow1" edge="1" parent="1" source="admin_wf1" style="endArrow=classic;html=1;rounded=0;exitX=1;exitY=0.5;entryX=0;entryY=0.5;strokeWidth=2" target="admin_wf2" value="">
+          <mxGeometry height="50" relative="1" width="50" as="geometry" />
+        </mxCell>
+        <mxCell id="admin_wf_arrow2" edge="1" parent="1" source="admin_wf2" style="endArrow=classic;html=1;rounded=0;exitX=1;exitY=0.5;entryX=0;entryY=0.5;strokeWidth=2" target="admin_wf3" value="">
+          <mxGeometry height="50" relative="1" width="50" as="geometry" />
+        </mxCell>
+        <mxCell id="admin_wf_arrow3" edge="1" parent="1" source="admin_wf3" style="endArrow=classic;html=1;rounded=0;exitX=1;exitY=0.5;entryX=0;entryY=0.5;strokeWidth=2" target="admin_wf4" value="">
+          <mxGeometry height="50" relative="1" width="50" as="geometry" />
+        </mxCell>
+        <mxCell id="admin_wf_arrow4" edge="1" parent="1" source="admin_wf4" style="endArrow=classic;html=1;rounded=0;exitX=1;exitY=0.5;entryX=0;entryY=0.5;strokeWidth=2" target="admin_wf5" value="">
+          <mxGeometry height="50" relative="1" width="50" as="geometry" />
+        </mxCell>
+        <mxCell id="admin_wf_arrow5" edge="1" parent="1" source="admin_wf5" style="endArrow=classic;html=1;rounded=0;exitX=1;exitY=0.5;entryX=0;entryY=0.5;strokeWidth=2" target="admin_wf6" value="">
+          <mxGeometry height="50" relative="1" width="50" as="geometry" />
+        </mxCell>
+        <mxCell id="chemist_workflow_title" parent="1" style="text;html=1;strokeColor=none;fillColor=none;align=left;verticalAlign=middle;whiteSpace=wrap;rounded=0;fontSize=16;fontStyle=1" value="Chemist/Pharmacist Workflow" vertex="1">
+          <mxGeometry height="30" width="300" x="1050" y="700" as="geometry" />
+        </mxCell>
+        <mxCell id="chemist_wf1" parent="1" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#dae8fc;strokeColor=#6c8ebf;fontSize=10" value="1. Login" vertex="1">
+          <mxGeometry height="40" width="120" x="1050" y="750" as="geometry" />
+        </mxCell>
+        <mxCell id="chemist_wf2" parent="1" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#dae8fc;strokeColor=#6c8ebf;fontSize=10" value="2. View Prescriptions" vertex="1">
+          <mxGeometry height="40" width="120" x="1190" y="750" as="geometry" />
+        </mxCell>
+        <mxCell id="chemist_wf3" parent="1" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#dae8fc;strokeColor=#6c8ebf;fontSize=10" value="3. Verify Prescription" vertex="1">
+          <mxGeometry height="40" width="120" x="1330" y="750" as="geometry" />
+        </mxCell>
+        <mxCell id="chemist_wf4" parent="1" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#dae8fc;strokeColor=#6c8ebf;fontSize=10" value="4. Check Inventory" vertex="1">
+          <mxGeometry height="40" width="120" x="1470" y="750" as="geometry" />
+        </mxCell>
+        <mxCell id="chemist_wf5" parent="1" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#dae8fc;strokeColor=#6c8ebf;fontSize=10" value="5. Dispense Medicine" vertex="1">
+          <mxGeometry height="40" width="120" x="1610" y="750" as="geometry" />
+        </mxCell>
+        <mxCell id="chemist_wf6" parent="1" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#dae8fc;strokeColor=#6c8ebf;fontSize=10" value="6. Update Stock" vertex="1">
+          <mxGeometry height="40" width="120" x="1750" y="750" as="geometry" />
+        </mxCell>
+        <mxCell id="chemist_wf_arrow1" edge="1" parent="1" source="chemist_wf1" style="endArrow=classic;html=1;rounded=0;exitX=1;exitY=0.5;entryX=0;entryY=0.5;strokeWidth=2" target="chemist_wf2" value="">
+          <mxGeometry height="50" relative="1" width="50" as="geometry" />
+        </mxCell>
+        <mxCell id="chemist_wf_arrow2" edge="1" parent="1" source="chemist_wf2" style="endArrow=classic;html=1;rounded=0;exitX=1;exitY=0.5;entryX=0;entryY=0.5;strokeWidth=2" target="chemist_wf3" value="">
+          <mxGeometry height="50" relative="1" width="50" as="geometry" />
+        </mxCell>
+        <mxCell id="chemist_wf_arrow3" edge="1" parent="1" source="chemist_wf3" style="endArrow=classic;html=1;rounded=0;exitX=1;exitY=0.5;entryX=0;entryY=0.5;strokeWidth=2" target="chemist_wf4" value="">
+          <mxGeometry height="50" relative="1" width="50" as="geometry" />
+        </mxCell>
+        <mxCell id="chemist_wf_arrow4" edge="1" parent="1" source="chemist_wf4" style="endArrow=classic;html=1;rounded=0;exitX=1;exitY=0.5;entryX=0;entryY=0.5;strokeWidth=2" target="chemist_wf5" value="">
+          <mxGeometry height="50" relative="1" width="50" as="geometry" />
+        </mxCell>
+        <mxCell id="chemist_wf_arrow5" edge="1" parent="1" source="chemist_wf5" style="endArrow=classic;html=1;rounded=0;exitX=1;exitY=0.5;entryX=0;entryY=0.5;strokeWidth=2" target="chemist_wf6" value="">
+          <mxGeometry height="50" relative="1" width="50" as="geometry" />
+        </mxCell>
+        <mxCell id="summary_box" parent="1" style="swimlane;fontStyle=1;childLayout=stackLayout;horizontal=1;startSize=30;horizontalStack=0;resizeParent=1;resizeParentMax=0;resizeLast=0;collapsible=1;marginBottom=0;whiteSpace=wrap;html=1;fillColor=#fff2cc;strokeColor=#d6b656;" value="Summary" vertex="1">
+          <mxGeometry height="200" width="1900" x="50" y="1500" as="geometry" />
+        </mxCell>
+        <mxCell id="summary_text" parent="summary_box" style="text;html=1;strokeColor=none;fillColor=none;align=left;verticalAlign=top;whiteSpace=wrap;rounded=0;fontSize=11" value="Key Points:&#xa;• Each user role has specific responsibilities and access levels&#xa;• Workflows are role-based and follow a logical sequence&#xa;• Universal Admin has highest privileges (all tenants)&#xa;• Sub Admin has limited global access&#xa;• Tenant Admin manages only their tenant&#xa;• Clinical staff (Doctors, Nurses) focus on patient care&#xa;• Support staff (Receptionist, Lab Tech, Chemist) handle operations&#xa;• Patients have read access to their own records and can book appointments&#xa;• All workflows start with authentication and follow role-specific paths" vertex="1">
+          <mxGeometry height="150" width="1860" x="20" y="30" as="geometry" />
+        </mxCell>
+        <mxCell id="legend_box" parent="1" style="swimlane;fontStyle=1;childLayout=stackLayout;horizontal=1;startSize=30;horizontalStack=0;resizeParent=1;resizeParentMax=0;resizeLast=0;collapsible=1;marginBottom=0;whiteSpace=wrap;html=1;fillColor=#f5f5f5;strokeColor=#666666;" value="Color Legend" vertex="1">
+          <mxGeometry height="100" width="1900" x="50" y="1750" as="geometry" />
+        </mxCell>
+        <mxCell id="legend_content" parent="legend_box" style="text;html=1;strokeColor=none;fillColor=none;align=left;verticalAlign=middle;whiteSpace=wrap;rounded=0;fontSize=12" value="Red = Admin Roles | Green = Clinical Staff (Doctor, Nurse) | Blue = Support Staff (Receptionist, Lab Tech, Chemist, Staff) | Purple = Patient" vertex="1">
+          <mxGeometry height="30" width="1860" x="20" y="30" as="geometry" />
+        </mxCell>
+        <mxCell id="legend_note" parent="legend_box" style="text;html=1;strokeColor=none;fillColor=none;align=left;verticalAlign=middle;whiteSpace=wrap;rounded=0;fontSize=10;fontStyle=2" value="Note: Workflow steps are color-coded to match their respective user roles. Arrows show the sequence of actions for each role." vertex="1">
+          <mxGeometry height="20" width="1860" x="20" y="60" as="geometry" />
+        </mxCell>
+      </root>
+    </mxGraphModel>
+  </diagram>
+</mxfile>

@@ -1,22 +1,23 @@
 import { Router } from 'express';
-import { UserController } from '../controllers/UserController';
+import PermissionController from '../controllers/PermissionController';
+import { authenticate } from '../middleware/auth.middleware';
 
 const router = Router();
-const userController = new UserController();
+const permissionController = new PermissionController();
 
 /**
  * @route   POST /api/permissions
  * @desc    Create a new permission
  * @access  Protected
  */
-router.post('/', userController.createPermission);
+router.post('/', authenticate, permissionController.createPermission);
 
 /**
  * @route   GET /api/permissions
  * @desc    Get all permissions (optionally filter by module)
  * @access  Protected
  */
-router.get('/', userController.getAllPermissions);
+router.get('/', authenticate, permissionController.getAllPermissions);
 
 export default router;
 

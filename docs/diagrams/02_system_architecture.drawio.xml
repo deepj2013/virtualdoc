@@ -1,0 +1,131 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<mxfile host="app.diagrams.net" version="28.2.8">
+  <diagram name="System Architecture" id="system-architecture">
+    <mxGraphModel dx="1422" dy="794" grid="1" gridSize="10" guides="1" tooltips="1" connect="1" arrows="1" fold="1" page="1" pageScale="1" pageWidth="1800" pageHeight="1400" math="0" shadow="0">
+      <root>
+        <mxCell id="0" />
+        <mxCell id="1" parent="0" />
+        
+        <mxCell id="title" value="VirtualDoc System Architecture" style="text;html=1;strokeColor=none;fillColor=none;align=center;verticalAlign=middle;whiteSpace=wrap;rounded=0;fontSize=24;fontStyle=1" vertex="1" parent="1">
+          <mxGeometry x="500" y="20" width="800" height="50" as="geometry" />
+        </mxCell>
+
+        <!-- Client Layer -->
+        <mxCell id="client_layer" value="Client Layer" style="swimlane;fontStyle=1;childLayout=stackLayout;horizontal=1;startSize=40;horizontalStack=0;resizeParent=1;resizeParentMax=0;resizeLast=0;collapsible=1;marginBottom=0;whiteSpace=wrap;html=1;fillColor=#e1d5e7;strokeColor=#9673a6;" vertex="1" parent="1">
+          <mxGeometry x="100" y="100" width="1600" height="120" as="geometry" />
+        </mxCell>
+        
+        <mxCell id="web_app" value="Web Application&#xa;(React + Vite)" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#ffe6cc;strokeColor=#d79b00;fontStyle=1;fontSize=12" vertex="1" parent="client_layer">
+          <mxGeometry x="100" y="40" width="200" height="60" as="geometry" />
+        </mxCell>
+        
+        <mxCell id="mobile_app" value="Mobile App&#xa;(Future)" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#ffe6cc;strokeColor=#d79b00;fontStyle=1;fontSize=12;opacity=50" vertex="1" parent="client_layer">
+          <mxGeometry x="350" y="40" width="200" height="60" as="geometry" />
+        </mxCell>
+        
+        <mxCell id="admin_panel" value="Admin Panel&#xa;(React)" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#ffe6cc;strokeColor=#d79b00;fontStyle=1;fontSize=12" vertex="1" parent="client_layer">
+          <mxGeometry x="600" y="40" width="200" height="60" as="geometry" />
+        </mxCell>
+
+        <!-- API Gateway Layer -->
+        <mxCell id="gateway_layer" value="API Gateway Layer" style="swimlane;fontStyle=1;childLayout=stackLayout;horizontal=1;startSize=40;horizontalStack=0;resizeParent=1;resizeParentMax=0;resizeLast=0;collapsible=1;marginBottom=0;whiteSpace=wrap;html=1;fillColor=#dae8fc;strokeColor=#6c8ebf;" vertex="1" parent="1">
+          <mxGeometry x="100" y="260" width="1600" height="100" as="geometry" />
+        </mxCell>
+        
+        <mxCell id="api_gateway" value="API Gateway&#xa;(Nginx - Future)&#xa;Load Balancing, Rate Limiting" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#cce5ff;strokeColor=#007fff;fontStyle=1;fontSize=12" vertex="1" parent="gateway_layer">
+          <mxGeometry x="700" y="40" width="200" height="50" as="geometry" />
+        </mxCell>
+
+        <!-- Microservices Layer -->
+        <mxCell id="services_layer" value="Microservices Layer" style="swimlane;fontStyle=1;childLayout=stackLayout;horizontal=1;startSize=40;horizontalStack=0;resizeParent=1;resizeParentMax=0;resizeLast=0;collapsible=1;marginBottom=0;whiteSpace=wrap;html=1;fillColor=#f8cecc;strokeColor=#b85450;" vertex="1" parent="1">
+          <mxGeometry x="100" y="400" width="1600" height="500" as="geometry" />
+        </mxCell>
+        
+        <mxCell id="auth_service" value="Auth Service&#xa;Port: 3001&#xa;• Authentication&#xa;• JWT Tokens&#xa;• Sessions&#xa;• Login Attempts" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#ffcccc;strokeColor=#cc0000;fontStyle=1;fontSize=11" vertex="1" parent="services_layer">
+          <mxGeometry x="50" y="40" width="180" height="100" as="geometry" />
+        </mxCell>
+        
+        <mxCell id="user_service" value="User Service&#xa;Port: 3002&#xa;• User Management&#xa;• Roles &amp; Permissions&#xa;• Profile Management" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#ffcccc;strokeColor=#cc0000;fontStyle=1;fontSize=11" vertex="1" parent="services_layer">
+          <mxGeometry x="280" y="40" width="180" height="100" as="geometry" />
+        </mxCell>
+        
+        <mxCell id="patient_service" value="Patient Service&#xa;Port: 3003&#xa;• Patient CRUD&#xa;• Medical Records&#xa;• Prescriptions" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#ffcccc;strokeColor=#cc0000;fontStyle=1;fontSize=11" vertex="1" parent="services_layer">
+          <mxGeometry x="510" y="40" width="180" height="100" as="geometry" />
+        </mxCell>
+        
+        <mxCell id="appointment_service" value="Appointment Service&#xa;Port: 3004&#xa;• Scheduling&#xa;• Rosters&#xa;• Reminders" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#ffcccc;strokeColor=#cc0000;fontStyle=1;fontSize=11" vertex="1" parent="services_layer">
+          <mxGeometry x="740" y="40" width="180" height="100" as="geometry" />
+        </mxCell>
+        
+        <mxCell id="video_service" value="Video Service&#xa;Port: 3005 (Future)&#xa;• WebRTC&#xa;• Meetings&#xa;• Recordings" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#ffcccc;strokeColor=#cc0000;fontStyle=1;fontSize=11;opacity=50" vertex="1" parent="services_layer">
+          <mxGeometry x="970" y="40" width="180" height="100" as="geometry" />
+        </mxCell>
+        
+        <mxCell id="billing_service" value="Billing Service&#xa;Port: 3006 (Future)&#xa;• Invoices&#xa;• Payments&#xa;• Insurance" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#ffcccc;strokeColor=#cc0000;fontStyle=1;fontSize=11;opacity=50" vertex="1" parent="services_layer">
+          <mxGeometry x="1200" y="40" width="180" height="100" as="geometry" />
+        </mxCell>
+        
+        <mxCell id="notification_service" value="Notification Service&#xa;Port: 3007 (Future)&#xa;• Email&#xa;• SMS&#xa;• Push" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#ffcccc;strokeColor=#cc0000;fontStyle=1;fontSize=11;opacity=50" vertex="1" parent="services_layer">
+          <mxGeometry x="1430" y="40" width="180" height="100" as="geometry" />
+        </mxCell>
+
+        <!-- Data Layer -->
+        <mxCell id="data_layer" value="Data Layer" style="swimlane;fontStyle=1;childLayout=stackLayout;horizontal=1;startSize=40;horizontalStack=0;resizeParent=1;resizeParentMax=0;resizeLast=0;collapsible=1;marginBottom=0;whiteSpace=wrap;html=1;fillColor=#d5e8d4;strokeColor=#82b366;" vertex="1" parent="1">
+          <mxGeometry x="100" y="940" width="1600" height="200" as="geometry" />
+        </mxCell>
+        
+        <mxCell id="postgres" value="PostgreSQL Database&#xa;Port: 5433&#xa;• Primary Data Store&#xa;• Multi-tenant Support&#xa;• ACID Compliance" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#c9e1b6;strokeColor=#5d8a3f;fontStyle=1;fontSize=12" vertex="1" parent="data_layer">
+          <mxGeometry x="600" y="40" width="250" height="100" as="geometry" />
+        </mxCell>
+        
+        <mxCell id="redis" value="Redis Cache&#xa;Port: 6379&#xa;• Session Storage&#xa;• Cache Layer&#xa;• TTL Management" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#c9e1b6;strokeColor=#5d8a3f;fontStyle=1;fontSize=12" vertex="1" parent="data_layer">
+          <mxGeometry x="900" y="40" width="250" height="100" as="geometry" />
+        </mxCell>
+        
+        <mxCell id="file_storage" value="File Storage&#xa;(Future)&#xa;• Medical Records&#xa;• Reports&#xa;• Encrypted Storage" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#c9e1b6;strokeColor=#5d8a3f;fontStyle=1;fontSize=12;opacity=50" vertex="1" parent="data_layer">
+          <mxGeometry x="1200" y="40" width="250" height="100" as="geometry" />
+        </mxCell>
+
+        <!-- Connections -->
+        <mxCell id="conn1" value="" style="endArrow=classic;html=1;rounded=0;exitX=0.5;exitY=1;entryX=0.5;entryY=0;strokeWidth=2" edge="1" parent="1" source="web_app" target="api_gateway">
+          <mxGeometry width="50" height="50" relative="1" as="geometry" />
+        </mxCell>
+        
+        <mxCell id="conn2" value="" style="endArrow=classic;html=1;rounded=0;exitX=0.5;exitY=1;entryX=0.5;entryY=0;strokeWidth=2" edge="1" parent="1" source="api_gateway" target="auth_service">
+          <mxGeometry width="50" height="50" relative="1" as="geometry" />
+        </mxCell>
+        
+        <mxCell id="conn3" value="" style="endArrow=classic;html=1;rounded=0;exitX=0.5;exitY=1;entryX=0.5;entryY=0;strokeWidth=2" edge="1" parent="1" source="auth_service" target="postgres">
+          <mxGeometry width="50" height="50" relative="1" as="geometry" />
+        </mxCell>
+        
+        <mxCell id="conn4" value="" style="endArrow=classic;html=1;rounded=0;exitX=0.5;exitY=1;entryX=0.5;entryY=0;strokeWidth=2" edge="1" parent="1" source="auth_service" target="redis">
+          <mxGeometry width="50" height="50" relative="1" as="geometry" />
+        </mxCell>
+        
+        <mxCell id="conn5" value="" style="endArrow=classic;html=1;rounded=0;exitX=0.5;exitY=1;entryX=0.5;entryY=0;strokeWidth=2" edge="1" parent="1" source="user_service" target="postgres">
+          <mxGeometry width="50" height="50" relative="1" as="geometry" />
+        </mxCell>
+        
+        <mxCell id="conn6" value="" style="endArrow=classic;html=1;rounded=0;exitX=0.5;exitY=1;entryX=0.5;entryY=0;strokeWidth=2" edge="1" parent="1" source="patient_service" target="postgres">
+          <mxGeometry width="50" height="50" relative="1" as="geometry" />
+        </mxCell>
+        
+        <mxCell id="conn7" value="" style="endArrow=classic;html=1;rounded=0;exitX=0.5;exitY=1;entryX=0.5;entryY=0;strokeWidth=2" edge="1" parent="1" source="appointment_service" target="postgres">
+          <mxGeometry width="50" height="50" relative="1" as="geometry" />
+        </mxCell>
+
+        <!-- Technology Stack -->
+        <mxCell id="tech_box" value="Technology Stack" style="swimlane;fontStyle=1;childLayout=stackLayout;horizontal=1;startSize=30;horizontalStack=0;resizeParent=1;resizeParentMax=0;resizeLast=0;collapsible=1;marginBottom=0;whiteSpace=wrap;html=1;fillColor=#fff2cc;strokeColor=#d6b656;" vertex="1" parent="1">
+          <mxGeometry x="100" y="1180" width="1600" height="150" as="geometry" />
+        </mxCell>
+        
+        <mxCell id="tech_text" value="Frontend: React, Vite, TypeScript, Tailwind CSS | Backend: Node.js, Express.js, TypeScript | Database: PostgreSQL 15, Redis 7 | Containerization: Docker, Docker Compose | Authentication: JWT | Security: Helmet.js, bcrypt" style="text;html=1;strokeColor=none;fillColor=none;align=left;verticalAlign=middle;whiteSpace=wrap;rounded=0;fontSize=11" vertex="1" parent="tech_box">
+          <mxGeometry x="20" y="30" width="1560" height="100" as="geometry" />
+        </mxCell>
+
+      </root>
+    </mxGraphModel>
+  </diagram>
+</mxfile>
+

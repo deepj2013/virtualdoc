@@ -1,8 +1,17 @@
 import { BrowserRouter, Routes, Route, Navigate } from 'react-router-dom';
 import HomePage from './pages/HomePage';
 import AdminLoginPage from './pages/AdminLoginPage';
-import AdminDashboard from './pages/AdminDashboard';
 import ForgotPasswordPage from './pages/ForgotPasswordPage';
+import AdminLayout from './components/AdminLayout';
+import AdminDashboard from './pages/AdminDashboard';
+import UsersPage from './pages/admin/UsersPage';
+import TenantsPage from './pages/admin/TenantsPage';
+import AdminsPage from './pages/admin/AdminsPage';
+import AnalyticsPage from './pages/admin/AnalyticsPage';
+import BillingPage from './pages/admin/BillingPage';
+import SecurityPage from './pages/admin/SecurityPage';
+import LogsPage from './pages/admin/LogsPage';
+import SettingsPage from './pages/admin/SettingsPage';
 import './App.css';
 
 // Protected Route Component
@@ -19,13 +28,24 @@ function App() {
         <Route path="/admin/login" element={<AdminLoginPage />} />
         <Route path="/admin/forgot-password" element={<ForgotPasswordPage />} />
         <Route
-          path="/admin/dashboard"
+          path="/admin"
           element={
             <ProtectedRoute>
-              <AdminDashboard />
+              <AdminLayout />
             </ProtectedRoute>
           }
-        />
+        >
+          <Route index element={<Navigate to="/admin/dashboard" replace />} />
+          <Route path="dashboard" element={<AdminDashboard />} />
+          <Route path="users" element={<UsersPage />} />
+          <Route path="tenants" element={<TenantsPage />} />
+          <Route path="admins" element={<AdminsPage />} />
+          <Route path="analytics" element={<AnalyticsPage />} />
+          <Route path="billing" element={<BillingPage />} />
+          <Route path="security" element={<SecurityPage />} />
+          <Route path="logs" element={<LogsPage />} />
+          <Route path="settings" element={<SettingsPage />} />
+        </Route>
         <Route path="*" element={<Navigate to="/" replace />} />
       </Routes>
     </BrowserRouter>

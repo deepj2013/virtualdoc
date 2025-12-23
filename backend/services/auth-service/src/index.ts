@@ -75,6 +75,7 @@ app.get('/health', (req: Request, res: Response) => {
 
 // API Routes
 app.use('/api/admin/auth', adminRoutes);
+app.use('/api/admin', adminRoutes); // Admin management routes (same controller, different base path)
 
 // Root route
 app.get('/', (req: Request, res: Response) => {

@@ -82,3 +82,58 @@ export interface UserSearchParams {
   limit?: number;
 }
 
+export interface Permission {
+  id: string;
+  name: string;
+  code: string;
+  module: string;
+  description: string | null;
+  createdAt: Date;
+}
+
+export interface CreatePermissionRequest {
+  name: string;
+  code: string;
+  module: string;
+  description?: string | null;
+}
+
+export interface RolePermission {
+  id: string;
+  role: string;
+  permissionId: string;
+  canRead: boolean;
+  canWrite: boolean;
+  canDelete: boolean;
+  canManage: boolean;
+  createdAt: Date;
+}
+
+export interface AssignRolePermissionRequest {
+  role: string;
+  permissionId: string;
+  canRead?: boolean;
+  canWrite?: boolean;
+  canDelete?: boolean;
+  canManage?: boolean;
+}
+
+export interface UserRole {
+  id: string;
+  userId: string;
+  role: string;
+  tenantId: string | null;
+  departmentId: string | null;
+  assignedBy: string;
+  assignedAt: Date;
+  isActive: boolean;
+}
+
+export interface CreateUserRoleRequest {
+  userId: string;
+  role: string;
+  tenantId: string | null;
+  departmentId?: string | null;
+  assignedBy: string;
+}
+

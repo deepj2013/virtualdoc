@@ -1,0 +1,320 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<mxfile host="app.diagrams.net" version="28.2.8">
+  <diagram name="Frontend Navigation by Role" id="frontend-nav">
+    <mxGraphModel dx="1422" dy="794" grid="1" gridSize="10" guides="1" tooltips="1" connect="1" arrows="1" fold="1" page="1" pageScale="1" pageWidth="2000" pageHeight="2800" math="0" shadow="0">
+      <root>
+        <mxCell id="0" />
+        <mxCell id="1" parent="0" />
+        
+        <mxCell id="title" value="VirtualDoc Frontend Navigation - Menu Structure by Role" style="text;html=1;strokeColor=none;fillColor=none;align=center;verticalAlign=middle;whiteSpace=wrap;rounded=0;fontSize=24;fontStyle=1" vertex="1" parent="1">
+          <mxGeometry x="500" y="20" width="1000" height="50" as="geometry" />
+        </mxCell>
+
+        <!-- Universal Admin -->
+        <mxCell id="admin_title" value="Universal Admin / Sub Admin / Tenant Admin" style="text;html=1;strokeColor=none;fillColor=none;align=left;verticalAlign=middle;whiteSpace=wrap;rounded=0;fontSize=18;fontStyle=1" vertex="1" parent="1">
+          <mxGeometry x="50" y="100" width="500" height="40" as="geometry" />
+        </mxCell>
+        
+        <mxCell id="admin_menu" value="Admin Panel Menu" style="swimlane;fontStyle=1;childLayout=stackLayout;horizontal=1;startSize=40;horizontalStack=0;resizeParent=1;resizeParentMax=0;resizeLast=0;collapsible=1;marginBottom=0;whiteSpace=wrap;html=1;fillColor=#ffcccc;strokeColor=#cc0000;" vertex="1" parent="1">
+          <mxGeometry x="50" y="160" width="900" height="300" as="geometry" />
+        </mxCell>
+        
+        <mxCell id="admin_dash" value="🏠 Dashboard - Overview, stats, quick actions" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#ffe6cc;strokeColor=#d79b00;fontSize=11;align=left" vertex="1" parent="admin_menu">
+          <mxGeometry x="20" y="40" width="860" height="30" as="geometry" />
+        </mxCell>
+        
+        <mxCell id="admin_users" value="👥 Users - Manage all users (Universal/Sub) or tenant users (Tenant Admin)" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#ffe6cc;strokeColor=#d79b00;fontSize=11;align=left" vertex="1" parent="admin_menu">
+          <mxGeometry x="20" y="80" width="860" height="30" as="geometry" />
+        </mxCell>
+        
+        <mxCell id="admin_tenants" value="🏢 Tenants - Manage tenants (Universal Admin only)" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#ffe6cc;strokeColor=#d79b00;fontSize=11;align=left" vertex="1" parent="admin_menu">
+          <mxGeometry x="20" y="120" width="860" height="30" as="geometry" />
+        </mxCell>
+        
+        <mxCell id="admin_admins" value="👤 Admins - Manage admin users (Universal Admin only)" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#ffe6cc;strokeColor=#d79b00;fontSize=11;align=left" vertex="1" parent="admin_menu">
+          <mxGeometry x="20" y="160" width="860" height="30" as="geometry" />
+        </mxCell>
+        
+        <mxCell id="admin_analytics" value="📊 Analytics - View platform analytics and reports" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#ffe6cc;strokeColor=#d79b00;fontSize=11;align=left" vertex="1" parent="admin_menu">
+          <mxGeometry x="20" y="200" width="860" height="30" as="geometry" />
+        </mxCell>
+        
+        <mxCell id="admin_billing" value="💳 Billing - Manage subscriptions and billing (Universal Admin only)" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#ffe6cc;strokeColor=#d79b00;fontSize=11;align=left" vertex="1" parent="admin_menu">
+          <mxGeometry x="20" y="240" width="860" height="30" as="geometry" />
+        </mxCell>
+        
+        <mxCell id="admin_security" value="🔒 Security - Security settings, audit logs" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#ffe6cc;strokeColor=#d79b00;fontSize=11;align=left" vertex="1" parent="admin_menu">
+          <mxGeometry x="20" y="280" width="860" height="30" as="geometry" />
+        </mxCell>
+
+        <!-- Doctor -->
+        <mxCell id="doctor_title" value="Doctor" style="text;html=1;strokeColor=none;fillColor=none;align=left;verticalAlign=middle;whiteSpace=wrap;rounded=0;fontSize=18;fontStyle=1" vertex="1" parent="1">
+          <mxGeometry x="50" y="500" width="500" height="40" as="geometry" />
+        </mxCell>
+        
+        <mxCell id="doctor_menu" value="Doctor Menu" style="swimlane;fontStyle=1;childLayout=stackLayout;horizontal=1;startSize=40;horizontalStack=0;resizeParent=1;resizeParentMax=0;resizeLast=0;collapsible=1;marginBottom=0;whiteSpace=wrap;html=1;fillColor=#d5e8d4;strokeColor=#82b366;" vertex="1" parent="1">
+          <mxGeometry x="50" y="560" width="900" height="300" as="geometry" />
+        </mxCell>
+        
+        <mxCell id="doc_dash" value="🏠 Dashboard - Today's appointments, pending consultations, quick stats" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#c9e1b6;strokeColor=#5d8a3f;fontSize=11;align=left" vertex="1" parent="doctor_menu">
+          <mxGeometry x="20" y="40" width="860" height="30" as="geometry" />
+        </mxCell>
+        
+        <mxCell id="doc_patients" value="👥 Patients - View all patients, search, patient details, medical history" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#c9e1b6;strokeColor=#5d8a3f;fontSize=11;align=left" vertex="1" parent="doctor_menu">
+          <mxGeometry x="20" y="80" width="860" height="30" as="geometry" />
+        </mxCell>
+        
+        <mxCell id="doc_appt" value="📅 Appointments - View schedule, upcoming appointments, manage roster" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#c9e1b6;strokeColor=#5d8a3f;fontSize=11;align=left" vertex="1" parent="doctor_menu">
+          <mxGeometry x="20" y="120" width="860" height="30" as="geometry" />
+        </mxCell>
+        
+        <mxCell id="doc_records" value="📋 Medical Records - Create/edit records, view patient history, prescriptions" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#c9e1b6;strokeColor=#5d8a3f;fontSize=11;align=left" vertex="1" parent="doctor_menu">
+          <mxGeometry x="20" y="160" width="860" height="30" as="geometry" />
+        </mxCell>
+        
+        <mxCell id="doc_reports" value="📊 Reports - View lab reports, imaging results, patient reports" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#c9e1b6;strokeColor=#5d8a3f;fontSize=11;align=left" vertex="1" parent="doctor_menu">
+          <mxGeometry x="20" y="200" width="860" height="30" as="geometry" />
+        </mxCell>
+        
+        <mxCell id="doc_settings" value="⚙️ Settings - Profile, preferences, notification settings" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#c9e1b6;strokeColor=#5d8a3f;fontSize=11;align=left" vertex="1" parent="doctor_menu">
+          <mxGeometry x="20" y="240" width="860" height="30" as="geometry" />
+        </mxCell>
+        
+        <mxCell id="doc_profile" value="👤 Profile - Personal information, change password" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#c9e1b6;strokeColor=#5d8a3f;fontSize=11;align=left" vertex="1" parent="doctor_menu">
+          <mxGeometry x="20" y="280" width="860" height="30" as="geometry" />
+        </mxCell>
+
+        <!-- Nurse -->
+        <mxCell id="nurse_title" value="Nurse" style="text;html=1;strokeColor=none;fillColor=none;align=left;verticalAlign=middle;whiteSpace=wrap;rounded=0;fontSize=18;fontStyle=1" vertex="1" parent="1">
+          <mxGeometry x="50" y="900" width="500" height="40" as="geometry" />
+        </mxCell>
+        
+        <mxCell id="nurse_menu" value="Nurse Menu" style="swimlane;fontStyle=1;childLayout=stackLayout;horizontal=1;startSize=40;horizontalStack=0;resizeParent=1;resizeParentMax=0;resizeLast=0;collapsible=1;marginBottom=0;whiteSpace=wrap;html=1;fillColor=#d5e8d4;strokeColor=#82b366;" vertex="1" parent="1">
+          <mxGeometry x="50" y="960" width="900" height="240" as="geometry" />
+        </mxCell>
+        
+        <mxCell id="nurse_dash" value="🏠 Dashboard - Assigned patients, tasks, vital signs to record" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#c9e1b6;strokeColor=#5d8a3f;fontSize=11;align=left" vertex="1" parent="nurse_menu">
+          <mxGeometry x="20" y="40" width="860" height="30" as="geometry" />
+        </mxCell>
+        
+        <mxCell id="nurse_patients" value="👥 Patients - View assigned patients, record vital signs, update charts" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#c9e1b6;strokeColor=#5d8a3f;fontSize=11;align=left" vertex="1" parent="nurse_menu">
+          <mxGeometry x="20" y="80" width="860" height="30" as="geometry" />
+        </mxCell>
+        
+        <mxCell id="nurse_appt" value="📅 Appointments - View schedule, assist with appointments" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#c9e1b6;strokeColor=#5d8a3f;fontSize=11;align=left" vertex="1" parent="nurse_menu">
+          <mxGeometry x="20" y="120" width="860" height="30" as="geometry" />
+        </mxCell>
+        
+        <mxCell id="nurse_records" value="📋 Medical Records - View records, update patient charts (read-only for most)" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#c9e1b6;strokeColor=#5d8a3f;fontSize=11;align=left" vertex="1" parent="nurse_menu">
+          <mxGeometry x="20" y="160" width="860" height="30" as="geometry" />
+        </mxCell>
+        
+        <mxCell id="nurse_settings" value="⚙️ Settings - Profile, preferences" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#c9e1b6;strokeColor=#5d8a3f;fontSize=11;align=left" vertex="1" parent="nurse_menu">
+          <mxGeometry x="20" y="200" width="860" height="30" as="geometry" />
+        </mxCell>
+
+        <!-- Receptionist -->
+        <mxCell id="receptionist_title" value="Receptionist" style="text;html=1;strokeColor=none;fillColor=none;align=left;verticalAlign=middle;whiteSpace=wrap;rounded=0;fontSize=18;fontStyle=1" vertex="1" parent="1">
+          <mxGeometry x="50" y="1240" width="500" height="40" as="geometry" />
+        </mxCell>
+        
+        <mxCell id="receptionist_menu" value="Receptionist Menu" style="swimlane;fontStyle=1;childLayout=stackLayout;horizontal=1;startSize=40;horizontalStack=0;resizeParent=1;resizeParentMax=0;resizeLast=0;collapsible=1;marginBottom=0;whiteSpace=wrap;html=1;fillColor=#dae8fc;strokeColor=#6c8ebf;" vertex="1" parent="1">
+          <mxGeometry x="50" y="1300" width="900" height="300" as="geometry" />
+        </mxCell>
+        
+        <mxCell id="rec_dash" value="🏠 Dashboard - Today's appointments, walk-ins, pending registrations" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#cce5ff;strokeColor=#007fff;fontSize=11;align=left" vertex="1" parent="receptionist_menu">
+          <mxGeometry x="20" y="40" width="860" height="30" as="geometry" />
+        </mxCell>
+        
+        <mxCell id="rec_patients" value="👥 Patients - Register new patients, search, update patient info" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#cce5ff;strokeColor=#007fff;fontSize=11;align=left" vertex="1" parent="receptionist_menu">
+          <mxGeometry x="20" y="80" width="860" height="30" as="geometry" />
+        </mxCell>
+        
+        <mxCell id="rec_appt" value="📅 Appointments - Book appointments, manage schedule, check-in/check-out" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#cce5ff;strokeColor=#007fff;fontSize=11;align=left" vertex="1" parent="receptionist_menu">
+          <mxGeometry x="20" y="120" width="860" height="30" as="geometry" />
+        </mxCell>
+        
+        <mxCell id="rec_billing" value="💳 Billing - Collect payments, generate invoices, payment history" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#cce5ff;strokeColor=#007fff;fontSize=11;align=left" vertex="1" parent="receptionist_menu">
+          <mxGeometry x="20" y="160" width="860" height="30" as="geometry" />
+        </mxCell>
+        
+        <mxCell id="rec_reports" value="📊 Reports - View appointment reports, daily summaries" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#cce5ff;strokeColor=#007fff;fontSize=11;align=left" vertex="1" parent="receptionist_menu">
+          <mxGeometry x="20" y="200" width="860" height="30" as="geometry" />
+        </mxCell>
+        
+        <mxCell id="rec_settings" value="⚙️ Settings - Profile, preferences" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#cce5ff;strokeColor=#007fff;fontSize=11;align=left" vertex="1" parent="receptionist_menu">
+          <mxGeometry x="20" y="240" width="860" height="30" as="geometry" />
+        </mxCell>
+        
+        <mxCell id="rec_profile" value="👤 Profile - Personal information" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#cce5ff;strokeColor=#007fff;fontSize=11;align=left" vertex="1" parent="receptionist_menu">
+          <mxGeometry x="20" y="280" width="860" height="30" as="geometry" />
+        </mxCell>
+
+        <!-- Lab Technician -->
+        <mxCell id="lab_title" value="Lab Technician" style="text;html=1;strokeColor=none;fillColor=none;align=left;verticalAlign=middle;whiteSpace=wrap;rounded=0;fontSize=18;fontStyle=1" vertex="1" parent="1">
+          <mxGeometry x="50" y="1640" width="500" height="40" as="geometry" />
+        </mxCell>
+        
+        <mxCell id="lab_menu" value="Lab Technician Menu" style="swimlane;fontStyle=1;childLayout=stackLayout;horizontal=1;startSize=40;horizontalStack=0;resizeParent=1;resizeParentMax=0;resizeLast=0;collapsible=1;marginBottom=0;whiteSpace=wrap;html=1;fillColor=#dae8fc;strokeColor=#6c8ebf;" vertex="1" parent="1">
+          <mxGeometry x="50" y="1700" width="900" height="240" as="geometry" />
+        </mxCell>
+        
+        <mxCell id="lab_dash" value="🏠 Dashboard - Pending tests, completed tests, critical results" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#cce5ff;strokeColor=#007fff;fontSize=11;align=left" vertex="1" parent="lab_menu">
+          <mxGeometry x="20" y="40" width="860" height="30" as="geometry" />
+        </mxCell>
+        
+        <mxCell id="lab_patients" value="👥 Patients - View patient info for test orders" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#cce5ff;strokeColor=#007fff;fontSize=11;align=left" vertex="1" parent="lab_menu">
+          <mxGeometry x="20" y="80" width="860" height="30" as="geometry" />
+        </mxCell>
+        
+        <mxCell id="lab_records" value="📋 Medical Records - Upload test results, enter lab values, attach reports" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#cce5ff;strokeColor=#007fff;fontSize=11;align=left" vertex="1" parent="lab_menu">
+          <mxGeometry x="20" y="120" width="860" height="30" as="geometry" />
+        </mxCell>
+        
+        <mxCell id="lab_reports" value="📊 Reports - Generate lab reports, quality control, test history" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#cce5ff;strokeColor=#007fff;fontSize=11;align=left" vertex="1" parent="lab_menu">
+          <mxGeometry x="20" y="160" width="860" height="30" as="geometry" />
+        </mxCell>
+        
+        <mxCell id="lab_settings" value="⚙️ Settings - Profile, equipment settings" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#cce5ff;strokeColor=#007fff;fontSize=11;align=left" vertex="1" parent="lab_menu">
+          <mxGeometry x="20" y="200" width="860" height="30" as="geometry" />
+        </mxCell>
+
+        <!-- Patient -->
+        <mxCell id="patient_title" value="Patient" style="text;html=1;strokeColor=none;fillColor=none;align=left;verticalAlign=middle;whiteSpace=wrap;rounded=0;fontSize=18;fontStyle=1" vertex="1" parent="1">
+          <mxGeometry x="50" y="1980" width="500" height="40" as="geometry" />
+        </mxCell>
+        
+        <mxCell id="patient_menu" value="Patient Portal Menu" style="swimlane;fontStyle=1;childLayout=stackLayout;horizontal=1;startSize=40;horizontalStack=0;resizeParent=1;resizeParentMax=0;resizeLast=0;collapsible=1;marginBottom=0;whiteSpace=wrap;html=1;fillColor=#e1d5e7;strokeColor=#9673a6;" vertex="1" parent="1">
+          <mxGeometry x="50" y="2040" width="900" height="300" as="geometry" />
+        </mxCell>
+        
+        <mxCell id="pat_dash" value="🏠 Dashboard - Upcoming appointments, recent visits, health summary" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#f0e6ff;strokeColor=#b894d6;fontSize=11;align=left" vertex="1" parent="patient_menu">
+          <mxGeometry x="20" y="40" width="860" height="30" as="geometry" />
+        </mxCell>
+        
+        <mxCell id="pat_appt" value="📅 Appointments - Book appointment, view upcoming, cancel/reschedule" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#f0e6ff;strokeColor=#b894d6;fontSize=11;align=left" vertex="1" parent="patient_menu">
+          <mxGeometry x="20" y="80" width="860" height="30" as="geometry" />
+        </mxCell>
+        
+        <mxCell id="pat_records" value="📋 Medical Records - View own records, prescriptions, lab reports" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#f0e6ff;strokeColor=#b894d6;fontSize=11;align=left" vertex="1" parent="patient_menu">
+          <mxGeometry x="20" y="120" width="860" height="30" as="geometry" />
+        </mxCell>
+        
+        <mxCell id="pat_reports" value="📊 Reports - View lab reports, imaging results, download PDFs" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#f0e6ff;strokeColor=#b894d6;fontSize=11;align=left" vertex="1" parent="patient_menu">
+          <mxGeometry x="20" y="160" width="860" height="30" as="geometry" />
+        </mxCell>
+        
+        <mxCell id="pat_billing" value="💳 Billing - View invoices, payment history, make payments" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#f0e6ff;strokeColor=#b894d6;fontSize=11;align=left" vertex="1" parent="patient_menu">
+          <mxGeometry x="20" y="200" width="860" height="30" as="geometry" />
+        </mxCell>
+        
+        <mxCell id="pat_settings" value="⚙️ Settings - Profile, preferences, notification settings" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#f0e6ff;strokeColor=#b894d6;fontSize=11;align=left" vertex="1" parent="patient_menu">
+          <mxGeometry x="20" y="240" width="860" height="30" as="geometry" />
+        </mxCell>
+        
+        <mxCell id="pat_profile" value="👤 Profile - Personal information, emergency contacts, insurance" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#f0e6ff;strokeColor=#b894d6;fontSize=11;align=left" vertex="1" parent="patient_menu">
+          <mxGeometry x="20" y="280" width="860" height="30" as="geometry" />
+        </mxCell>
+
+        <!-- Chemist/Pharmacist -->
+        <mxCell id="chemist_title" value="Chemist/Pharmacist" style="text;html=1;strokeColor=none;fillColor=none;align=left;verticalAlign=middle;whiteSpace=wrap;rounded=0;fontSize=18;fontStyle=1" vertex="1" parent="1">
+          <mxGeometry x="1050" y="100" width="500" height="40" as="geometry" />
+        </mxCell>
+        
+        <mxCell id="chemist_menu" value="Chemist Menu" style="swimlane;fontStyle=1;childLayout=stackLayout;horizontal=1;startSize=40;horizontalStack=0;resizeParent=1;resizeParentMax=0;resizeLast=0;collapsible=1;marginBottom=0;whiteSpace=wrap;html=1;fillColor=#dae8fc;strokeColor=#6c8ebf;" vertex="1" parent="1">
+          <mxGeometry x="1050" y="160" width="900" height="300" as="geometry" />
+        </mxCell>
+        
+        <mxCell id="chem_dash" value="🏠 Dashboard - Pending prescriptions, inventory alerts, sales summary" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#cce5ff;strokeColor=#007fff;fontSize=11;align=left" vertex="1" parent="chemist_menu">
+          <mxGeometry x="20" y="40" width="860" height="30" as="geometry" />
+        </mxCell>
+        
+        <mxCell id="chem_patients" value="👥 Patients - View patient info for prescription verification" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#cce5ff;strokeColor=#007fff;fontSize=11;align=left" vertex="1" parent="chemist_menu">
+          <mxGeometry x="20" y="80" width="860" height="30" as="geometry" />
+        </mxCell>
+        
+        <mxCell id="chem_records" value="📋 Medical Records - View prescriptions, verify, dispense medications" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#cce5ff;strokeColor=#007fff;fontSize=11;align=left" vertex="1" parent="chemist_menu">
+          <mxGeometry x="20" y="120" width="860" height="30" as="geometry" />
+        </mxCell>
+        
+        <mxCell id="chem_inventory" value="📦 Inventory - Manage stock, add medicines, low stock alerts" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#cce5ff;strokeColor=#007fff;fontSize=11;align=left" vertex="1" parent="chemist_menu">
+          <mxGeometry x="20" y="160" width="860" height="30" as="geometry" />
+        </mxCell>
+        
+        <mxCell id="chem_billing" value="💳 Billing - Process payments for medications" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#cce5ff;strokeColor=#007fff;fontSize=11;align=left" vertex="1" parent="chemist_menu">
+          <mxGeometry x="20" y="200" width="860" height="30" as="geometry" />
+        </mxCell>
+        
+        <mxCell id="chem_reports" value="📊 Reports - Sales reports, inventory reports, prescription tracking" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#cce5ff;strokeColor=#007fff;fontSize=11;align=left" vertex="1" parent="chemist_menu">
+          <mxGeometry x="20" y="240" width="860" height="30" as="geometry" />
+        </mxCell>
+        
+        <mxCell id="chem_settings" value="⚙️ Settings - Profile, preferences" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#cce5ff;strokeColor=#007fff;fontSize=11;align=left" vertex="1" parent="chemist_menu">
+          <mxGeometry x="20" y="280" width="860" height="30" as="geometry" />
+        </mxCell>
+
+        <!-- Staff -->
+        <mxCell id="staff_title" value="Staff" style="text;html=1;strokeColor=none;fillColor=none;align=left;verticalAlign=middle;whiteSpace=wrap;rounded=0;fontSize=18;fontStyle=1" vertex="1" parent="1">
+          <mxGeometry x="1050" y="500" width="500" height="40" as="geometry" />
+        </mxCell>
+        
+        <mxCell id="staff_menu" value="Staff Menu" style="swimlane;fontStyle=1;childLayout=stackLayout;horizontal=1;startSize=40;horizontalStack=0;resizeParent=1;resizeParentMax=0;resizeLast=0;collapsible=1;marginBottom=0;whiteSpace=wrap;html=1;fillColor=#dae8fc;strokeColor=#6c8ebf;" vertex="1" parent="1">
+          <mxGeometry x="1050" y="560" width="900" height="180" as="geometry" />
+        </mxCell>
+        
+        <mxCell id="staff_dash" value="🏠 Dashboard - Assigned tasks, general overview" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#cce5ff;strokeColor=#007fff;fontSize=11;align=left" vertex="1" parent="staff_menu">
+          <mxGeometry x="20" y="40" width="860" height="30" as="geometry" />
+        </mxCell>
+        
+        <mxCell id="staff_records" value="📋 Medical Records - View records (read-only), data entry" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#cce5ff;strokeColor=#007fff;fontSize=11;align=left" vertex="1" parent="staff_menu">
+          <mxGeometry x="20" y="80" width="860" height="30" as="geometry" />
+        </mxCell>
+        
+        <mxCell id="staff_reports" value="📊 Reports - Generate basic reports, export data" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#cce5ff;strokeColor=#007fff;fontSize=11;align=left" vertex="1" parent="staff_menu">
+          <mxGeometry x="20" y="120" width="860" height="30" as="geometry" />
+        </mxCell>
+        
+        <mxCell id="staff_settings" value="⚙️ Settings - Profile, preferences" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#cce5ff;strokeColor=#007fff;fontSize=11;align=left" vertex="1" parent="staff_menu">
+          <mxGeometry x="20" y="160" width="860" height="30" as="geometry" />
+        </mxCell>
+
+        <!-- Public Pages -->
+        <mxCell id="public_title" value="Public Pages (All Users)" style="text;html=1;strokeColor=none;fillColor=none;align=left;verticalAlign=middle;whiteSpace=wrap;rounded=0;fontSize=18;fontStyle=1" vertex="1" parent="1">
+          <mxGeometry x="1050" y="780" width="500" height="40" as="geometry" />
+        </mxCell>
+        
+        <mxCell id="public_menu" value="Public Pages" style="swimlane;fontStyle=1;childLayout=stackLayout;horizontal=1;startSize=40;horizontalStack=0;resizeParent=1;resizeParentMax=0;resizeLast=0;collapsible=1;marginBottom=0;whiteSpace=wrap;html=1;fillColor=#fff2cc;strokeColor=#d6b656;" vertex="1" parent="1">
+          <mxGeometry x="1050" y="840" width="900" height="120" as="geometry" />
+        </mxCell>
+        
+        <mxCell id="public_landing" value="🏠 Landing Page - Homepage, services, about, contact info" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#ffe6cc;strokeColor=#d79b00;fontSize=11;align=left" vertex="1" parent="public_menu">
+          <mxGeometry x="20" y="40" width="860" height="30" as="geometry" />
+        </mxCell>
+        
+        <mxCell id="public_login" value="🔐 Login - Authentication page for all users" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#ffe6cc;strokeColor=#d79b00;fontSize=11;align=left" vertex="1" parent="public_menu">
+          <mxGeometry x="20" y="80" width="860" height="30" as="geometry" />
+        </mxCell>
+
+        <!-- Summary -->
+        <mxCell id="summary" value="Menu Access Summary" style="swimlane;fontStyle=1;childLayout=stackLayout;horizontal=1;startSize=30;horizontalStack=0;resizeParent=1;resizeParentMax=0;resizeLast=0;collapsible=1;marginBottom=0;whiteSpace=wrap;html=1;fillColor=#f5f5f5;strokeColor=#666666;" vertex="1" parent="1">
+          <mxGeometry x="50" y="2380" width="1900" height="200" as="geometry" />
+        </mxCell>
+        
+        <mxCell id="summary_text" value="Key Points:&#xa;• Each role sees only menu items relevant to their responsibilities&#xa;• Menu visibility is controlled by RBAC (Role-Based Access Control)&#xa;• Universal Admin has access to all admin features across all tenants&#xa;• Sub Admin has limited admin features (no tenant management)&#xa;• Tenant Admin manages only their specific tenant&#xa;• Clinical staff (Doctor, Nurse) focus on patient care and medical records&#xa;• Support staff (Receptionist, Lab Tech, Chemist) handle operational tasks&#xa;• Patients have read access to their own records and can book appointments&#xa;• All authenticated users have access to Profile and Settings&#xa;• Public pages (Landing, Login) are accessible to everyone" style="text;html=1;strokeColor=none;fillColor=none;align=left;verticalAlign=top;whiteSpace=wrap;rounded=0;fontSize=11" vertex="1" parent="summary">
+          <mxGeometry x="20" y="30" width="1860" height="150" as="geometry" />
+        </mxCell>
+
+        <!-- Legend -->
+        <mxCell id="legend" value="Color Legend" style="swimlane;fontStyle=1;childLayout=stackLayout;horizontal=1;startSize=30;horizontalStack=0;resizeParent=1;resizeParentMax=0;resizeLast=0;collapsible=1;marginBottom=0;whiteSpace=wrap;html=1;fillColor=#fff2cc;strokeColor=#d6b656;" vertex="1" parent="1">
+          <mxGeometry x="50" y="2620" width="1900" height="100" as="geometry" />
+        </mxCell>
+        
+        <mxCell id="legend_text" value="Red = Admin Roles | Green = Clinical Staff (Doctor, Nurse) | Blue = Support Staff (Receptionist, Lab Tech, Chemist, Staff) | Purple = Patient | Yellow = Public Pages" style="text;html=1;strokeColor=none;fillColor=none;align=left;verticalAlign=middle;whiteSpace=wrap;rounded=0;fontSize=12" vertex="1" parent="legend">
+          <mxGeometry x="20" y="30" width="1860" height="30" as="geometry" />
+        </mxCell>
+
+      </root>
+    </mxGraphModel>
+  </diagram>
+</mxfile>
+

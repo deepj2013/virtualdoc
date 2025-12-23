@@ -1,0 +1,109 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<mxfile host="app.diagrams.net" version="28.2.8">
+  <diagram name="Database ERD" id="database-erd">
+    <mxGraphModel dx="1422" dy="794" grid="1" gridSize="10" guides="1" tooltips="1" connect="1" arrows="1" fold="1" page="1" pageScale="1" pageWidth="2000" pageHeight="1600" math="0" shadow="0">
+      <root>
+        <mxCell id="0" />
+        <mxCell id="1" parent="0" />
+        
+        <mxCell id="title" value="VirtualDoc Database Entity Relationship Diagram" style="text;html=1;strokeColor=none;fillColor=none;align=center;verticalAlign=middle;whiteSpace=wrap;rounded=0;fontSize=24;fontStyle=1" vertex="1" parent="1">
+          <mxGeometry x="500" y="20" width="1000" height="50" as="geometry" />
+        </mxCell>
+
+        <!-- Core Tables -->
+        <mxCell id="tenants" value="tenants&#xa;━━━━━━━━━━━━━━━━━━━━&#xa;id (PK)&#xa;name&#xa;slug (UNIQUE)&#xa;type&#xa;subscription_tier&#xa;is_active" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#dae8fc;strokeColor=#6c8ebf;fontStyle=1;fontSize=11;align=left" vertex="1" parent="1">
+          <mxGeometry x="50" y="100" width="200" height="120" as="geometry" />
+        </mxCell>
+        
+        <mxCell id="users" value="users&#xa;━━━━━━━━━━━━━━━━━━━━&#xa;id (PK)&#xa;tenant_id (FK)&#xa;email (UNIQUE)&#xa;password_hash&#xa;first_name&#xa;last_name&#xa;role&#xa;is_active" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#fff2cc;strokeColor=#d6b656;fontStyle=1;fontSize=11;align=left" vertex="1" parent="1">
+          <mxGeometry x="300" y="100" width="200" height="120" as="geometry" />
+        </mxCell>
+        
+        <mxCell id="patients" value="patients&#xa;━━━━━━━━━━━━━━━━━━━━&#xa;id (PK)&#xa;tenant_id (FK)&#xa;user_id (FK)&#xa;patient_number (UNIQUE)&#xa;first_name&#xa;last_name&#xa;date_of_birth&#xa;gender&#xa;phone&#xa;email" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#d5e8d4;strokeColor=#82b366;fontStyle=1;fontSize=11;align=left" vertex="1" parent="1">
+          <mxGeometry x="550" y="100" width="200" height="140" as="geometry" />
+        </mxCell>
+        
+        <mxCell id="appointments" value="appointments&#xa;━━━━━━━━━━━━━━━━━━━━&#xa;id (PK)&#xa;tenant_id (FK)&#xa;patient_id (FK)&#xa;doctor_id (FK)&#xa;appointment_date&#xa;appointment_time&#xa;status&#xa;appointment_type" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#e1d5e7;strokeColor=#9673a6;fontStyle=1;fontSize=11;align=left" vertex="1" parent="1">
+          <mxGeometry x="800" y="100" width="200" height="120" as="geometry" />
+        </mxCell>
+        
+        <mxCell id="medical_records" value="medical_records&#xa;━━━━━━━━━━━━━━━━━━━━&#xa;id (PK)&#xa;tenant_id (FK)&#xa;patient_id (FK)&#xa;doctor_id (FK)&#xa;record_type&#xa;visit_date&#xa;diagnosis&#xa;notes" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#f8cecc;strokeColor=#b85450;fontStyle=1;fontSize=11;align=left" vertex="1" parent="1">
+          <mxGeometry x="1050" y="100" width="200" height="120" as="geometry" />
+        </mxCell>
+        
+        <mxCell id="prescriptions" value="prescriptions&#xa;━━━━━━━━━━━━━━━━━━━━&#xa;id (PK)&#xa;patient_id (FK)&#xa;doctor_id (FK)&#xa;prescription_number&#xa;issue_date&#xa;status" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#f8cecc;strokeColor=#b85450;fontStyle=1;fontSize=11;align=left" vertex="1" parent="1">
+          <mxGeometry x="1300" y="100" width="200" height="100" as="geometry" />
+        </mxCell>
+        
+        <mxCell id="video_calls" value="video_call_sessions&#xa;━━━━━━━━━━━━━━━━━━━━&#xa;id (PK)&#xa;tenant_id (FK)&#xa;appointment_id (FK)&#xa;organizer_id (FK)&#xa;meeting_room_id&#xa;status&#xa;scheduled_start" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#dae8fc;strokeColor=#6c8ebf;fontStyle=1;fontSize=11;align=left" vertex="1" parent="1">
+          <mxGeometry x="1550" y="100" width="200" height="120" as="geometry" />
+        </mxCell>
+
+        <!-- Authentication Tables -->
+        <mxCell id="auth_tokens" value="authentication_tokens&#xa;━━━━━━━━━━━━━━━━━━━━&#xa;id (PK)&#xa;user_id (FK)&#xa;token_type&#xa;token_hash&#xa;expires_at&#xa;is_active" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#fff2cc;strokeColor=#d6b656;fontStyle=1;fontSize=11;align=left" vertex="1" parent="1">
+          <mxGeometry x="50" y="300" width="200" height="100" as="geometry" />
+        </mxCell>
+        
+        <mxCell id="user_sessions" value="user_sessions&#xa;━━━━━━━━━━━━━━━━━━━━&#xa;id (PK)&#xa;user_id (FK)&#xa;session_token&#xa;access_token_id (FK)&#xa;refresh_token_id (FK)&#xa;expires_at" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#fff2cc;strokeColor=#d6b656;fontStyle=1;fontSize=11;align=left" vertex="1" parent="1">
+          <mxGeometry x="300" y="300" width="200" height="100" as="geometry" />
+        </mxCell>
+        
+        <mxCell id="admin_users" value="admin_users&#xa;━━━━━━━━━━━━━━━━━━━━&#xa;id (PK)&#xa;user_id (FK)&#xa;tenant_id (FK)&#xa;admin_role_code&#xa;is_active&#xa;is_suspended" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#ffcccc;strokeColor=#cc0000;fontStyle=1;fontSize=11;align=left" vertex="1" parent="1">
+          <mxGeometry x="550" y="300" width="200" height="100" as="geometry" />
+        </mxCell>
+        
+        <mxCell id="admin_roles" value="admin_roles&#xa;━━━━━━━━━━━━━━━━━━━━&#xa;id (PK)&#xa;role_code (UNIQUE)&#xa;role_name&#xa;hierarchy_level&#xa;permissions (JSONB)&#xa;can_manage_users" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#ffcccc;strokeColor=#cc0000;fontStyle=1;fontSize=11;align=left" vertex="1" parent="1">
+          <mxGeometry x="800" y="300" width="200" height="100" as="geometry" />
+        </mxCell>
+
+        <!-- Relationships -->
+        <mxCell id="rel1" value="1:N" style="endArrow=ERmany;startArrow=ERone;html=1;rounded=0;exitX=1;exitY=0.5;entryX=0;entryY=0.5;strokeWidth=2" edge="1" parent="1" source="tenants" target="users">
+          <mxGeometry width="100" height="100" relative="1" as="geometry" />
+        </mxCell>
+        
+        <mxCell id="rel2" value="1:1" style="endArrow=ERone;startArrow=ERone;html=1;rounded=0;exitX=1;exitY=0.5;entryX=0;entryY=0.5;strokeWidth=2" edge="1" parent="1" source="users" target="patients">
+          <mxGeometry width="100" height="100" relative="1" as="geometry" />
+        </mxCell>
+        
+        <mxCell id="rel3" value="N:1" style="endArrow=ERone;startArrow=ERmany;html=1;rounded=0;exitX=0.5;exitY=0;entryX=0.5;entryY=1;strokeWidth=2" edge="1" parent="1" source="appointments" target="patients">
+          <mxGeometry width="100" height="100" relative="1" as="geometry" />
+        </mxCell>
+        
+        <mxCell id="rel4" value="N:1" style="endArrow=ERone;startArrow=ERmany;html=1;rounded=0;exitX=0.5;exitY=0;entryX=0.5;entryY=1;strokeWidth=2" edge="1" parent="1" source="medical_records" target="patients">
+          <mxGeometry width="100" height="100" relative="1" as="geometry" />
+        </mxCell>
+        
+        <mxCell id="rel5" value="N:1" style="endArrow=ERone;startArrow=ERmany;html=1;rounded=0;exitX=0.5;exitY=0;entryX=0.5;entryY=1;strokeWidth=2" edge="1" parent="1" source="prescriptions" target="patients">
+          <mxGeometry width="100" height="100" relative="1" as="geometry" />
+        </mxCell>
+        
+        <mxCell id="rel6" value="1:1" style="endArrow=ERone;startArrow=ERone;html=1;rounded=0;exitX=0;exitY=0.5;entryX=1;entryY=0.5;strokeWidth=2" edge="1" parent="1" source="video_calls" target="appointments">
+          <mxGeometry width="100" height="100" relative="1" as="geometry" />
+        </mxCell>
+        
+        <mxCell id="rel7" value="N:1" style="endArrow=ERone;startArrow=ERmany;html=1;rounded=0;exitX=0.5;exitY=0;entryX=0.5;entryY=1;strokeWidth=2" edge="1" parent="1" source="auth_tokens" target="users">
+          <mxGeometry width="100" height="100" relative="1" as="geometry" />
+        </mxCell>
+        
+        <mxCell id="rel8" value="N:1" style="endArrow=ERone;startArrow=ERmany;html=1;rounded=0;exitX=0.5;exitY=0;entryX=0.5;entryY=1;strokeWidth=2" edge="1" parent="1" source="user_sessions" target="users">
+          <mxGeometry width="100" height="100" relative="1" as="geometry" />
+        </mxCell>
+        
+        <mxCell id="rel9" value="1:1" style="endArrow=ERone;startArrow=ERone;html=1;rounded=0;exitX=0;exitY=0.5;entryX=1;entryY=0.5;strokeWidth=2" edge="1" parent="1" source="admin_users" target="users">
+          <mxGeometry width="100" height="100" relative="1" as="geometry" />
+        </mxCell>
+
+        <!-- Legend -->
+        <mxCell id="legend" value="Database Schema Legend" style="swimlane;fontStyle=1;childLayout=stackLayout;horizontal=1;startSize=30;horizontalStack=0;resizeParent=1;resizeParentMax=0;resizeLast=0;collapsible=1;marginBottom=0;whiteSpace=wrap;html=1;fillColor=#f5f5f5;strokeColor=#666666;" vertex="1" parent="1">
+          <mxGeometry x="50" y="450" width="1700" height="200" as="geometry" />
+        </mxCell>
+        
+        <mxCell id="legend_text" value="Key Relationships:&#xa;• Tenants → Users (1:N) - One tenant has many users&#xa;• Users → Patients (1:1) - User can be linked to patient record&#xa;• Patients → Appointments (1:N) - Patient can have multiple appointments&#xa;• Patients → Medical Records (1:N) - Patient has multiple medical records&#xa;• Patients → Prescriptions (1:N) - Patient can have multiple prescriptions&#xa;• Appointments → Video Calls (1:1) - Each appointment can have one video session&#xa;• Users → Auth Tokens (1:N) - User can have multiple tokens&#xa;• Users → Sessions (1:N) - User can have multiple sessions&#xa;• Users → Admin Users (1:1) - User can have admin role" style="text;html=1;strokeColor=none;fillColor=none;align=left;verticalAlign=top;whiteSpace=wrap;rounded=0;fontSize=11" vertex="1" parent="legend">
+          <mxGeometry x="20" y="30" width="1660" height="150" as="geometry" />
+        </mxCell>
+
+      </root>
+    </mxGraphModel>
+  </diagram>
+</mxfile>
+

@@ -10,6 +10,7 @@ import { getDeviceId, getDeviceInfo, getDeviceType } from '../helpers/device.hel
 import { validateSignup, validateLogin } from '../validators/admin.validator';
 import { hashToken } from '../helpers/jwt.helper';
 import { SignupResponse, LoginResponse } from '../types/admin.types';
+import { AuthRequest } from '../middleware/auth.middleware';
 import logger from '../utils/logger';
 
 class AdminController {
@@ -597,6 +598,718 @@ class AdminController {
       res.status(500).json({
         success: false,
         message: 'Internal server error',
+      });
+    }
+  };
+
+  /**
+   * List all admins
+   * GET /api/admin/admins
+   */
+  listAdmins = async (req: AuthRequest, res: Response): Promise<void> => {
+    try {
+      const { page = '1', limit = '20', search = '', role = '' } = req.query;
+      const pageNum = parseInt(page as string);
+      const limitNum = parseInt(limit as string);
+      const offset = (pageNum - 1) * limitNum;
+
+      let query = `
+        SELECT 
+          au.id, au.user_id as "userId", au.admin_role_code as "adminRoleCode",
+          au.is_active as "isActive", au.is_suspended as "isSuspended",
+          au.last_login_at as "lastLoginAt", au.created_at as "createdAt",
+          u.email, u.first_name as "firstName", u.last_name as "lastName",
+          u.phone, u.role, ar.role_name as "roleName"
+        FROM admin_users au
+        INNER JOIN users u ON au.user_id = u.id
+        LEFT JOIN admin_roles ar ON au.admin_role_id = ar.id
+        WHERE 1=1
+      `;
+      const params: any[] = [];
+      let paramCount = 1;
+
+      if (search) {
+        query += ` AND (u.email ILIKE $${paramCount} OR u.first_name ILIKE $${paramCount} OR u.last_name ILIKE $${paramCount})`;
+        params.push(`%${search}%`);
+        paramCount++;
+      }
+
+      if (role) {
+        query += ` AND au.admin_role_code = $${paramCount}`;
+        params.push(role);
+        paramCount++;
+      }
+
+      query += ` ORDER BY au.created_at DESC LIMIT $${paramCount} OFFSET $${paramCount + 1}`;
+      params.push(limitNum, offset);
+
+      const result = await query(query, params);
+      const countResult = await query(
+        `SELECT COUNT(*) as total FROM admin_users au INNER JOIN users u ON au.user_id = u.id WHERE 1=1${search ? ` AND (u.email ILIKE '%${search}%' OR u.first_name ILIKE '%${search}%' OR u.last_name ILIKE '%${search}%')` : ''}${role ? ` AND au.admin_role_code = '${role}'` : ''}`
+      );
+
+      res.json({
+        success: true,
+        data: {
+          admins: result.rows,
+          pagination: {
+            total: parseInt(countResult.rows[0].total),
+            page: pageNum,
+            limit: limitNum,
+            totalPages: Math.ceil(parseInt(countResult.rows[0].total) / limitNum),
+          },
+        },
+      });
+    } catch (error: any) {
+      logger.error('List admins failed', error);
+      res.status(500).json({
+        success: false,
+        message: error.message || 'Failed to list admins',
+      });
+    }
+  };
+
+  /**
+   * Create admin
+   * POST /api/admin/admins
+   */
+  createAdmin = async (req: AuthRequest, res: Response): Promise<void> => {
+    try {
+      const { email, password, firstName, lastName, phone, adminRoleCode = 'sub_admin' } = req.body;
+
+      if (!email || !password || !firstName || !lastName) {
+        res.status(400).json({
+          success: false,
+          message: 'Email, password, firstName, and lastName are required',
+        });
+        return;
+      }
+
+      // Check if email exists
+      const emailExists = await UserService.emailExists(email, null);
+      if (emailExists) {
+        res.status(409).json({
+          success: false,
+          message: 'Email already registered',
+        });
+        return;
+      }
+
+      const { hashPassword } = await import('../helpers/password.helper');
+      const passwordHash = await hashPassword(password);
+
+      const result = await transaction(async (client) => {
+        // Create user
+        const userResult = await client.query(
+          `INSERT INTO users (
+            tenant_id, email, password_hash, first_name, last_name, phone, role,
+            email_verified, phone_verified, is_active, created_at, updated_at
+          ) VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9, $10, CURRENT_TIMESTAMP, CURRENT_TIMESTAMP)
+          RETURNING *`,
+          [
+            null,
+            email.toLowerCase(),
+            passwordHash,
+            firstName,
+            lastName,
+            phone || null,
+            'admin',
+            false,
+            false,
+            true,
+          ]
+        );
+
+        const user = userResult.rows[0];
+
+        // Get admin role
+        const roleResult = await client.query(
+          'SELECT id FROM admin_roles WHERE role_code = $1',
+          [adminRoleCode]
+        );
+
+        if (roleResult.rows.length === 0) {
+          throw new Error(`Admin role ${adminRoleCode} not found`);
+        }
+
+        const adminRoleId = roleResult.rows[0].id;
+
+        // Create admin user
+        const adminResult = await client.query(
+          `INSERT INTO admin_users (
+            user_id, tenant_id, admin_role_id, admin_role_code,
+            is_active, created_at, updated_at
+          ) VALUES ($1, $2, $3, $4, $5, CURRENT_TIMESTAMP, CURRENT_TIMESTAMP)
+          RETURNING *`,
+          [user.id, null, adminRoleId, adminRoleCode, true]
+        );
+
+        return { user, admin: adminResult.rows[0] };
+      });
+
+      res.status(201).json({
+        success: true,
+        message: 'Admin created successfully',
+        data: {
+          admin: {
+            id: result.admin.id,
+            userId: result.user.id,
+            email: result.user.email,
+            firstName: result.user.first_name,
+            lastName: result.user.last_name,
+            adminRoleCode: result.admin.admin_role_code,
+          },
+        },
+      });
+    } catch (error: any) {
+      logger.error('Create admin failed', error);
+      res.status(500).json({
+        success: false,
+        message: error.message || 'Failed to create admin',
+      });
+    }
+  };
+
+  /**
+   * Update admin
+   * PUT /api/admin/admins/:id
+   */
+  updateAdmin = async (req: AuthRequest, res: Response): Promise<void> => {
+    try {
+      const { id } = req.params;
+      const { firstName, lastName, phone, isActive, isSuspended, adminRoleCode } = req.body;
+
+      await transaction(async (client) => {
+        // Update user if provided
+        if (firstName || lastName || phone !== undefined) {
+          const updateFields: string[] = [];
+          const params: any[] = [];
+          let paramCount = 1;
+
+          if (firstName) {
+            updateFields.push(`first_name = $${paramCount++}`);
+            params.push(firstName);
+          }
+          if (lastName) {
+            updateFields.push(`last_name = $${paramCount++}`);
+            params.push(lastName);
+          }
+          if (phone !== undefined) {
+            updateFields.push(`phone = $${paramCount++}`);
+            params.push(phone);
+          }
+          updateFields.push(`updated_at = CURRENT_TIMESTAMP`);
+          params.push(id);
+
+          await client.query(
+            `UPDATE users SET ${updateFields.join(', ')} WHERE id = (SELECT user_id FROM admin_users WHERE id = $${paramCount})`,
+            params
+          );
+        }
+
+        // Update admin if provided
+        if (isActive !== undefined || isSuspended !== undefined || adminRoleCode) {
+          const updateFields: string[] = [];
+          const params: any[] = [];
+          let paramCount = 1;
+
+          if (isActive !== undefined) {
+            updateFields.push(`is_active = $${paramCount++}`);
+            params.push(isActive);
+          }
+          if (isSuspended !== undefined) {
+            updateFields.push(`is_suspended = $${paramCount++}`);
+            params.push(isSuspended);
+            if (isSuspended) {
+              updateFields.push(`suspended_at = CURRENT_TIMESTAMP`);
+            }
+          }
+          if (adminRoleCode) {
+            const roleResult = await client.query(
+              'SELECT id FROM admin_roles WHERE role_code = $1',
+              [adminRoleCode]
+            );
+            if (roleResult.rows.length > 0) {
+              updateFields.push(`admin_role_id = $${paramCount++}`);
+              params.push(roleResult.rows[0].id);
+              updateFields.push(`admin_role_code = $${paramCount++}`);
+              params.push(adminRoleCode);
+            }
+          }
+          updateFields.push(`updated_at = CURRENT_TIMESTAMP`);
+          params.push(id);
+
+          await client.query(
+            `UPDATE admin_users SET ${updateFields.join(', ')} WHERE id = $${paramCount}`,
+            params
+          );
+        }
+      });
+
+      res.json({
+        success: true,
+        message: 'Admin updated successfully',
+      });
+    } catch (error: any) {
+      logger.error('Update admin failed', error);
+      res.status(500).json({
+        success: false,
+        message: error.message || 'Failed to update admin',
+      });
+    }
+  };
+
+  /**
+   * List all tenants
+   * GET /api/admin/tenants
+   */
+  listTenants = async (req: AuthRequest, res: Response): Promise<void> => {
+    try {
+      const { page = '1', limit = '20', search = '', type = '', isActive = '' } = req.query;
+      const pageNum = parseInt(page as string);
+      const limitNum = parseInt(limit as string);
+      const offset = (pageNum - 1) * limitNum;
+
+      let query = `
+        SELECT 
+          t.*,
+          (SELECT COUNT(*) FROM users WHERE tenant_id = t.id) as user_count,
+          (SELECT COUNT(*) FROM patients WHERE tenant_id = t.id) as patient_count
+        FROM tenants t
+        WHERE 1=1
+      `;
+      const params: any[] = [];
+      let paramCount = 1;
+
+      if (search) {
+        query += ` AND (t.name ILIKE $${paramCount} OR t.slug ILIKE $${paramCount} OR t.subdomain ILIKE $${paramCount})`;
+        params.push(`%${search}%`);
+        paramCount++;
+      }
+
+      if (type) {
+        query += ` AND t.type = $${paramCount}`;
+        params.push(type);
+        paramCount++;
+      }
+
+      if (isActive !== '') {
+        query += ` AND t.is_active = $${paramCount}`;
+        params.push(isActive === 'true');
+        paramCount++;
+      }
+
+      query += ` ORDER BY t.created_at DESC LIMIT $${paramCount} OFFSET $${paramCount + 1}`;
+      params.push(limitNum, offset);
+
+      const result = await query(query, params);
+      const countResult = await query(
+        `SELECT COUNT(*) as total FROM tenants WHERE 1=1${search ? ` AND (name ILIKE '%${search}%' OR slug ILIKE '%${search}%' OR subdomain ILIKE '%${search}%')` : ''}${type ? ` AND type = '${type}'` : ''}${isActive !== '' ? ` AND is_active = ${isActive === 'true'}` : ''}`
+      );
+
+      res.json({
+        success: true,
+        data: {
+          tenants: result.rows,
+          pagination: {
+            total: parseInt(countResult.rows[0].total),
+            page: pageNum,
+            limit: limitNum,
+            totalPages: Math.ceil(parseInt(countResult.rows[0].total) / limitNum),
+          },
+        },
+      });
+    } catch (error: any) {
+      logger.error('List tenants failed', error);
+      res.status(500).json({
+        success: false,
+        message: error.message || 'Failed to list tenants',
+      });
+    }
+  };
+
+  /**
+   * Create tenant
+   * POST /api/admin/tenants
+   */
+  createTenant = async (req: AuthRequest, res: Response): Promise<void> => {
+    try {
+      const {
+        name,
+        slug,
+        type,
+        customDomain,
+        subdomain,
+        subscriptionTier = 'freemium',
+        maxUsers = 10,
+        maxPatients = 100,
+        maxStorageGb = 10,
+      } = req.body;
+
+      if (!name || !slug || !type) {
+        res.status(400).json({
+          success: false,
+          message: 'Name, slug, and type are required',
+        });
+        return;
+      }
+
+      const result = await query(
+        `INSERT INTO tenants (
+          name, slug, type, custom_domain, subdomain, subscription_tier,
+          subscription_start, max_users, max_patients, max_storage_gb,
+          is_active, created_at, updated_at
+        ) VALUES ($1, $2, $3, $4, $5, $6, CURRENT_DATE, $7, $8, $9, true, CURRENT_TIMESTAMP, CURRENT_TIMESTAMP)
+        RETURNING *`,
+        [name, slug, type, customDomain || null, subdomain || null, subscriptionTier, maxUsers, maxPatients, maxStorageGb]
+      );
+
+      res.status(201).json({
+        success: true,
+        message: 'Tenant created successfully',
+        data: {
+          tenant: result.rows[0],
+        },
+      });
+    } catch (error: any) {
+      if (error.code === '23505') { // Unique violation
+        res.status(409).json({
+          success: false,
+          message: 'Tenant with this slug, subdomain, or domain already exists',
+        });
+        return;
+      }
+      logger.error('Create tenant failed', error);
+      res.status(500).json({
+        success: false,
+        message: error.message || 'Failed to create tenant',
+      });
+    }
+  };
+
+  /**
+   * Update tenant
+   * PUT /api/admin/tenants/:id
+   */
+  updateTenant = async (req: AuthRequest, res: Response): Promise<void> => {
+    try {
+      const { id } = req.params;
+      const updateData = req.body;
+
+      const allowedFields = [
+        'name', 'slug', 'type', 'custom_domain', 'subdomain',
+        'subscription_tier', 'subscription_end', 'max_users',
+        'max_patients', 'max_storage_gb', 'is_active'
+      ];
+
+      const updateFields: string[] = [];
+      const params: any[] = [];
+      let paramCount = 1;
+
+      for (const field of allowedFields) {
+        if (updateData[field] !== undefined) {
+          updateFields.push(`${field} = $${paramCount++}`);
+          params.push(updateData[field]);
+        }
+      }
+
+      if (updateFields.length === 0) {
+        res.status(400).json({
+          success: false,
+          message: 'No valid fields to update',
+        });
+        return;
+      }
+
+      updateFields.push('updated_at = CURRENT_TIMESTAMP');
+      params.push(id);
+
+      await query(
+        `UPDATE tenants SET ${updateFields.join(', ')} WHERE id = $${paramCount}`,
+        params
+      );
+
+      res.json({
+        success: true,
+        message: 'Tenant updated successfully',
+      });
+    } catch (error: any) {
+      logger.error('Update tenant failed', error);
+      res.status(500).json({
+        success: false,
+        message: error.message || 'Failed to update tenant',
+      });
+    }
+  };
+
+  /**
+   * Get dashboard stats
+   * GET /api/admin/dashboard/stats
+   */
+  getDashboardStats = async (req: AuthRequest, res: Response): Promise<void> => {
+    try {
+      const [usersResult, tenantsResult, adminsResult, appointmentsResult] = await Promise.all([
+        query('SELECT COUNT(*) as total FROM users WHERE tenant_id IS NOT NULL'),
+        query('SELECT COUNT(*) as total, COUNT(*) FILTER (WHERE is_active = true) as active FROM tenants'),
+        query('SELECT COUNT(*) as total FROM admin_users WHERE is_active = true AND is_suspended = false'),
+        query('SELECT COUNT(*) as total FROM appointments WHERE status = \'confirmed\' AND appointment_date >= CURRENT_DATE'),
+      ]);
+
+      const stats = {
+        totalUsers: parseInt(usersResult.rows[0].total),
+        totalTenants: parseInt(tenantsResult.rows[0].total),
+        activeTenants: parseInt(tenantsResult.rows[0].active),
+        totalAdmins: parseInt(adminsResult.rows[0].total),
+        upcomingAppointments: parseInt(appointmentsResult.rows[0].total),
+      };
+
+      res.json({
+        success: true,
+        data: stats,
+      });
+    } catch (error: any) {
+      logger.error('Get dashboard stats failed', error);
+      res.status(500).json({
+        success: false,
+        message: error.message || 'Failed to get dashboard stats',
+      });
+    }
+  };
+
+  /**
+   * Get analytics
+   * GET /api/admin/analytics
+   */
+  getAnalytics = async (req: AuthRequest, res: Response): Promise<void> => {
+    try {
+      const { period = '30' } = req.query;
+      const days = parseInt(period as string);
+
+      const [
+        usersResult,
+        tenantsResult,
+        appointmentsResult,
+        revenueResult,
+      ] = await Promise.all([
+        query(`
+          SELECT 
+            COUNT(*) as total,
+            COUNT(*) FILTER (WHERE created_at >= CURRENT_DATE - INTERVAL '${days} days') as recent
+          FROM users WHERE tenant_id IS NOT NULL
+        `),
+        query(`
+          SELECT 
+            COUNT(*) as total,
+            COUNT(*) FILTER (WHERE created_at >= CURRENT_DATE - INTERVAL '${days} days') as recent
+          FROM tenants
+        `),
+        query(`
+          SELECT COUNT(*) as total FROM appointments 
+          WHERE created_at >= CURRENT_DATE - INTERVAL '${days} days'
+        `),
+        query(`
+          SELECT COALESCE(SUM(total_amount), 0) as total FROM invoices 
+          WHERE created_at >= CURRENT_DATE - INTERVAL '${days} days' AND status = 'paid'
+        `),
+      ]);
+
+      res.json({
+        success: true,
+        data: {
+          users: {
+            total: parseInt(usersResult.rows[0].total),
+            recent: parseInt(usersResult.rows[0].recent),
+          },
+          tenants: {
+            total: parseInt(tenantsResult.rows[0].total),
+            recent: parseInt(tenantsResult.rows[0].recent),
+          },
+          appointments: parseInt(appointmentsResult.rows[0].total),
+          revenue: parseFloat(revenueResult.rows[0].total || '0'),
+        },
+      });
+    } catch (error: any) {
+      logger.error('Get analytics failed', error);
+      res.status(500).json({
+        success: false,
+        message: error.message || 'Failed to get analytics',
+      });
+    }
+  };
+
+  /**
+   * Get billing info
+   * GET /api/admin/billing
+   */
+  getBilling = async (req: AuthRequest, res: Response): Promise<void> => {
+    try {
+      const [revenueResult, subscriptionsResult, pendingResult] = await Promise.all([
+        query(`
+          SELECT COALESCE(SUM(total_amount), 0) as total 
+          FROM invoices 
+          WHERE status = 'paid' AND created_at >= DATE_TRUNC('month', CURRENT_DATE)
+        `),
+        query(`
+          SELECT COUNT(*) as total FROM tenants 
+          WHERE subscription_tier != 'freemium' AND is_active = true
+        `),
+        query(`
+          SELECT COALESCE(SUM(total_amount), 0) as total 
+          FROM invoices 
+          WHERE status = 'pending' OR status = 'overdue'
+        `),
+      ]);
+
+      res.json({
+        success: true,
+        data: {
+          totalRevenue: parseFloat(revenueResult.rows[0].total || '0'),
+          activeSubscriptions: parseInt(subscriptionsResult.rows[0].total),
+          pendingPayments: parseFloat(pendingResult.rows[0].total || '0'),
+        },
+      });
+    } catch (error: any) {
+      logger.error('Get billing failed', error);
+      res.status(500).json({
+        success: false,
+        message: error.message || 'Failed to get billing info',
+      });
+    }
+  };
+
+  /**
+   * Get security info
+   * GET /api/admin/security
+   */
+  getSecurity = async (req: AuthRequest, res: Response): Promise<void> => {
+    try {
+      const [sessionsResult, failedLoginsResult] = await Promise.all([
+        query(`
+          SELECT COUNT(*) as total FROM user_sessions 
+          WHERE is_active = true AND is_current = true
+        `),
+        query(`
+          SELECT COUNT(*) as total FROM login_attempts 
+          WHERE success = false AND attempted_at >= CURRENT_DATE - INTERVAL '24 hours'
+        `),
+      ]);
+
+      res.json({
+        success: true,
+        data: {
+          activeSessions: parseInt(sessionsResult.rows[0].total),
+          failedLogins24h: parseInt(failedLoginsResult.rows[0].total),
+          securityScore: 98, // Placeholder
+        },
+      });
+    } catch (error: any) {
+      logger.error('Get security failed', error);
+      res.status(500).json({
+        success: false,
+        message: error.message || 'Failed to get security info',
+      });
+    }
+  };
+
+  /**
+   * Get audit logs
+   * GET /api/admin/logs
+   */
+  getAuditLogs = async (req: AuthRequest, res: Response): Promise<void> => {
+    try {
+      const { page = '1', limit = '50', type = '' } = req.query;
+      const pageNum = parseInt(page as string);
+      const limitNum = parseInt(limit as string);
+      const offset = (pageNum - 1) * limitNum;
+
+      let query = `
+        SELECT 
+          id, user_id as "userId", action, resource_type as "resourceType",
+          resource_id as "resourceId", ip_address as "ipAddress",
+          user_agent as "userAgent", created_at as "createdAt"
+        FROM audit_logs
+        WHERE 1=1
+      `;
+      const params: any[] = [];
+      let paramCount = 1;
+
+      if (type) {
+        query += ` AND action = $${paramCount}`;
+        params.push(type);
+        paramCount++;
+      }
+
+      query += ` ORDER BY created_at DESC LIMIT $${paramCount} OFFSET $${paramCount + 1}`;
+      params.push(limitNum, offset);
+
+      const result = await query(query, params);
+      const countResult = await query(
+        `SELECT COUNT(*) as total FROM audit_logs${type ? ` WHERE action = '${type}'` : ''}`
+      );
+
+      res.json({
+        success: true,
+        data: {
+          logs: result.rows,
+          pagination: {
+            total: parseInt(countResult.rows[0].total),
+            page: pageNum,
+            limit: limitNum,
+            totalPages: Math.ceil(parseInt(countResult.rows[0].total) / limitNum),
+          },
+        },
+      });
+    } catch (error: any) {
+      logger.error('Get audit logs failed', error);
+      res.status(500).json({
+        success: false,
+        message: error.message || 'Failed to get audit logs',
+      });
+    }
+  };
+
+  /**
+   * Get settings
+   * GET /api/admin/settings
+   */
+  getSettings = async (req: AuthRequest, res: Response): Promise<void> => {
+    try {
+      // Placeholder - implement based on your settings table structure
+      res.json({
+        success: true,
+        data: {
+          settings: {
+            platformName: 'VirtualDoc',
+            emailEnabled: true,
+            mfaEnabled: true,
+          },
+        },
+      });
+    } catch (error: any) {
+      logger.error('Get settings failed', error);
+      res.status(500).json({
+        success: false,
+        message: error.message || 'Failed to get settings',
+      });
+    }
+  };
+
+  /**
+   * Update settings
+   * PUT /api/admin/settings
+   */
+  updateSettings = async (req: AuthRequest, res: Response): Promise<void> => {
+    try {
+      // Placeholder - implement based on your settings table structure
+      res.json({
+        success: true,
+        message: 'Settings updated successfully',
+      });
+    } catch (error: any) {
+      logger.error('Update settings failed', error);
+      res.status(500).json({
+        success: false,
+        message: error.message || 'Failed to update settings',
       });
     }
   };
