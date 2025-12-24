@@ -613,7 +613,7 @@ class AdminController {
       const limitNum = parseInt(limit as string);
       const offset = (pageNum - 1) * limitNum;
 
-      let query = `
+      let sqlQuery = `
         SELECT 
           au.id, au.user_id as "userId", au.admin_role_code as "adminRoleCode",
           au.is_active as "isActive", au.is_suspended as "isSuspended",
@@ -629,21 +629,21 @@ class AdminController {
       let paramCount = 1;
 
       if (search) {
-        query += ` AND (u.email ILIKE $${paramCount} OR u.first_name ILIKE $${paramCount} OR u.last_name ILIKE $${paramCount})`;
+        sqlQuery += ` AND (u.email ILIKE $${paramCount} OR u.first_name ILIKE $${paramCount} OR u.last_name ILIKE $${paramCount})`;
         params.push(`%${search}%`);
         paramCount++;
       }
 
       if (role) {
-        query += ` AND au.admin_role_code = $${paramCount}`;
+        sqlQuery += ` AND au.admin_role_code = $${paramCount}`;
         params.push(role);
         paramCount++;
       }
 
-      query += ` ORDER BY au.created_at DESC LIMIT $${paramCount} OFFSET $${paramCount + 1}`;
+      sqlQuery += ` ORDER BY au.created_at DESC LIMIT $${paramCount} OFFSET $${paramCount + 1}`;
       params.push(limitNum, offset);
 
-      const result = await query(query, params);
+      const result = await query(sqlQuery, params);
       const countResult = await query(
         `SELECT COUNT(*) as total FROM admin_users au INNER JOIN users u ON au.user_id = u.id WHERE 1=1${search ? ` AND (u.email ILIKE '%${search}%' OR u.first_name ILIKE '%${search}%' OR u.last_name ILIKE '%${search}%')` : ''}${role ? ` AND au.admin_role_code = '${role}'` : ''}`
       );
@@ -870,7 +870,7 @@ class AdminController {
       const limitNum = parseInt(limit as string);
       const offset = (pageNum - 1) * limitNum;
 
-      let query = `
+      let sqlQuery = `
         SELECT 
           t.*,
           (SELECT COUNT(*) FROM users WHERE tenant_id = t.id) as user_count,
@@ -882,27 +882,27 @@ class AdminController {
       let paramCount = 1;
 
       if (search) {
-        query += ` AND (t.name ILIKE $${paramCount} OR t.slug ILIKE $${paramCount} OR t.subdomain ILIKE $${paramCount})`;
+        sqlQuery += ` AND (t.name ILIKE $${paramCount} OR t.slug ILIKE $${paramCount} OR t.subdomain ILIKE $${paramCount})`;
         params.push(`%${search}%`);
         paramCount++;
       }
 
       if (type) {
-        query += ` AND t.type = $${paramCount}`;
+        sqlQuery += ` AND t.type = $${paramCount}`;
         params.push(type);
         paramCount++;
       }
 
       if (isActive !== '') {
-        query += ` AND t.is_active = $${paramCount}`;
+        sqlQuery += ` AND t.is_active = $${paramCount}`;
         params.push(isActive === 'true');
         paramCount++;
       }
 
-      query += ` ORDER BY t.created_at DESC LIMIT $${paramCount} OFFSET $${paramCount + 1}`;
+      sqlQuery += ` ORDER BY t.created_at DESC LIMIT $${paramCount} OFFSET $${paramCount + 1}`;
       params.push(limitNum, offset);
 
-      const result = await query(query, params);
+      const result = await query(sqlQuery, params);
       const countResult = await query(
         `SELECT COUNT(*) as total FROM tenants WHERE 1=1${search ? ` AND (name ILIKE '%${search}%' OR slug ILIKE '%${search}%' OR subdomain ILIKE '%${search}%')` : ''}${type ? ` AND type = '${type}'` : ''}${isActive !== '' ? ` AND is_active = ${isActive === 'true'}` : ''}`
       );
@@ -1049,7 +1049,7 @@ class AdminController {
   getDashboardStats = async (req: AuthRequest, res: Response): Promise<void> => {
     try {
       const [usersResult, tenantsResult, adminsResult, appointmentsResult] = await Promise.all([
-        query('SELECT COUNT(*) as total FROM users WHERE tenant_id IS NOT NULL'),
+        query('SELECT COUNT(*) as total FROM users'), // Count all users including admins
         query('SELECT COUNT(*) as total, COUNT(*) FILTER (WHERE is_active = true) as active FROM tenants'),
         query('SELECT COUNT(*) as total FROM admin_users WHERE is_active = true AND is_suspended = false'),
         query('SELECT COUNT(*) as total FROM appointments WHERE status = \'confirmed\' AND appointment_date >= CURRENT_DATE'),
@@ -1222,7 +1222,7 @@ class AdminController {
       const limitNum = parseInt(limit as string);
       const offset = (pageNum - 1) * limitNum;
 
-      let query = `
+      let sqlQuery = `
         SELECT 
           id, user_id as "userId", action, resource_type as "resourceType",
           resource_id as "resourceId", ip_address as "ipAddress",
@@ -1234,15 +1234,15 @@ class AdminController {
       let paramCount = 1;
 
       if (type) {
-        query += ` AND action = $${paramCount}`;
+        sqlQuery += ` AND action = $${paramCount}`;
         params.push(type);
         paramCount++;
       }
 
-      query += ` ORDER BY created_at DESC LIMIT $${paramCount} OFFSET $${paramCount + 1}`;
+      sqlQuery += ` ORDER BY created_at DESC LIMIT $${paramCount} OFFSET $${paramCount + 1}`;
       params.push(limitNum, offset);
 
-      const result = await query(query, params);
+      const result = await query(sqlQuery, params);
       const countResult = await query(
         `SELECT COUNT(*) as total FROM audit_logs${type ? ` WHERE action = '${type}'` : ''}`
       );
@@ -1312,6 +1312,195 @@ class AdminController {
         message: error.message || 'Failed to update settings',
       });
     }
+  };
+
+  /**
+   * Create user (from admin panel)
+   * POST /api/admin/users
+   */
+  createUser = async (req: AuthRequest, res: Response): Promise<void> => {
+    try {
+      const { email, password, firstName, lastName, phone, role = 'patient', tenantId } = req.body;
+
+      if (!email || !password || !firstName || !lastName) {
+        res.status(400).json({
+          success: false,
+          message: 'Email, password, firstName, and lastName are required',
+        });
+        return;
+      }
+
+      // Validate password strength
+      const passwordValidation = validatePasswordStrength(password);
+      if (!passwordValidation.valid) {
+        res.status(400).json({
+          success: false,
+          message: passwordValidation.message,
+        });
+        return;
+      }
+
+      // Check if email already exists
+      const emailExists = await UserService.emailExists(email, tenantId || null);
+      if (emailExists) {
+        res.status(409).json({
+          success: false,
+          message: 'Email already registered',
+        });
+        return;
+      }
+
+      const { hashPassword } = await import('../helpers/password.helper');
+      const passwordHash = await hashPassword(password);
+
+      const result = await transaction(async (client) => {
+        // Create user
+        const userResult = await client.query(
+          `INSERT INTO users (
+            tenant_id, email, password_hash, first_name, last_name, phone, role,
+            email_verified, phone_verified, is_active, created_at, updated_at
+          ) VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9, $10, CURRENT_TIMESTAMP, CURRENT_TIMESTAMP)
+          RETURNING *`,
+          [
+            tenantId || null,
+            email.toLowerCase(),
+            passwordHash,
+            firstName,
+            lastName,
+            phone || null,
+            role,
+            false,
+            false,
+            true,
+          ]
+        );
+
+        return { user: userResult.rows[0] };
+      });
+
+      // Security audit log
+      logger.security('User created by admin', {
+        userId: result.user.id,
+        email: result.user.email,
+        createdBy: req.user?.userId,
+        action: 'create_user',
+        ipAddress: req.ip || req.socket.remoteAddress || 'unknown',
+      });
+
+      res.status(201).json({
+        success: true,
+        message: 'User created successfully',
+        data: {
+          user: {
+            id: result.user.id,
+            email: result.user.email,
+            firstName: result.user.first_name,
+            lastName: result.user.last_name,
+            role: result.user.role,
+          },
+        },
+      });
+    } catch (error: any) {
+      logger.error('Create user failed', error);
+      res.status(500).json({
+        success: false,
+        message: error.message || 'Failed to create user',
+      });
+    }
+  };
+
+  /**
+   * Search users (proxy to user-service)
+   * GET /api/users/search
+   */
+  searchUsers = async (req: AuthRequest, res: Response): Promise<void> => {
+    try {
+      const { page, limit, search, role } = req.query;
+      const userServiceUrl = process.env.USER_SERVICE_URL || 'http://user-service:3000';
+      const token = req.headers.authorization;
+
+      // Build query string
+      const queryParams = new URLSearchParams();
+      if (page) queryParams.append('page', page as string);
+      if (limit) queryParams.append('limit', limit as string);
+      if (search) queryParams.append('search', search as string);
+      if (role) queryParams.append('role', role as string);
+
+      const url = `${userServiceUrl}/api/users/search?${queryParams.toString()}`;
+
+      // Forward request to user-service
+      const response = await fetch(url, {
+        method: 'GET',
+        headers: {
+          'Authorization': token || '',
+          'Content-Type': 'application/json',
+        },
+      });
+
+      const data = await response.json();
+
+      if (!response.ok) {
+        res.status(response.status).json(data);
+        return;
+      }
+
+      res.json(data);
+    } catch (error: any) {
+      logger.error('Search users failed', error);
+      res.status(500).json({
+        success: false,
+        message: error.message || 'Failed to search users',
+      });
+    }
+  };
+
+  /**
+   * Proxy methods for roles and permissions (forward to user-service)
+   */
+  private async proxyToUserService(req: AuthRequest, res: Response, path: string, method: string = 'GET', body?: any): Promise<void> {
+    try {
+      const userServiceUrl = process.env.USER_SERVICE_URL || 'http://user-service:3000';
+      const token = req.headers.authorization;
+      const queryString = new URLSearchParams(req.query as any).toString();
+      const url = `${userServiceUrl}${path}${queryString ? `?${queryString}` : ''}`;
+
+      const response = await fetch(url, {
+        method,
+        headers: {
+          'Authorization': token || '',
+          'Content-Type': 'application/json',
+        },
+        body: body ? JSON.stringify(body) : undefined,
+      });
+
+      const data = await response.json();
+      res.status(response.status).json(data);
+    } catch (error: any) {
+      logger.error(`Proxy to user-service failed: ${path}`, error);
+      res.status(500).json({
+        success: false,
+        message: error.message || 'Failed to proxy request',
+      });
+    }
+  }
+
+  // Proxy endpoints
+  getAllPermissions = async (req: AuthRequest, res: Response) => {
+    await this.proxyToUserService(req, res, '/api/permissions', 'GET');
+  };
+
+  createPermission = async (req: AuthRequest, res: Response) => {
+    await this.proxyToUserService(req, res, '/api/permissions', 'POST', req.body);
+  };
+
+  getRolePermissions = async (req: AuthRequest, res: Response) => {
+    const { role } = req.params;
+    await this.proxyToUserService(req, res, `/api/roles/${role}/permissions`, 'GET');
+  };
+
+  assignRolePermission = async (req: AuthRequest, res: Response) => {
+    const { role } = req.params;
+    await this.proxyToUserService(req, res, `/api/roles/${role}/permissions`, 'POST', req.body);
   };
 }
 

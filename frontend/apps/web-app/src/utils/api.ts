@@ -72,6 +72,18 @@ export const adminAPI = {
   // Users (from user-service)
   searchUsers: (params?: { page?: number; limit?: number; search?: string; role?: string }) =>
     api.get('/api/users/search', { params }),
+  createUser: (data: { email: string; password: string; firstName: string; lastName: string; phone?: string; role?: string; tenantId?: string }) =>
+    api.post('/api/admin/users', data),
+
+  // Roles & Permissions (from user-service)
+  getAllPermissions: (params?: { module?: string }) =>
+    api.get('/api/permissions', { params }),
+  createPermission: (data: { name: string; code: string; module: string; description?: string }) =>
+    api.post('/api/permissions', data),
+  getRolePermissions: (role: string) =>
+    api.get(`/api/roles/${role}/permissions`),
+  assignRolePermission: (role: string, data: { permissionId: string; canRead?: boolean; canWrite?: boolean; canDelete?: boolean; canManage?: boolean }) =>
+    api.post(`/api/roles/${role}/permissions`, data),
 
   // Analytics
   getAnalytics: (params?: { period?: string }) =>

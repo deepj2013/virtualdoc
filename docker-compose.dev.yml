@@ -1,0 +1,77 @@
+# Development Docker Compose with Hot Reload
+# Usage: docker-compose -f docker-compose.yml -f docker-compose.dev.yml up
+
+services:
+  # Auth Service - Development with Hot Reload
+  auth-service:
+    build:
+      context: ./backend/services/auth-service
+      dockerfile: Dockerfile.dev
+    volumes:
+      - ./backend/services/auth-service/src:/app/src
+      - ./backend/services/auth-service/package.json:/app/package.json
+      - ./backend/services/auth-service/tsconfig.json:/app/tsconfig.json
+    command: npm run dev
+    environment:
+      - NODE_ENV=development
+
+  # User Service - Development with Hot Reload
+  user-service:
+    build:
+      context: ./backend/services/user-service
+      dockerfile: Dockerfile.dev
+    volumes:
+      - ./backend/services/user-service/src:/app/src
+      - ./backend/services/user-service/package.json:/app/package.json
+      - ./backend/services/user-service/tsconfig.json:/app/tsconfig.json
+    command: npm run dev
+    environment:
+      - NODE_ENV=development
+
+  # Patient Service - Development with Hot Reload
+  patient-service:
+    build:
+      context: ./backend/services/patient-service
+      dockerfile: Dockerfile.dev
+    volumes:
+      - ./backend/services/patient-service/src:/app/src
+      - ./backend/services/patient-service/package.json:/app/package.json
+      - ./backend/services/patient-service/tsconfig.json:/app/tsconfig.json
+    command: npm run dev
+    environment:
+      - NODE_ENV=development
+
+  # Appointment Service - Development with Hot Reload
+  appointment-service:
+    build:
+      context: ./backend/services/appointment-service
+      dockerfile: Dockerfile.dev
+    volumes:
+      - ./backend/services/appointment-service/src:/app/src
+      - ./backend/services/appointment-service/package.json:/app/package.json
+      - ./backend/services/appointment-service/tsconfig.json:/app/tsconfig.json
+    command: npm run dev
+    environment:
+      - NODE_ENV=development
+
+  # Frontend Web App - Development with Hot Reload
+  web-app:
+    build:
+      context: ./frontend/apps/web-app
+      dockerfile: Dockerfile.dev
+    volumes:
+      - ./frontend/apps/web-app/src:/app/src
+      - ./frontend/apps/web-app/public:/app/public
+      - ./frontend/apps/web-app/index.html:/app/index.html
+      - ./frontend/apps/web-app/vite.config.ts:/app/vite.config.ts
+      - ./frontend/apps/web-app/tsconfig.json:/app/tsconfig.json
+      - ./frontend/apps/web-app/tailwind.config.js:/app/tailwind.config.js
+      - ./frontend/apps/web-app/postcss.config.js:/app/postcss.config.js
+      - /app/node_modules
+    command: npm run dev -- --host 0.0.0.0 --port 5173
+    ports:
+      - "${WEB_APP_PORT:-3000}:5173"  # Vite dev server port
+    environment:
+      - NODE_ENV=development
+      - VITE_API_URL=http://localhost:3001
+

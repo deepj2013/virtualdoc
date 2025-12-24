@@ -59,6 +59,7 @@ services:
       - DOCKER_ENV=true
       - REDIS_URL=redis://redis:6379
       - JWT_SECRET=${JWT_SECRET:-your-secret-key-change-in-production}
+      - USER_SERVICE_URL=http://user-service:3000
     depends_on:
       postgres:
         condition: service_healthy

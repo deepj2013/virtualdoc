@@ -18,7 +18,6 @@ const AdminDashboard: React.FC = () => {
   const navigate = useNavigate();
   const user = JSON.parse(localStorage.getItem('user') || '{}');
   const [stats, setStats] = useState<any>(null);
-  const [loading, setLoading] = useState(true);
 
   useEffect(() => {
     initTheme();
@@ -33,8 +32,6 @@ const AdminDashboard: React.FC = () => {
       }
     } catch (error) {
       console.error('Error fetching dashboard stats:', error);
-    } finally {
-      setLoading(false);
     }
   };
 

@@ -136,5 +136,47 @@ router.get('/settings', authenticate, requireUniversalAdmin, adminController.get
  */
 router.put('/settings', authenticate, requireUniversalAdmin, adminController.updateSettings);
 
+/**
+ * @route   POST /api/admin/users
+ * @desc    Create new user (from admin panel)
+ * @access  Protected, Universal Admin
+ */
+router.post('/users', authenticate, requireUniversalAdmin, adminController.createUser);
+
+/**
+ * @route   GET /api/users/search
+ * @desc    Proxy to user-service for user search
+ * @access  Protected, Universal Admin
+ */
+router.get('/search', authenticate, requireUniversalAdmin, adminController.searchUsers);
+
+/**
+ * @route   GET /api/permissions
+ * @desc    Proxy to user-service - Get all permissions
+ * @access  Protected, Universal Admin
+ */
+router.get('/permissions', authenticate, requireUniversalAdmin, adminController.getAllPermissions);
+
+/**
+ * @route   POST /api/permissions
+ * @desc    Proxy to user-service - Create permission
+ * @access  Protected, Universal Admin
+ */
+router.post('/permissions', authenticate, requireUniversalAdmin, adminController.createPermission);
+
+/**
+ * @route   GET /api/roles/:role/permissions
+ * @desc    Proxy to user-service - Get role permissions
+ * @access  Protected, Universal Admin
+ */
+router.get('/roles/:role/permissions', authenticate, requireUniversalAdmin, adminController.getRolePermissions);
+
+/**
+ * @route   POST /api/roles/:role/permissions
+ * @desc    Proxy to user-service - Assign permission to role
+ * @access  Protected, Universal Admin
+ */
+router.post('/roles/:role/permissions', authenticate, requireUniversalAdmin, adminController.assignRolePermission);
+
 export default router;
 

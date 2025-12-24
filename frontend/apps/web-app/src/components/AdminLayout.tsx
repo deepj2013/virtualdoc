@@ -2,6 +2,7 @@ import React, { useEffect, useState } from 'react';
 import { useNavigate, useLocation, Outlet } from 'react-router-dom';
 import axios from 'axios';
 import { initTheme } from '../utils/theme';
+import { adminAPI } from '../utils/api';
 import ThemeToggle from './ThemeToggle';
 import {
   UsersIcon,
@@ -14,6 +15,7 @@ import {
   ShieldCheckIcon,
   DocumentTextIcon,
   BellIcon,
+  KeyIcon,
 } from '@heroicons/react/24/outline';
 
 const AdminLayout: React.FC = () => {
@@ -21,14 +23,27 @@ const AdminLayout: React.FC = () => {
   const location = useLocation();
   const user = JSON.parse(localStorage.getItem('user') || '{}');
   const [activeSection, setActiveSection] = useState('dashboard');
+  const [stats, setStats] = useState<any>(null);
+  const [loading, setLoading] = useState(true);
+
+  // Format count for display (e.g., 1200 -> "1.2K", 45 -> "45")
+  const formatCount = (count: number | undefined): string | undefined => {
+    if (loading || (count === undefined && count !== 0)) return undefined;
+    if (count >= 1000) {
+      return (count / 1000).toFixed(1) + 'K';
+    }
+    return count.toString();
+  };
 
   useEffect(() => {
     initTheme();
+    fetchStats();
     // Set active section based on current route
     const path = location.pathname;
     if (path.includes('/users')) setActiveSection('users');
     else if (path.includes('/tenants')) setActiveSection('tenants');
     else if (path.includes('/admins')) setActiveSection('admins');
+    else if (path.includes('/roles')) setActiveSection('roles');
     else if (path.includes('/analytics')) setActiveSection('analytics');
     else if (path.includes('/billing')) setActiveSection('billing');
     else if (path.includes('/settings')) setActiveSection('settings');
@@ -36,6 +51,27 @@ const AdminLayout: React.FC = () => {
     else if (path.includes('/logs')) setActiveSection('logs');
     else setActiveSection('dashboard');
   }, [location]);
+
+  const fetchStats = async () => {
+    try {
+      setLoading(true);
+      const response = await adminAPI.getDashboardStats();
+      if (response.data.success) {
+        setStats(response.data.data);
+      }
+    } catch (error) {
+      console.error('Error fetching dashboard stats:', error);
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  // Refresh stats when navigating to certain pages
+  useEffect(() => {
+    if (location.pathname.includes('/users') || location.pathname.includes('/tenants') || location.pathname.includes('/admins')) {
+      fetchStats();
+    }
+  }, [location.pathname]);
 
   const handleLogout = async () => {
     try {
@@ -63,9 +99,31 @@ const AdminLayout: React.FC = () => {
 
   const menuItems = [
     { id: 'dashboard', icon: HomeIcon, label: 'Dashboard', path: '/admin/dashboard', color: 'blue' },
-    { id: 'users', icon: UsersIcon, label: 'Users', path: '/admin/users', color: 'green', count: '1.2K' },
-    { id: 'tenants', icon: BuildingOfficeIcon, label: 'Tenants', path: '/admin/tenants', color: 'purple', count: '45' },
-    { id: 'admins', icon: UserGroupIcon, label: 'Admins', path: '/admin/admins', color: 'indigo', count: '12' },
+    { 
+      id: 'users', 
+      icon: UsersIcon, 
+      label: 'Users', 
+      path: '/admin/users', 
+      color: 'green', 
+      count: formatCount(stats?.totalUsers) 
+    },
+    { 
+      id: 'tenants', 
+      icon: BuildingOfficeIcon, 
+      label: 'Tenants', 
+      path: '/admin/tenants', 
+      color: 'purple', 
+      count: formatCount(stats?.totalTenants) 
+    },
+    { 
+      id: 'admins', 
+      icon: UserGroupIcon, 
+      label: 'Admins', 
+      path: '/admin/admins', 
+      color: 'indigo', 
+      count: formatCount(stats?.totalAdmins) 
+    },
+    { id: 'roles', icon: KeyIcon, label: 'Roles & Permissions', path: '/admin/roles', color: 'orange' },
     { id: 'analytics', icon: ChartBarIcon, label: 'Analytics', path: '/admin/analytics', color: 'yellow' },
     { id: 'billing', icon: CreditCardIcon, label: 'Billing', path: '/admin/billing', color: 'pink' },
     { id: 'security', icon: ShieldCheckIcon, label: 'Security', path: '/admin/security', color: 'red' },

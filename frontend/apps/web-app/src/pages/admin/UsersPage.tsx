@@ -1,4 +1,5 @@
 import React, { useState, useEffect } from 'react';
+import { useNavigate } from 'react-router-dom';
 import { UsersIcon, PlusIcon, MagnifyingGlassIcon, PencilIcon, TrashIcon } from '@heroicons/react/24/outline';
 import { adminAPI } from '../../utils/api';
 
@@ -13,6 +14,7 @@ interface User {
 }
 
 const UsersPage: React.FC = () => {
+  const navigate = useNavigate();
   const [users, setUsers] = useState<User[]>([]);
   const [loading, setLoading] = useState(true);
   const [search, setSearch] = useState('');
@@ -58,7 +60,10 @@ const UsersPage: React.FC = () => {
           <h1 className="text-3xl font-bold text-gray-900 dark:text-white">Users Management</h1>
           <p className="text-gray-600 dark:text-gray-400 mt-1">Manage all platform users, roles, and permissions</p>
         </div>
-        <button className="flex items-center gap-2 px-4 py-2 bg-primary-600 hover:bg-primary-700 text-white rounded-lg font-semibold">
+        <button
+          onClick={() => navigate('/admin/users/new')}
+          className="flex items-center gap-2 px-4 py-2 bg-primary-600 hover:bg-primary-700 text-white rounded-lg font-semibold"
+        >
           <PlusIcon className="w-5 h-5" />
           Add New User
         </button>

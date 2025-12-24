@@ -76,6 +76,9 @@ app.get('/health', (req: Request, res: Response) => {
 // API Routes
 app.use('/api/admin/auth', adminRoutes);
 app.use('/api/admin', adminRoutes); // Admin management routes (same controller, different base path)
+app.use('/api/users', adminRoutes); // User search proxy (forwards to user-service)
+app.use('/api/permissions', adminRoutes); // Permissions proxy (forwards to user-service)
+app.use('/api/roles', adminRoutes); // Roles proxy (forwards to user-service)
 
 // Root route
 app.get('/', (req: Request, res: Response) => {

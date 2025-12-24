@@ -5,8 +5,10 @@ import ForgotPasswordPage from './pages/ForgotPasswordPage';
 import AdminLayout from './components/AdminLayout';
 import AdminDashboard from './pages/AdminDashboard';
 import UsersPage from './pages/admin/UsersPage';
+import CreateUserPage from './pages/admin/CreateUserPage';
 import TenantsPage from './pages/admin/TenantsPage';
 import AdminsPage from './pages/admin/AdminsPage';
+import RolesPage from './pages/admin/RolesPage';
 import AnalyticsPage from './pages/admin/AnalyticsPage';
 import BillingPage from './pages/admin/BillingPage';
 import SecurityPage from './pages/admin/SecurityPage';
@@ -38,8 +40,10 @@ function App() {
           <Route index element={<Navigate to="/admin/dashboard" replace />} />
           <Route path="dashboard" element={<AdminDashboard />} />
           <Route path="users" element={<UsersPage />} />
+          <Route path="users/new" element={<CreateUserPage />} />
           <Route path="tenants" element={<TenantsPage />} />
           <Route path="admins" element={<AdminsPage />} />
+          <Route path="roles" element={<RolesPage />} />
           <Route path="analytics" element={<AnalyticsPage />} />
           <Route path="billing" element={<BillingPage />} />
           <Route path="security" element={<SecurityPage />} />
