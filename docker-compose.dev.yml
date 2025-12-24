@@ -65,12 +65,13 @@ services:
       - ./frontend/apps/web-app/index.html:/app/index.html
       - ./frontend/apps/web-app/vite.config.ts:/app/vite.config.ts
       - ./frontend/apps/web-app/tsconfig.json:/app/tsconfig.json
+      - ./frontend/apps/web-app/tsconfig.node.json:/app/tsconfig.node.json
       - ./frontend/apps/web-app/tailwind.config.js:/app/tailwind.config.js
       - ./frontend/apps/web-app/postcss.config.js:/app/postcss.config.js
       - /app/node_modules
     command: npm run dev -- --host 0.0.0.0 --port 5173
     ports:
-      - "${WEB_APP_PORT:-3000}:5173"  # Vite dev server port
+      - "${WEB_APP_PORT:-3011}:5173"  # Map host port 3011 to container port 5173 (Vite dev server)
     environment:
       - NODE_ENV=development
       - VITE_API_URL=http://localhost:3001

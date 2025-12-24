@@ -127,13 +127,15 @@ services:
     restart: unless-stopped
 
   # Frontend Web App
+  # Note: Port mapping is defined in docker-compose.dev.yml for development
+  # For production, ports should be explicitly set
   web-app:
     build:
       context: ./frontend/apps/web-app
       dockerfile: Dockerfile
     container_name: virtualdoc-web-app
-    ports:
-      - "${WEB_APP_PORT:-3000}:3000"
+    # Ports are defined in docker-compose.dev.yml for dev mode
+    # For production, uncomment: ports: - "${WEB_APP_PORT:-3011}:3011"
     environment:
       - NODE_ENV=development
       - VITE_API_URL=http://localhost:3001
